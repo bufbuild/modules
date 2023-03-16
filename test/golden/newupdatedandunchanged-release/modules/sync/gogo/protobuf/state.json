@@ -1,0 +1,8 @@
+{
+  "references": [
+    {
+      "name": "8892e00f944642b7dc8d81b419879fd4be12f056",
+      "digest": "newDummyManifestDigestGogoProtobuf"
+    }
+  ]
+}

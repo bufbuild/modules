@@ -1,0 +1,70 @@
++ LICENSE
+
+# The most commonly used protos from api, used throughout.
+# We're trying to avoid:
+# * bringing in subpackages that aren't being used
+# * including proto files that import other packages that aren't included
++ api/annotations.proto
+# required for longrunning/operations.proto
++ api/client.proto
++ api/http.proto
++ api/httpbody.proto
++ api/field_behavior.proto
++ api/resource.proto
+# Required for grpc-gateway
++ api/visibility.proto
+# Required for api/client.proto
++ api/launch_stage.proto
+
+# api/expr/v1alpha1 is required for xds and envoy.
++ api/expr/v1alpha1/checked.proto
++ api/expr/v1alpha1/eval.proto
++ api/expr/v1alpha1/explain.proto
++ api/expr/v1alpha1/syntax.proto
++ api/expr/v1alpha1/value.proto
+
+# Bring in v1beta1 to complete api/expr.
++ api/expr/v1beta1/decl.proto
++ api/expr/v1beta1/eval.proto
++ api/expr/v1beta1/expr.proto
++ api/expr/v1beta1/source.proto
++ api/expr/v1beta1/value.proto
+
+# Bring in bytestream for Bazel
++ bytestream/bytestream.proto
+
+# All of longrunning
+# Recommended by Google in their API Design docs
+# See https://cloud.google.com/apis/design/design_patterns#long_running_operations
++ longrunning/operations.proto
+
+# All of geo
++ geo/type/viewport.proto
+
+# All of rpc
++ rpc/code.proto
++ rpc/context/attribute_context.proto
++ rpc/error_details.proto
++ rpc/status.proto
+
+# All of type
++ type/calendar_period.proto
++ type/color.proto
++ type/date.proto
++ type/datetime.proto
++ type/dayofweek.proto
++ type/decimal.proto
++ type/expr.proto
++ type/fraction.proto
++ type/interval.proto
++ type/latlng.proto
++ type/localized_text.proto
++ type/money.proto
++ type/month.proto
++ type/phone_number.proto
++ type/postal_address.proto
++ type/quaternion.proto
++ type/timeofday.proto
+
++ */
+- *

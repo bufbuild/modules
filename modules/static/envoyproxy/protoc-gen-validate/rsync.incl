@@ -1,0 +1,8 @@
++ LICENSE
++ *.proto
+- example-workspace
+- java
+- tests
+- vendor
++ */
+- *

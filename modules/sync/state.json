@@ -1,0 +1,12 @@
+{
+  "modules": [
+    {
+      "module_name": "opencensus/opencensus",
+      "latest_reference": "3619b5dda8bff26ff1974714c24de8f6d4953811"
+    },
+    {
+      "module_name": "opentelemetry/opentelemetry",
+      "latest_reference": "ce4475566d50cf2b2dd377953e2cddab8ff59117"
+    }
+  ]
+}

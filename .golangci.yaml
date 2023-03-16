@@ -1,0 +1,128 @@
+run:
+  # do not skip golangci-lint's default skip directory set
+  skip-dirs-use-default: false
+output:
+  # colored-line-number|line-number|json|tab|checkstyle|code-climate
+  # default is colored-line-number
+  format: colored-line-number
+linters-settings:
+  errcheck:
+    # check for m := a.(Foo) without ok check
+    check-type-assertions: true
+  forbidigo:
+    # Forbid the following identifiers (identifiers are written using regexp):
+    forbid:
+      # Use private/pkg/command.Runner
+      - '^exec\.Cmd$'
+      - '^exec\.Command$'
+      - '^exec\.CommandContext$'
+      # Ban debug statements
+      - '^fmt\.Print'
+      - '^log\.'
+      - '^print$'
+      - '^println$'
+      # Ban timestamppb.New because it doesn't validate. Use prototime.NewTimestamp instead.
+      - '^timestamppb.New$'
+      - '^os.Chdir$'
+  ifshort:
+    # Maximum length of variable declaration measured in number of lines, after which
+    # linter won't suggest using short syntax. Has higher priority than max-decl-chars.
+    max-decl-lines: 20
+    # Maximum length of variable declaration measured in number of characters, after
+    # which linter won't suggest using short syntax.
+    max-decl-chars: 100
+  lll:
+    # counts tabs as tab-width
+    line-length: 140
+    tab-width: 4
+linters:
+  enable:
+    - asciicheck
+    - bidichk
+    - bodyclose
+    - containedctx
+      #- contextcheck
+    #- cyclop
+    - decorder
+    - depguard
+    - dogsled
+    #- dupl
+    - errcheck
+      #- errchkjson
+      #- errname
+      #- errorlint
+      #- execinquery TODO: reenable
+      #- exhaustive
+      #- exhaustivestruct
+    #- exhauststruct
+    - exportloopref
+    - forbidigo
+    - forcetypeassert
+    #- funlen
+    - gci
+    #- gochecknoglobals
+    - gochecknoinits
+      #- gocognit
+      #- goconst
+      #- gocritic
+      #- gocyclo
+      #- godot
+      #- godox
+    #- goerr113
+    - gofmt
+    #- gofumpt
+    - goheader
+      #- goimports  # we have gci enabled instead
+      #- golint
+      #- gomnd
+    #- gomoddirectives
+    - gomodguard
+    - goprintffuncname
+    - gosec
+    - gosimple
+    - govet
+    - grouper
+    #- ifshort
+    - importas
+    - ineffassign
+      #- interfacer
+    #- lll
+    - logrlint
+    #- maintidx
+    - makezero
+    #- maligned
+    - misspell
+    - nakedret
+      #- namedreturns
+    #- nestif
+    - nilerr
+      #- nilnil
+      #- nlreturn
+    #- noctx
+    - nolintlint
+      #- nosprintfhostport TODO: reenable
+      #- paralleltest
+    #- prealloc
+    - predeclared
+    - promlinter
+    - reassign
+    #- revive
+    - rowserrcheck
+    #- sqlclosecheck
+    - staticcheck
+    - stylecheck
+      #- tagliatelle
+      #- tenv
+      #- testpackage
+      #- thelper
+    #- tparallel
+    - typecheck
+    - unconvert
+    #- unparam
+    - unused
+    - wastedassign
+    - whitespace
+      #- wrapcheck
+    #- wsl
+  # disable all that are not manually enabled
+  disable-all: true
