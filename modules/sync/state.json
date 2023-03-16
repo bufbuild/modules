@@ -1,12 +1,16 @@
 {
   "modules": [
     {
+      "module_name": "envoyproxy/protoc-gen-validate",
+      "latest_reference": "2540a2dbb00ae2aeb55d4d81be7f7542910570f9"
+    },
+    {
       "module_name": "opencensus/opencensus",
       "latest_reference": "3619b5dda8bff26ff1974714c24de8f6d4953811"
     },
     {
       "module_name": "opentelemetry/opentelemetry",
-      "latest_reference": "ce4475566d50cf2b2dd377953e2cddab8ff59117"
+      "latest_reference": "4b23e936e1c7b76244ac0c3f77e023b42dad7c6e"
     }
   ]
 }
