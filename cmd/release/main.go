@@ -87,14 +87,15 @@ func (c *command) run() (retErr error) {
 			return err
 		}
 	}
+	globalStateFilePath := filepath.Join(bufstate.SyncRoot, bufstate.GlobalStateFileName)
 	var currentReleaseState *modulestatev1alpha1.GlobalState
-	if _, err := os.Stat(bufstate.SyncRoot); err != nil {
+	if _, err := os.Stat(globalStateFilePath); err != nil {
 		if !os.IsNotExist(err) {
 			return fmt.Errorf("stat file: %w", err)
 		}
 		currentReleaseState = &modulestatev1alpha1.GlobalState{}
 	} else {
-		globalStateFile, err := os.Open(bufstate.SyncRoot)
+		globalStateFile, err := os.Open(globalStateFilePath)
 		if err != nil {
 			return fmt.Errorf("open file: %w", err)
 		}
