@@ -5,6 +5,10 @@
       "latest_reference": "2540a2dbb00ae2aeb55d4d81be7f7542910570f9"
     },
     {
+      "module_name": "gogo/protobuf",
+      "latest_reference": "f67b8970b736e53dbd7d0a27146c8f1ac52f74e5"
+    },
+    {
       "module_name": "opencensus/opencensus",
       "latest_reference": "3619b5dda8bff26ff1974714c24de8f6d4953811"
     },
