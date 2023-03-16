@@ -338,10 +338,7 @@ func createReleaseBody(name string, moduleStates map[string]releaseModuleState) 
 	}
 
 	if unchanged := unchangedStringBuilder.String(); unchanged != "" {
-		unchangedModuleHeader := `## Unchanged Modules
-<details>
-	<summary>Expand</summary>
-`
+		unchangedModuleHeader := "## Unchanged Modules\n<details>\n<summary>Expand</summary>\n"
 		if _, err := mainStringBuilder.WriteString(fmt.Sprintf("%s\n%s\n</details>\n", unchangedModuleHeader, unchanged)); err != nil {
 			return "", err
 		}
@@ -355,11 +352,10 @@ func writeUpdatedReferencesTable(
 	references []*modulestatev1alpha1.ModuleReference,
 ) error {
 	refCount := len(references)
-	if _, err := sb.WriteString(fmt.Sprintf(`<details><summary>%s: %d update(s)</summary>
-
-| Reference | Manifest Digest |
-|---|---|
-`, moduleName, refCount)); err != nil {
+	if _, err := sb.WriteString(fmt.Sprintf(
+		"<details><summary>%s: %d update(s)</summary>\n\n| Reference | Manifest Digest |\n|---|---|\n",
+		moduleName, refCount,
+	)); err != nil {
 		return err
 	}
 	// maxRows maximum amount of reference rows in a table
@@ -373,13 +369,16 @@ func writeUpdatedReferencesTable(
 	} else {
 		for i, ref := range references {
 			// write only maxRows amount, first 5, last 5
-			if (i < maxRows/2) || (i > refCount-(maxRows/2)) {
+			if (i < maxRows/2) || (i >= refCount-(maxRows/2)) {
 				if _, err := sb.WriteString(fmt.Sprintf("| %s | %s |\n", ref.GetName(), ref.GetDigest())); err != nil {
 					return err
 				}
 			}
 			if i == maxRows/2 {
-				if _, err := sb.WriteString(fmt.Sprintf("| ... %d references skipped ... | ... %d references skipped ... |\n", refCount-maxRows, refCount-maxRows)); err != nil {
+				if _, err := sb.WriteString(fmt.Sprintf(
+					"| ... %d references skipped ... | ... %d references skipped ... |\n",
+					refCount-maxRows, refCount-maxRows,
+				)); err != nil {
 					return err
 				}
 			}

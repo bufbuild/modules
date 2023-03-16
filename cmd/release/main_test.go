@@ -15,12 +15,15 @@
 package main
 
 import (
+	"fmt"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/bufbuild/modules/internal/modules"
 	"github.com/bufbuild/modules/private/bufpkg/bufstate"
 	modulestatev1alpha1 "github.com/bufbuild/modules/private/gen/modulestate/v1alpha1"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -143,6 +146,7 @@ func TestMapGlobalStateReferences(t *testing.T) {
 func TestCreateReleaseBody(t *testing.T) {
 	t.Parallel()
 	t.Run("Basic", func(t *testing.T) {
+		t.Parallel()
 		mods := map[string]releaseModuleState{
 			"test-org/test-repo": {
 				status: modules.New,
@@ -176,6 +180,7 @@ func TestCreateReleaseBody(t *testing.T) {
 		require.Equal(t, want, got)
 	})
 	t.Run("NewAndUpdated", func(t *testing.T) {
+		t.Parallel()
 		mods := map[string]releaseModuleState{
 			"test-org/new-repo": {
 				status: modules.New,
@@ -231,6 +236,7 @@ func TestCreateReleaseBody(t *testing.T) {
 		require.Equal(t, want, got)
 	})
 	t.Run("NewUpdatedUnchanged", func(t *testing.T) {
+		t.Parallel()
 		mods := map[string]releaseModuleState{
 			"test-org/new-repo": {
 				status: modules.New,
@@ -292,5 +298,92 @@ func TestCreateReleaseBody(t *testing.T) {
 		got, err := createReleaseBody("20230519.1", mods)
 		require.NoError(t, err)
 		require.Equal(t, want, got)
+	})
+}
+
+func TestWriteReferencesTable(t *testing.T) {
+	populateReferences := func(refsCount int) []*modulestatev1alpha1.ModuleReference {
+		refs := make([]*modulestatev1alpha1.ModuleReference, refsCount)
+		for i := 0; i < refsCount; i++ {
+			refs[i] = &modulestatev1alpha1.ModuleReference{
+				Name:   fmt.Sprintf("commit%03d", i),
+				Digest: fmt.Sprintf("digest%03d", i),
+			}
+		}
+		return refs
+	}
+	t.Run("lessThanLimit", func(t *testing.T) {
+		const (
+			moduleName = "foo/bar"
+			refsCount  = 5
+		)
+		var sb strings.Builder
+		require.NoError(t, writeUpdatedReferencesTable(&sb, moduleName, populateReferences(refsCount)))
+		const want = `<details><summary>foo/bar: 5 update(s)</summary>
+
+| Reference | Manifest Digest |
+|---|---|
+| commit000 | digest000 |
+| commit001 | digest001 |
+| commit002 | digest002 |
+| commit003 | digest003 |
+| commit004 | digest004 |
+
+</details>
+`
+		assert.Equal(t, want, sb.String())
+	})
+	t.Run("rightInTheLimit", func(t *testing.T) {
+		const (
+			moduleName = "foo/bar"
+			refsCount  = 10
+		)
+		var sb strings.Builder
+		require.NoError(t, writeUpdatedReferencesTable(&sb, moduleName, populateReferences(refsCount)))
+		const want = `<details><summary>foo/bar: 10 update(s)</summary>
+
+| Reference | Manifest Digest |
+|---|---|
+| commit000 | digest000 |
+| commit001 | digest001 |
+| commit002 | digest002 |
+| commit003 | digest003 |
+| commit004 | digest004 |
+| commit005 | digest005 |
+| commit006 | digest006 |
+| commit007 | digest007 |
+| commit008 | digest008 |
+| commit009 | digest009 |
+
+</details>
+`
+		assert.Equal(t, want, sb.String())
+	})
+	t.Run("afterLimit", func(t *testing.T) {
+		const (
+			moduleName = "foo/bar"
+			refsCount  = 100
+		)
+		var sb strings.Builder
+		require.NoError(t, writeUpdatedReferencesTable(&sb, moduleName, populateReferences(refsCount)))
+		const want = `<details><summary>foo/bar: 100 update(s)</summary>
+
+| Reference | Manifest Digest |
+|---|---|
+| commit000 | digest000 |
+| commit001 | digest001 |
+| commit002 | digest002 |
+| commit003 | digest003 |
+| commit004 | digest004 |
+| ... 90 references skipped ... | ... 90 references skipped ... |
+| commit095 | digest095 |
+| commit096 | digest096 |
+| commit097 | digest097 |
+| commit098 | digest098 |
+| commit099 | digest099 |
+
+</details>
+`
+		assert.Equal(t, want, sb.String())
 	})
 }
