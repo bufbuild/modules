@@ -307,40 +307,12 @@ func createReleaseBody(name string, moduleStates map[string]releaseModuleState) 
 	for module, modState := range moduleStates {
 		switch modState.status {
 		case modules.New:
-			moduleBlock := fmt.Sprintf(`<details>
-	<summary>%s: %d update(s)</summary>
-
-| Reference | Manifest Digest |
-|---------|--------|
-`, module, len(modState.references))
-			if _, err := newStringBuilder.WriteString(moduleBlock); err != nil {
-				return "", err
-			}
-			for _, ref := range modState.references {
-				if _, err := newStringBuilder.WriteString(fmt.Sprintf("| %s | %s |\n", ref.GetName(), ref.GetDigest())); err != nil {
-					return "", err
-				}
-			}
-			if _, err := newStringBuilder.WriteString("\n</details>\n"); err != nil {
-				return "", err
+			if err := writeUpdatedReferencesTable(&newStringBuilder, module, modState.references); err != nil {
+				return "", fmt.Errorf("write new modules table: %w", err)
 			}
 		case modules.Updated:
-			moduleBlock := fmt.Sprintf(`<details>
-	<summary>%s: %d update(s)</summary>
-
-| Reference | Manifest Digest |
-|---------|--------|
-`, module, len(modState.references))
-			if _, err := updatedStringBuilder.WriteString(moduleBlock); err != nil {
-				return "", err
-			}
-			for _, ref := range modState.references {
-				if _, err := updatedStringBuilder.WriteString(fmt.Sprintf("| %s | %s |\n", ref.GetName(), ref.GetDigest())); err != nil {
-					return "", err
-				}
-			}
-			if _, err := updatedStringBuilder.WriteString("\n</details>\n"); err != nil {
-				return "", err
+			if err := writeUpdatedReferencesTable(&updatedStringBuilder, module, modState.references); err != nil {
+				return "", fmt.Errorf("write updated modules table: %w", err)
 			}
 		case modules.Unchanged:
 			if _, err := unchangedStringBuilder.WriteString(fmt.Sprintf("- %s\n", module)); err != nil {
@@ -375,4 +347,46 @@ func createReleaseBody(name string, moduleStates map[string]releaseModuleState) 
 		}
 	}
 	return mainStringBuilder.String(), nil
+}
+
+func writeUpdatedReferencesTable(
+	sb *strings.Builder,
+	moduleName string,
+	references []*modulestatev1alpha1.ModuleReference,
+) error {
+	refCount := len(references)
+	if _, err := sb.WriteString(fmt.Sprintf(`<details><summary>%s: %d update(s)</summary>
+
+| Reference | Manifest Digest |
+|---|---|
+`, moduleName, refCount)); err != nil {
+		return err
+	}
+	// maxRows maximum amount of reference rows in a table
+	const maxRows = 10
+	if refCount <= maxRows {
+		for _, ref := range references {
+			if _, err := sb.WriteString(fmt.Sprintf("| %s | %s |\n", ref.GetName(), ref.GetDigest())); err != nil {
+				return err
+			}
+		}
+	} else {
+		for i, ref := range references {
+			// write only maxRows amount, first 5, last 5
+			if (i < maxRows/2) || (i > refCount-(maxRows/2)) {
+				if _, err := sb.WriteString(fmt.Sprintf("| %s | %s |\n", ref.GetName(), ref.GetDigest())); err != nil {
+					return err
+				}
+			}
+			if i == maxRows/2 {
+				if _, err := sb.WriteString(fmt.Sprintf("| ... %d references skipped ... | ... %d references skipped ... |\n", refCount-maxRows, refCount-maxRows)); err != nil {
+					return err
+				}
+			}
+		}
+	}
+	if _, err := sb.WriteString("\n</details>\n"); err != nil {
+		return err
+	}
+	return nil
 }
