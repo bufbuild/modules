@@ -9,6 +9,10 @@
       "latest_reference": "f67b8970b736e53dbd7d0a27146c8f1ac52f74e5"
     },
     {
+      "module_name": "googleapis/googleapis",
+      "latest_reference": "98c303c996d33de57b06237f54d0dc918864463a"
+    },
+    {
       "module_name": "opencensus/opencensus",
       "latest_reference": "3619b5dda8bff26ff1974714c24de8f6d4953811"
     },
