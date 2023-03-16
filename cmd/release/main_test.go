@@ -34,7 +34,7 @@ func TestCalculateNewReleaseModules(t *testing.T) {
 		currentRelease := map[string]string{
 			"envoyproxy/envoy": "bb554f53ad8d3a2a2ae4cbd7102a3e20ae00b558",
 		}
-		got, err := calculateNewReleaseModules(filepath.Join("../../test/golden/new-release", bufstate.SyncRoot), nil, currentRelease)
+		got, err := calculateNewReleaseModules(filepath.Join("testdata/golden/new-release", bufstate.SyncRoot), nil, currentRelease)
 		require.NoError(t, err)
 		require.Equal(t, map[string]releaseModuleState{
 			"envoyproxy/envoy": {
@@ -54,7 +54,7 @@ func TestCalculateNewReleaseModules(t *testing.T) {
 			"envoyproxy/envoy": "7850b6bb6494e3bfc093b1aff20282ab30b67940", // updated
 
 		}
-		got, err := calculateNewReleaseModules(filepath.Join("../../test/golden/updated-release", bufstate.SyncRoot), prevRelease, currentRelease)
+		got, err := calculateNewReleaseModules(filepath.Join("testdata/golden/updated-release", bufstate.SyncRoot), prevRelease, currentRelease)
 		require.NoError(t, err)
 		require.Equal(t, map[string]releaseModuleState{
 			"envoyproxy/envoy": {
@@ -93,7 +93,7 @@ func TestCalculateNewReleaseModules(t *testing.T) {
 			"envoyproxy/protoc-gen-validate": "38260ee45796b420276ac925d826ecec8fc3e9a8", // unchanged
 			"gogo/protobuf":                  "8892e00f944642b7dc8d81b419879fd4be12f056", // new
 		}
-		got, err := calculateNewReleaseModules(filepath.Join("../../test/golden/newupdatedandunchanged-release", bufstate.SyncRoot), prevRelease, currentRelease)
+		got, err := calculateNewReleaseModules(filepath.Join("testdata/golden/newupdatedandunchanged-release", bufstate.SyncRoot), prevRelease, currentRelease)
 		require.NoError(t, err)
 		require.Equal(t, map[string]releaseModuleState{
 			"envoyproxy/protoc-gen-validate": {
@@ -288,8 +288,7 @@ func TestCreateReleaseBody(t *testing.T) {
 </details>
 
 ## Unchanged Modules
-<details>
-	<summary>Expand</summary>
+<details><summary>Expand</summary>
 
 - test-org/unchanged-repo
 

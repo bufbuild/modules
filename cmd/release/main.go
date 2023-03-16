@@ -338,7 +338,7 @@ func createReleaseBody(name string, moduleStates map[string]releaseModuleState) 
 	}
 
 	if unchanged := unchangedStringBuilder.String(); unchanged != "" {
-		unchangedModuleHeader := "## Unchanged Modules\n<details>\n<summary>Expand</summary>\n"
+		unchangedModuleHeader := "## Unchanged Modules\n<details><summary>Expand</summary>\n"
 		if _, err := mainStringBuilder.WriteString(fmt.Sprintf("%s\n%s\n</details>\n", unchangedModuleHeader, unchanged)); err != nil {
 			return "", err
 		}
