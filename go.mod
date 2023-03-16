@@ -10,7 +10,7 @@ require (
 	go.uber.org/multierr v1.10.0
 	golang.org/x/mod v0.9.0
 	golang.org/x/oauth2 v0.6.0
-	google.golang.org/protobuf v1.29.0
+	google.golang.org/protobuf v1.30.0
 )
 
 require (
