@@ -5,4 +5,4 @@ differ from _tags_ in that one GitHub release can only have one associated tag.
 
 ## Special case for WKT
 
-See `modules/static/protocolbuffers/wellknowntypes/buf.md` to understand this module's special case.
+See the [README](../../modules/static/protocolbuffers/wellknowntypes/buf.md) to understand this module's special case.
