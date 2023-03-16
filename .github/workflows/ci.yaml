@@ -9,30 +9,20 @@ permissions:
 concurrency: ci-${{ github.ref }}
 
 jobs:
-  lint:
+  ci:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-    - name: Install Go
-      uses: actions/setup-go@v3
-      with:
-        go-version: 1.19.x
-        check-latest: true
-        cache: true
-    - name: golangci-lint
-      uses: golangci/golangci-lint-action@08e2f20817b15149a52b5b3ebe7de50aff2ba8c5
-  test:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-    - name: Install Go
-      uses: actions/setup-go@v3
-      with:
-        go-version: 1.19.x
-        check-latest: true
-        cache: true
-    - name: Test
-      shell: bash
-      run: make test
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+      - name: Install Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.20.x
+          check-latest: true
+          cache: true
+      - name: Test
+        run: make test
+      - name: Lint
+        run: make checkgenerate && make lint
