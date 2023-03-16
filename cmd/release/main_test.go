@@ -24,7 +24,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func Test_calculateNewReleaseModules(t *testing.T) {
+func TestCalculateNewReleaseModules(t *testing.T) {
 	t.Parallel()
 	t.Run("NewReleases-FromNoPreviousRelease", func(t *testing.T) {
 		t.Parallel()
@@ -113,7 +113,7 @@ func Test_calculateNewReleaseModules(t *testing.T) {
 	})
 }
 
-func Test_mapGlobalStateReferences(t *testing.T) {
+func TestMapGlobalStateReferences(t *testing.T) {
 	t.Parallel()
 	t.Run("nil_state", func(t *testing.T) {
 		var globalState *modulestatev1alpha1.GlobalState
@@ -140,7 +140,7 @@ func Test_mapGlobalStateReferences(t *testing.T) {
 	})
 }
 
-func Test_createReleaseBody(t *testing.T) {
+func TestCreateReleaseBody(t *testing.T) {
 	t.Parallel()
 	t.Run("Basic", func(t *testing.T) {
 		mods := map[string]releaseModuleState{
@@ -158,14 +158,13 @@ func Test_createReleaseBody(t *testing.T) {
 			},
 		}
 
-		want := `# Buf Modules Release 20230519.1
+		const want = `# Buf Modules Release 20230519.1
 
 ## New Modules
-<details>
-	<summary>test-org/test-repo: 2 update(s)</summary>
+<details><summary>test-org/test-repo: 2 update(s)</summary>
 
 | Reference | Manifest Digest |
-|---------|--------|
+|---|---|
 | v1.0.0 | fakedigest |
 | v1.1.0 | fakedigest |
 
@@ -204,25 +203,23 @@ func Test_createReleaseBody(t *testing.T) {
 			},
 		}
 
-		want := `# Buf Modules Release 20230519.1
+		const want = `# Buf Modules Release 20230519.1
 
 ## New Modules
-<details>
-	<summary>test-org/new-repo: 2 update(s)</summary>
+<details><summary>test-org/new-repo: 2 update(s)</summary>
 
 | Reference | Manifest Digest |
-|---------|--------|
+|---|---|
 | v1.0.0 | fakedigest |
 | v1.1.0 | fakedigest |
 
 </details>
 
 ## Updated Modules
-<details>
-	<summary>test-org/updated-repo: 2 update(s)</summary>
+<details><summary>test-org/updated-repo: 2 update(s)</summary>
 
 | Reference | Manifest Digest |
-|---------|--------|
+|---|---|
 | v1.0.0 | fakedigest |
 | v1.1.0 | fakedigest |
 
@@ -264,24 +261,22 @@ func Test_createReleaseBody(t *testing.T) {
 			},
 		}
 
-		want := `# Buf Modules Release 20230519.1
+		const want = `# Buf Modules Release 20230519.1
 
 ## New Modules
-<details>
-	<summary>test-org/new-repo: 1 update(s)</summary>
+<details><summary>test-org/new-repo: 1 update(s)</summary>
 
 | Reference | Manifest Digest |
-|---------|--------|
+|---|---|
 | v1.0.0 | fakedigest |
 
 </details>
 
 ## Updated Modules
-<details>
-	<summary>test-org/updated-repo: 1 update(s)</summary>
+<details><summary>test-org/updated-repo: 1 update(s)</summary>
 
 | Reference | Manifest Digest |
-|---------|--------|
+|---|---|
 | v1.0.0 | fakedigest |
 
 </details>
