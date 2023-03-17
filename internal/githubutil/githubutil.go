@@ -27,7 +27,7 @@ import (
 	"time"
 
 	"github.com/bufbuild/modules/private/bufpkg/bufstate"
-	modulestatev1alpha1 "github.com/bufbuild/modules/private/gen/modulestate/v1alpha1"
+	statev1alpha1 "github.com/bufbuild/modules/private/gen/modules/state/v1alpha1"
 	"github.com/google/go-github/v48/github"
 	"github.com/hashicorp/go-retryablehttp"
 	"golang.org/x/oauth2"
@@ -190,12 +190,12 @@ func (c *Client) AllReleaseTagNames(
 func (c *Client) DownloadReleaseManifest(
 	ctx context.Context,
 	release *github.RepositoryRelease,
-) (*modulestatev1alpha1.GlobalState, error) {
+) (*statev1alpha1.GlobalState, error) {
 	manifestBytes, _, err := c.downloadAsset(ctx, release, bufstate.ModStateFileName)
 	if err != nil {
 		return nil, err
 	}
-	var moduleReleases modulestatev1alpha1.GlobalState
+	var moduleReleases statev1alpha1.GlobalState
 	if err := json.Unmarshal(manifestBytes, &moduleReleases); err != nil {
 		return nil, err
 	}

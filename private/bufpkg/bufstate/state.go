@@ -19,7 +19,7 @@ import (
 	"os"
 	"path/filepath"
 
-	modulestatev1alpha1 "github.com/bufbuild/modules/private/gen/modulestate/v1alpha1"
+	statev1alpha1 "github.com/bufbuild/modules/private/gen/modules/state/v1alpha1"
 )
 
 const (
@@ -39,12 +39,12 @@ func AppendModuleReference(
 	digest string,
 ) (retErr error) {
 	modFilePath := filepath.Join(rootSyncDir, ownerName, repoName, ModStateFileName)
-	var modState *modulestatev1alpha1.ModuleState
+	var modState *statev1alpha1.ModuleState
 	if _, err := os.Stat(modFilePath); err != nil {
 		if !os.IsNotExist(err) {
 			return fmt.Errorf("stat file: %w", err)
 		}
-		modState = &modulestatev1alpha1.ModuleState{}
+		modState = &statev1alpha1.ModuleState{}
 	} else {
 		modStateFile, err := os.Open(modFilePath)
 		if err != nil {
@@ -55,7 +55,7 @@ func AppendModuleReference(
 			return fmt.Errorf("read module state file: %w", err)
 		}
 	}
-	modState.References = append(modState.References, &modulestatev1alpha1.ModuleReference{Name: reference, Digest: digest})
+	modState.References = append(modState.References, &statev1alpha1.ModuleReference{Name: reference, Digest: digest})
 	// As the state file read/write functions both close after their operations,
 	// we need to re-open another io.WriteCloser here, the easiest way is to
 	// truncate the file with Create if it exists.
@@ -68,12 +68,12 @@ func AppendModuleReference(
 	}
 
 	globalFilePath := filepath.Join(rootSyncDir, GlobalStateFileName)
-	var globalState *modulestatev1alpha1.GlobalState
+	var globalState *statev1alpha1.GlobalState
 	if _, err := os.Stat(globalFilePath); err != nil {
 		if !os.IsNotExist(err) {
 			return fmt.Errorf("stat file: %w", err)
 		}
-		globalState = &modulestatev1alpha1.GlobalState{}
+		globalState = &statev1alpha1.GlobalState{}
 	} else {
 		globalStateFile, err := os.Open(globalFilePath)
 		if err != nil {
@@ -96,7 +96,7 @@ func AppendModuleReference(
 	if !found {
 		globalState.Modules = append(
 			globalState.GetModules(),
-			&modulestatev1alpha1.GlobalStateReference{
+			&statev1alpha1.GlobalStateReference{
 				ModuleName:      moduleName,
 				LatestReference: reference,
 			},

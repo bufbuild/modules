@@ -28,7 +28,7 @@ import (
 	"github.com/bufbuild/modules/internal/githubutil"
 	"github.com/bufbuild/modules/internal/modules"
 	"github.com/bufbuild/modules/private/bufpkg/bufstate"
-	modulestatev1alpha1 "github.com/bufbuild/modules/private/gen/modulestate/v1alpha1"
+	statev1alpha1 "github.com/bufbuild/modules/private/gen/modules/state/v1alpha1"
 	"github.com/google/go-github/v48/github"
 	"go.uber.org/multierr"
 )
@@ -39,7 +39,7 @@ type command struct {
 
 type releaseModuleState struct {
 	status     modules.Status
-	references []*modulestatev1alpha1.ModuleReference
+	references []*statev1alpha1.ModuleReference
 }
 
 func main() {
@@ -80,7 +80,7 @@ func (c *command) run() (retErr error) {
 	if err != nil && !errors.Is(err, githubutil.ErrNotFound) {
 		return fmt.Errorf("retrieve latest release: %w", err)
 	}
-	var prevReleaseState *modulestatev1alpha1.GlobalState
+	var prevReleaseState *statev1alpha1.GlobalState
 	if prevRelease != nil {
 		prevReleaseState, err = githubClient.DownloadReleaseManifest(ctx, prevRelease)
 		if err != nil {
@@ -88,12 +88,12 @@ func (c *command) run() (retErr error) {
 		}
 	}
 	globalStateFilePath := filepath.Join(bufstate.SyncRoot, bufstate.GlobalStateFileName)
-	var currentReleaseState *modulestatev1alpha1.GlobalState
+	var currentReleaseState *statev1alpha1.GlobalState
 	if _, err := os.Stat(globalStateFilePath); err != nil {
 		if !os.IsNotExist(err) {
 			return fmt.Errorf("stat file: %w", err)
 		}
-		currentReleaseState = &modulestatev1alpha1.GlobalState{}
+		currentReleaseState = &statev1alpha1.GlobalState{}
 	} else {
 		globalStateFile, err := os.Open(globalStateFilePath)
 		if err != nil {
@@ -141,7 +141,7 @@ func (c *command) run() (retErr error) {
 	return nil
 }
 
-func mapGlobalStateReferences(globalState *modulestatev1alpha1.GlobalState) map[string]string {
+func mapGlobalStateReferences(globalState *statev1alpha1.GlobalState) map[string]string {
 	if globalState == nil || len(globalState.GetModules()) == 0 {
 		return nil
 	}
@@ -195,12 +195,12 @@ func calculateNewReleaseModules(
 
 	for _, updatedModule := range updatedModules {
 		modFilePath := filepath.Join(dir, updatedModule.Name, bufstate.ModStateFileName)
-		var moduleManifest *modulestatev1alpha1.ModuleState
+		var moduleManifest *statev1alpha1.ModuleState
 		if _, err := os.Stat(modFilePath); err != nil {
 			if !os.IsNotExist(err) {
 				return nil, fmt.Errorf("stat file: %w", err)
 			}
-			moduleManifest = &modulestatev1alpha1.ModuleState{}
+			moduleManifest = &statev1alpha1.ModuleState{}
 		} else {
 			modStateFile, err := os.Open(modFilePath)
 			if err != nil {
@@ -349,7 +349,7 @@ func createReleaseBody(name string, moduleStates map[string]releaseModuleState) 
 func writeUpdatedReferencesTable(
 	sb *strings.Builder,
 	moduleName string,
-	references []*modulestatev1alpha1.ModuleReference,
+	references []*statev1alpha1.ModuleReference,
 ) error {
 	refCount := len(references)
 	if _, err := sb.WriteString(fmt.Sprintf(

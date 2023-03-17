@@ -17,7 +17,7 @@ package bufstate
 import (
 	"testing"
 
-	modulestatev1alpha1 "github.com/bufbuild/modules/private/gen/modulestate/v1alpha1"
+	statev1alpha1 "github.com/bufbuild/modules/private/gen/modules/state/v1alpha1"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -25,12 +25,12 @@ func TestValidModuleStates(t *testing.T) {
 	t.Parallel()
 	t.Run("empty", func(t *testing.T) {
 		t.Parallel()
-		assert.NoError(t, validateModuleState(&modulestatev1alpha1.ModuleState{}))
+		assert.NoError(t, validateModuleState(&statev1alpha1.ModuleState{}))
 	})
 	t.Run("valid", func(t *testing.T) {
 		t.Parallel()
-		assert.NoError(t, validateModuleState(&modulestatev1alpha1.ModuleState{
-			References: []*modulestatev1alpha1.ModuleReference{
+		assert.NoError(t, validateModuleState(&statev1alpha1.ModuleState{
+			References: []*statev1alpha1.ModuleReference{
 				{Name: "commit1", Digest: "foo"},
 				{Name: "commit2", Digest: "bar"},
 				{Name: "v1.23.4", Digest: "baz"},
@@ -42,8 +42,8 @@ func TestValidModuleStates(t *testing.T) {
 		// between those commits there were no changes in the relevant files that we
 		// sync.
 		t.Parallel()
-		assert.NoError(t, validateModuleState(&modulestatev1alpha1.ModuleState{
-			References: []*modulestatev1alpha1.ModuleReference{
+		assert.NoError(t, validateModuleState(&statev1alpha1.ModuleState{
+			References: []*statev1alpha1.ModuleReference{
 				{Name: "commit1", Digest: "foo"},
 				{Name: "commit2", Digest: "foo"},
 				{Name: "v1.23.4", Digest: "foo"},
@@ -56,8 +56,8 @@ func TestInvalidModuleStates(t *testing.T) {
 	t.Parallel()
 	t.Run("repeatedReferences", func(t *testing.T) {
 		t.Parallel()
-		assert.Error(t, validateModuleState(&modulestatev1alpha1.ModuleState{
-			References: []*modulestatev1alpha1.ModuleReference{
+		assert.Error(t, validateModuleState(&statev1alpha1.ModuleState{
+			References: []*statev1alpha1.ModuleReference{
 				{Name: "commit1", Digest: "foo"},
 				{Name: "commit1", Digest: "bar"},
 				{Name: "commit2", Digest: "baz"},
@@ -68,8 +68,8 @@ func TestInvalidModuleStates(t *testing.T) {
 		// even if the reference has no files or empty content, an empty manifest
 		// still has a digest.
 		t.Parallel()
-		assert.Error(t, validateModuleState(&modulestatev1alpha1.ModuleState{
-			References: []*modulestatev1alpha1.ModuleReference{
+		assert.Error(t, validateModuleState(&statev1alpha1.ModuleState{
+			References: []*statev1alpha1.ModuleReference{
 				{Name: "commit1", Digest: "foo"},
 				{Name: "commit2", Digest: ""},
 				{Name: "commit3", Digest: "baz"},
@@ -79,8 +79,8 @@ func TestInvalidModuleStates(t *testing.T) {
 	t.Run("emptyReferenceNames", func(t *testing.T) {
 		// all commits should have a valid, unique reference
 		t.Parallel()
-		assert.Error(t, validateModuleState(&modulestatev1alpha1.ModuleState{
-			References: []*modulestatev1alpha1.ModuleReference{
+		assert.Error(t, validateModuleState(&statev1alpha1.ModuleState{
+			References: []*statev1alpha1.ModuleReference{
 				{Name: "commit1", Digest: "foo"},
 				{Name: "", Digest: "foo"},
 				{Name: "commit3", Digest: "baz"},

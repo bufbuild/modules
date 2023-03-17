@@ -20,20 +20,20 @@ import (
 	"io"
 	"sort"
 
-	modulestatev1alpha1 "github.com/bufbuild/modules/private/gen/modulestate/v1alpha1"
+	statev1alpha1 "github.com/bufbuild/modules/private/gen/modules/state/v1alpha1"
 	"go.uber.org/multierr"
 )
 
 const GlobalStateFileName = "state.json"
 
 // ReadGlobalState reads a JSON encoded GlobalState from the given reader before closing it.
-func ReadGlobalState(reader io.ReadCloser) (_ *modulestatev1alpha1.GlobalState, retErr error) {
+func ReadGlobalState(reader io.ReadCloser) (_ *statev1alpha1.GlobalState, retErr error) {
 	defer func() {
 		if err := reader.Close(); err != nil {
 			retErr = multierr.Append(retErr, fmt.Errorf("close file: %w", err))
 		}
 	}()
-	var s modulestatev1alpha1.GlobalState
+	var s statev1alpha1.GlobalState
 	if err := json.NewDecoder(reader).Decode(&s); err != nil {
 		return nil, fmt.Errorf("read file: %w", err)
 	}
@@ -44,7 +44,7 @@ func ReadGlobalState(reader io.ReadCloser) (_ *modulestatev1alpha1.GlobalState, 
 }
 
 // WriteGlobalState takes a global state and writes it to the given writer before closing it.
-func WriteGlobalState(writer io.WriteCloser, s *modulestatev1alpha1.GlobalState) (retErr error) {
+func WriteGlobalState(writer io.WriteCloser, s *statev1alpha1.GlobalState) (retErr error) {
 	defer func() {
 		if err := writer.Close(); err != nil {
 			retErr = multierr.Append(retErr, fmt.Errorf("close file: %w", err))
@@ -69,7 +69,7 @@ func WriteGlobalState(writer io.WriteCloser, s *modulestatev1alpha1.GlobalState)
 }
 
 // validateGlobalState checks there are no repeated modules or empty values in names or references.
-func validateGlobalState(s *modulestatev1alpha1.GlobalState) error {
+func validateGlobalState(s *statev1alpha1.GlobalState) error {
 	mods := make(map[string]struct{}, len(s.GetModules()))
 	for _, mod := range s.GetModules() {
 		if len(mod.GetModuleName()) == 0 {
