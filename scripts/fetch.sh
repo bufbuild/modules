@@ -37,10 +37,8 @@ process_ref() {
   # relevant: each BSR cluster will sync itself from the base files and
   # regenerate its own `buf.lock`.
   pushd "${mod_tmp_path}" > /dev/null
-  tree .
-  buf mod update --debug
-  buf build --debug
-  cat buf.lock # TODO: remove
+  buf mod update
+  buf build
   rm buf.lock
   popd > /dev/null
 
@@ -94,16 +92,10 @@ sync_references() {
     echo "skipping module ${owner}/${repo}, no references to sync"
   else
     for reference in $(echo "${rev_list}"); do
-      echo "=== processing reference ${reference}"
       process_ref "${reference}"
     done
   fi
   popd > /dev/null
-
-  # TODO: remove: useful for local testing
-  cat "${all_mods_sync_path}/state.json"
-  tree "${mod_sync_path}"
-  cat "${mod_sync_path}/state.json"
 }
 
 get_commit_revlist() {
