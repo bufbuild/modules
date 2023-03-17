@@ -18,7 +18,7 @@ For feature requests, bugs, or technical questions, email us at [dev@buf.build](
 
 Offered under the [Apache 2 license][license].
 
-[bsr]: https://buf.build/explore
-[issue-template] https://github.com/bufbuild/modules/issues/new?assignees=&labels=Feature&template=managed-module-request-for-buf-schema-registry.md&title=Managed+Module+request+for+Buf+Schema+Registry
+[bsr]: https://buf.build/explore 
+[issue-template]: https://github.com/bufbuild/modules/issues/new?assignees=&labels=Feature&template=managed-module-request-for-buf-schema-registry.md&title=Managed+Module+request+for+Buf+Schema+Registry
 [license]: https://github.com/bufbuild/modules/blob/main/LICENSE
 [slack]: https://buf.build/links/slack
