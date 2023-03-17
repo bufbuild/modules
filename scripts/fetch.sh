@@ -23,7 +23,7 @@ process_ref() {
   local -r mod_tmp_path="$(mktemp -d)"
   dirs_to_delete+=("${mod_tmp_path}")
   local -r module_static_path="${repo_root}/modules/static/${owner}/${repo}"
-  git -c advice.detachedHead=false checkout "${mod_ref}"
+  git -c advice.detachedHead=false checkout "${mod_ref}" -q
   git clean -df
 
   # Copy only curated subset of files from that repo into a tmp module dir.
@@ -91,6 +91,7 @@ sync_references() {
     echo "skipping module ${owner}/${repo}, no references to sync"
   else
     for reference in $(echo "${rev_list}"); do
+      echo "processing reference ${owner}/${repo}:${reference}"
       process_ref "${reference}"
     done
   fi
