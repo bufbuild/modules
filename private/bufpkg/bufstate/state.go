@@ -37,7 +37,7 @@ func AppendModuleReference(
 	repoName string,
 	reference string,
 	digest string,
-) (retErr error) {
+) error {
 	modFilePath := filepath.Join(rootSyncDir, ownerName, repoName, ModStateFileName)
 	var modState *statev1alpha1.ModuleState
 	if _, err := os.Stat(modFilePath); err != nil {

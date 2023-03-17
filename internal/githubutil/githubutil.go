@@ -225,16 +225,16 @@ func (c *Client) downloadAsset(
 	if err != nil {
 		return nil, time.Time{}, err
 	}
-	rc, _, err := c.GitHub.Repositories.DownloadReleaseAsset(ctx, owner, repo, assetID, http.DefaultClient)
+	releaseAsset, _, err := c.GitHub.Repositories.DownloadReleaseAsset(ctx, owner, repo, assetID, http.DefaultClient)
 	if err != nil {
 		return nil, time.Time{}, err
 	}
 	defer func() {
-		if err := rc.Close(); err != nil {
+		if err := releaseAsset.Close(); err != nil {
 			_, _ = fmt.Fprintf(os.Stdout, "close: %v", err)
 		}
 	}()
-	contents, err := io.ReadAll(rc)
+	contents, err := io.ReadAll(releaseAsset)
 	if err != nil {
 		return nil, time.Time{}, err
 	}

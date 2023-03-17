@@ -34,7 +34,7 @@ const (
 )
 
 var (
-	skipTags = map[string]map[string]struct{}{
+	skipTags = map[string]map[string]struct{}{ //nolint:gochecknoglobals
 		"protocolbuffers/protobuf": {
 			"v3.4.1": {}, // v3.4.1 did not have protoc attached to it
 		},

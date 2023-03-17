@@ -33,32 +33,32 @@ func ReadGlobalState(reader io.ReadCloser) (_ *statev1alpha1.GlobalState, retErr
 			retErr = multierr.Append(retErr, fmt.Errorf("close file: %w", err))
 		}
 	}()
-	var s statev1alpha1.GlobalState
-	if err := json.NewDecoder(reader).Decode(&s); err != nil {
+	var globalState statev1alpha1.GlobalState
+	if err := json.NewDecoder(reader).Decode(&globalState); err != nil {
 		return nil, fmt.Errorf("read file: %w", err)
 	}
-	if err := validateGlobalState(&s); err != nil {
+	if err := validateGlobalState(&globalState); err != nil {
 		return nil, fmt.Errorf("invalid global state: %w", err)
 	}
-	return &s, nil
+	return &globalState, nil
 }
 
 // WriteGlobalState takes a global state and writes it to the given writer before closing it.
-func WriteGlobalState(writer io.WriteCloser, s *statev1alpha1.GlobalState) (retErr error) {
+func WriteGlobalState(writer io.WriteCloser, globalState *statev1alpha1.GlobalState) (retErr error) {
 	defer func() {
 		if err := writer.Close(); err != nil {
 			retErr = multierr.Append(retErr, fmt.Errorf("close file: %w", err))
 		}
 	}()
-	if err := validateGlobalState(s); err != nil {
+	if err := validateGlobalState(globalState); err != nil {
 		return fmt.Errorf("invalid global state: %w", err)
 	}
-	mods := s.GetModules()
+	mods := globalState.GetModules()
 	sort.Slice(mods, func(i, j int) bool {
 		return mods[i].GetModuleName() < mods[j].GetModuleName()
 	})
-	s.Modules = mods
-	data, err := json.MarshalIndent(s, "", "  ")
+	globalState.Modules = mods
+	data, err := json.MarshalIndent(globalState, "", "  ")
 	if err != nil {
 		return fmt.Errorf("json marshal state: %w", err)
 	}

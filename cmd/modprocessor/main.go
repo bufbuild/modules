@@ -181,16 +181,16 @@ func writeBlobInDir(ctx context.Context, blob manifest.Blob, dir string) (retErr
 			retErr = multierr.Append(retErr, fmt.Errorf("close file: %w", err))
 		}
 	}()
-	rc, err := blob.Open(ctx)
+	readCloser, err := blob.Open(ctx)
 	if err != nil {
 		return fmt.Errorf("open blob: %w", err)
 	}
 	defer func() {
-		if err := rc.Close(); err != nil {
+		if err := readCloser.Close(); err != nil {
 			retErr = multierr.Append(retErr, fmt.Errorf("close blob: %w", err))
 		}
 	}()
-	if _, err := io.Copy(file, rc); err != nil {
+	if _, err := io.Copy(file, readCloser); err != nil {
 		return fmt.Errorf("copy to file: %w", err)
 	}
 	return nil

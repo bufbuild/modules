@@ -119,11 +119,15 @@ func TestCalculateNewReleaseModules(t *testing.T) {
 func TestMapGlobalStateReferences(t *testing.T) {
 	t.Parallel()
 	t.Run("nil_state", func(t *testing.T) {
+		t.Parallel()
+
 		var globalState *statev1alpha1.GlobalState
 		got := mapGlobalStateReferences(globalState)
 		require.Equal(t, map[string]string(nil), got)
 	})
 	t.Run("not_nil_state", func(t *testing.T) {
+		t.Parallel()
+
 		globalState := &statev1alpha1.GlobalState{
 			Modules: []*statev1alpha1.GlobalStateReference{
 				{
@@ -301,6 +305,8 @@ func TestCreateReleaseBody(t *testing.T) {
 }
 
 func TestWriteReferencesTable(t *testing.T) {
+	t.Parallel()
+
 	populateReferences := func(refsCount int) []*statev1alpha1.ModuleReference {
 		refs := make([]*statev1alpha1.ModuleReference, refsCount)
 		for i := 0; i < refsCount; i++ {
@@ -312,12 +318,14 @@ func TestWriteReferencesTable(t *testing.T) {
 		return refs
 	}
 	t.Run("lessThanLimit", func(t *testing.T) {
+		t.Parallel()
+
 		const (
 			moduleName = "foo/bar"
 			refsCount  = 5
 		)
-		var sb strings.Builder
-		require.NoError(t, writeUpdatedReferencesTable(&sb, moduleName, populateReferences(refsCount)))
+		var strBuilder strings.Builder
+		require.NoError(t, writeUpdatedReferencesTable(&strBuilder, moduleName, populateReferences(refsCount)))
 		const want = `<details><summary>foo/bar: 5 update(s)</summary>
 
 | Reference | Manifest Digest |
@@ -330,15 +338,17 @@ func TestWriteReferencesTable(t *testing.T) {
 
 </details>
 `
-		assert.Equal(t, want, sb.String())
+		assert.Equal(t, want, strBuilder.String())
 	})
 	t.Run("rightInTheLimit", func(t *testing.T) {
+		t.Parallel()
+
 		const (
 			moduleName = "foo/bar"
 			refsCount  = 10
 		)
-		var sb strings.Builder
-		require.NoError(t, writeUpdatedReferencesTable(&sb, moduleName, populateReferences(refsCount)))
+		var strBuilder strings.Builder
+		require.NoError(t, writeUpdatedReferencesTable(&strBuilder, moduleName, populateReferences(refsCount)))
 		const want = `<details><summary>foo/bar: 10 update(s)</summary>
 
 | Reference | Manifest Digest |
@@ -356,15 +366,17 @@ func TestWriteReferencesTable(t *testing.T) {
 
 </details>
 `
-		assert.Equal(t, want, sb.String())
+		assert.Equal(t, want, strBuilder.String())
 	})
 	t.Run("afterLimit", func(t *testing.T) {
+		t.Parallel()
+
 		const (
 			moduleName = "foo/bar"
 			refsCount  = 100
 		)
-		var sb strings.Builder
-		require.NoError(t, writeUpdatedReferencesTable(&sb, moduleName, populateReferences(refsCount)))
+		var strBuilder strings.Builder
+		require.NoError(t, writeUpdatedReferencesTable(&strBuilder, moduleName, populateReferences(refsCount)))
 		const want = `<details><summary>foo/bar: 100 update(s)</summary>
 
 | Reference | Manifest Digest |
@@ -383,6 +395,6 @@ func TestWriteReferencesTable(t *testing.T) {
 
 </details>
 `
-		assert.Equal(t, want, sb.String())
+		assert.Equal(t, want, strBuilder.String())
 	})
 }
