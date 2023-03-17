@@ -10,7 +10,7 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "98c303c996d33de57b06237f54d0dc918864463a"
+      "latest_reference": "a17e9d531878c60da5fde21519b082aeb7d50ba9"
     },
     {
       "module_name": "opencensus/opencensus",
@@ -19,6 +19,10 @@
     {
       "module_name": "opentelemetry/opentelemetry",
       "latest_reference": "4b23e936e1c7b76244ac0c3f77e023b42dad7c6e"
+    },
+    {
+      "module_name": "protocolbuffers/wellknowntypes",
+      "latest_reference": "v22.2"
     }
   ]
 }

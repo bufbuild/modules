@@ -1,0 +1,312 @@
+{
+  "references": [
+    {
+      "name": "v3.0.0",
+      "digest": "be29eb083f3e5f1c2d48756a43c13f0a388ce20ebb1b1064f91523ab6e3e6c32cf69deb4c268124acf8d45269dcd2d3180cad58da5ec6cb1c20f863c2809b8d5"
+    },
+    {
+      "name": "v3.0.2",
+      "digest": "be29eb083f3e5f1c2d48756a43c13f0a388ce20ebb1b1064f91523ab6e3e6c32cf69deb4c268124acf8d45269dcd2d3180cad58da5ec6cb1c20f863c2809b8d5"
+    },
+    {
+      "name": "v3.1.0",
+      "digest": "80301ffd8af10ba9c0638aab217ee6436fe2bee0ec3f36c583cc79e7f411fb228bbdcdbe229d68970076ad4b6dfe041c7541adde4ac386ae2a346714c6e5dcf7"
+    },
+    {
+      "name": "v3.2.0",
+      "digest": "fc16bb6e18ed698078a3ca80559636698e8853844d87ee05420f9b661b29601d87581899eb4ee790267fdf569fd9b76bcc16b145b0ca6653d415aad06c37f54f"
+    },
+    {
+      "name": "v3.3.0",
+      "digest": "839118d5f11f8613601653deadd55cb7b059c641cdad6a76c6d49e9dfbe08031841c0286c3f8cafe2f4c3cb5e1b2d315d2d6be232fc1f79ec987ec583b128664"
+    },
+    {
+      "name": "v3.4.0",
+      "digest": "7f7bd4654f74ccc02669e7eb87cfcdeb5863eb7315ebf2eb5f2b3e3249368ee2698667cf1c8d778eaf4624d5d107327db92ce4844e7d5cc811ea005777ee700d"
+    },
+    {
+      "name": "v3.5.0",
+      "digest": "2765bda78e307161c98c52ad540edc8697fe7d2d65599dfaabcf75c7f9eb0b1ffa46408a222249a10c56fd72a6d2abb7001ee93f869a27496f883e958cbbaf45"
+    },
+    {
+      "name": "v3.5.1",
+      "digest": "2765bda78e307161c98c52ad540edc8697fe7d2d65599dfaabcf75c7f9eb0b1ffa46408a222249a10c56fd72a6d2abb7001ee93f869a27496f883e958cbbaf45"
+    },
+    {
+      "name": "v3.6.0",
+      "digest": "73749e27a232ecb9adffb54b6f0c6be0ce4b813acba41e90a24ee2ea9b3144814568ab670d5575943dfa593246150ddb41e1157899defe7e253077809351b245"
+    },
+    {
+      "name": "v3.6.1",
+      "digest": "73749e27a232ecb9adffb54b6f0c6be0ce4b813acba41e90a24ee2ea9b3144814568ab670d5575943dfa593246150ddb41e1157899defe7e253077809351b245"
+    },
+    {
+      "name": "v3.7.0",
+      "digest": "322f8fd2e1dd70795f9f45a2d30b1f6ae62f6ffa9c08f42a9bc1b4503869a851558ef6fe278c9420b8d3c3099c0c64a29b573f13cac5b7a4467d540d04a77b2f"
+    },
+    {
+      "name": "v3.7.1",
+      "digest": "322f8fd2e1dd70795f9f45a2d30b1f6ae62f6ffa9c08f42a9bc1b4503869a851558ef6fe278c9420b8d3c3099c0c64a29b573f13cac5b7a4467d540d04a77b2f"
+    },
+    {
+      "name": "v3.8.0",
+      "digest": "efc4a3eb4e5a7390d5951b9a1d925f0274827eca56a968f84e28b253a5611afe8f28d4baf52b43d9cc1e8da334511926c5fa7e6ffd7a17bf28f4e9f4cc3fcc56"
+    },
+    {
+      "name": "v3.9.0",
+      "digest": "84074ab35078e0692af81cf9994bb29fa2e9028c15725f15e74e0ff2c82b3d1aba5c9f4bf8ad269ad07ef6fe46e61b07125a193362a059090d3051604828dbfa"
+    },
+    {
+      "name": "v3.9.1",
+      "digest": "84074ab35078e0692af81cf9994bb29fa2e9028c15725f15e74e0ff2c82b3d1aba5c9f4bf8ad269ad07ef6fe46e61b07125a193362a059090d3051604828dbfa"
+    },
+    {
+      "name": "v3.9.2",
+      "digest": "84074ab35078e0692af81cf9994bb29fa2e9028c15725f15e74e0ff2c82b3d1aba5c9f4bf8ad269ad07ef6fe46e61b07125a193362a059090d3051604828dbfa"
+    },
+    {
+      "name": "v3.10.0",
+      "digest": "664c64ee6e6118f1ffe65d09eb796910b70fdb8b6ec72ff03aa966f8ff296c869ee4ede885d73306298b0d2daa54d46348359bca3478d4deccfd2db1d5db6725"
+    },
+    {
+      "name": "v3.10.1",
+      "digest": "664c64ee6e6118f1ffe65d09eb796910b70fdb8b6ec72ff03aa966f8ff296c869ee4ede885d73306298b0d2daa54d46348359bca3478d4deccfd2db1d5db6725"
+    },
+    {
+      "name": "v3.11.0",
+      "digest": "033f108301b77e1d4750f83f75f8c68c472e5692d14dd643be24668213b34a088862b0fbbf0ef6bf74f23c6febc306e8c63efc31820af46bb2df09d8aa8e14aa"
+    },
+    {
+      "name": "v3.11.1",
+      "digest": "033f108301b77e1d4750f83f75f8c68c472e5692d14dd643be24668213b34a088862b0fbbf0ef6bf74f23c6febc306e8c63efc31820af46bb2df09d8aa8e14aa"
+    },
+    {
+      "name": "v3.11.2",
+      "digest": "033f108301b77e1d4750f83f75f8c68c472e5692d14dd643be24668213b34a088862b0fbbf0ef6bf74f23c6febc306e8c63efc31820af46bb2df09d8aa8e14aa"
+    },
+    {
+      "name": "v3.11.3",
+      "digest": "033f108301b77e1d4750f83f75f8c68c472e5692d14dd643be24668213b34a088862b0fbbf0ef6bf74f23c6febc306e8c63efc31820af46bb2df09d8aa8e14aa"
+    },
+    {
+      "name": "v3.11.4",
+      "digest": "033f108301b77e1d4750f83f75f8c68c472e5692d14dd643be24668213b34a088862b0fbbf0ef6bf74f23c6febc306e8c63efc31820af46bb2df09d8aa8e14aa"
+    },
+    {
+      "name": "v3.12.0",
+      "digest": "69045007e337c6b5ea7bf4753097586c904df156f339a6b5604229cc94a473cfef154c3b76ea48f131cf093afa6d2ccec4d7f064a9d06f372c025b983825ed67"
+    },
+    {
+      "name": "v3.12.1",
+      "digest": "69045007e337c6b5ea7bf4753097586c904df156f339a6b5604229cc94a473cfef154c3b76ea48f131cf093afa6d2ccec4d7f064a9d06f372c025b983825ed67"
+    },
+    {
+      "name": "v3.12.2",
+      "digest": "69045007e337c6b5ea7bf4753097586c904df156f339a6b5604229cc94a473cfef154c3b76ea48f131cf093afa6d2ccec4d7f064a9d06f372c025b983825ed67"
+    },
+    {
+      "name": "v3.12.3",
+      "digest": "69045007e337c6b5ea7bf4753097586c904df156f339a6b5604229cc94a473cfef154c3b76ea48f131cf093afa6d2ccec4d7f064a9d06f372c025b983825ed67"
+    },
+    {
+      "name": "v3.12.4",
+      "digest": "69045007e337c6b5ea7bf4753097586c904df156f339a6b5604229cc94a473cfef154c3b76ea48f131cf093afa6d2ccec4d7f064a9d06f372c025b983825ed67"
+    },
+    {
+      "name": "v3.13.0",
+      "digest": "69045007e337c6b5ea7bf4753097586c904df156f339a6b5604229cc94a473cfef154c3b76ea48f131cf093afa6d2ccec4d7f064a9d06f372c025b983825ed67"
+    },
+    {
+      "name": "v3.14.0",
+      "digest": "88a1129074f5b3aef9156feda5a5d988873ac7baaf91e35bf48d47fe2ac8bbe6414474efec7ac1531f2f2257611185218e0a3c82e34b5fff51dd022a6bbef6eb"
+    },
+    {
+      "name": "v3.15.0",
+      "digest": "88a1129074f5b3aef9156feda5a5d988873ac7baaf91e35bf48d47fe2ac8bbe6414474efec7ac1531f2f2257611185218e0a3c82e34b5fff51dd022a6bbef6eb"
+    },
+    {
+      "name": "v3.15.1",
+      "digest": "88a1129074f5b3aef9156feda5a5d988873ac7baaf91e35bf48d47fe2ac8bbe6414474efec7ac1531f2f2257611185218e0a3c82e34b5fff51dd022a6bbef6eb"
+    },
+    {
+      "name": "v3.15.2",
+      "digest": "88a1129074f5b3aef9156feda5a5d988873ac7baaf91e35bf48d47fe2ac8bbe6414474efec7ac1531f2f2257611185218e0a3c82e34b5fff51dd022a6bbef6eb"
+    },
+    {
+      "name": "v3.15.3",
+      "digest": "88a1129074f5b3aef9156feda5a5d988873ac7baaf91e35bf48d47fe2ac8bbe6414474efec7ac1531f2f2257611185218e0a3c82e34b5fff51dd022a6bbef6eb"
+    },
+    {
+      "name": "v3.15.4",
+      "digest": "88a1129074f5b3aef9156feda5a5d988873ac7baaf91e35bf48d47fe2ac8bbe6414474efec7ac1531f2f2257611185218e0a3c82e34b5fff51dd022a6bbef6eb"
+    },
+    {
+      "name": "v3.15.5",
+      "digest": "88a1129074f5b3aef9156feda5a5d988873ac7baaf91e35bf48d47fe2ac8bbe6414474efec7ac1531f2f2257611185218e0a3c82e34b5fff51dd022a6bbef6eb"
+    },
+    {
+      "name": "v3.15.6",
+      "digest": "88a1129074f5b3aef9156feda5a5d988873ac7baaf91e35bf48d47fe2ac8bbe6414474efec7ac1531f2f2257611185218e0a3c82e34b5fff51dd022a6bbef6eb"
+    },
+    {
+      "name": "v3.15.7",
+      "digest": "88a1129074f5b3aef9156feda5a5d988873ac7baaf91e35bf48d47fe2ac8bbe6414474efec7ac1531f2f2257611185218e0a3c82e34b5fff51dd022a6bbef6eb"
+    },
+    {
+      "name": "v3.15.8",
+      "digest": "88a1129074f5b3aef9156feda5a5d988873ac7baaf91e35bf48d47fe2ac8bbe6414474efec7ac1531f2f2257611185218e0a3c82e34b5fff51dd022a6bbef6eb"
+    },
+    {
+      "name": "v3.16.0",
+      "digest": "ba90437ac55a0a8addda6b80acb576366c75ff5ee23306cb554fce342c94df5e0736991ae00bb4b44e449da371d42e2138395e34ff5d1b76feed7ebe6d8b4b02"
+    },
+    {
+      "name": "v3.16.1",
+      "digest": "ba90437ac55a0a8addda6b80acb576366c75ff5ee23306cb554fce342c94df5e0736991ae00bb4b44e449da371d42e2138395e34ff5d1b76feed7ebe6d8b4b02"
+    },
+    {
+      "name": "v3.16.3",
+      "digest": "ba90437ac55a0a8addda6b80acb576366c75ff5ee23306cb554fce342c94df5e0736991ae00bb4b44e449da371d42e2138395e34ff5d1b76feed7ebe6d8b4b02"
+    },
+    {
+      "name": "v3.17.0",
+      "digest": "ba90437ac55a0a8addda6b80acb576366c75ff5ee23306cb554fce342c94df5e0736991ae00bb4b44e449da371d42e2138395e34ff5d1b76feed7ebe6d8b4b02"
+    },
+    {
+      "name": "v3.17.1",
+      "digest": "ba90437ac55a0a8addda6b80acb576366c75ff5ee23306cb554fce342c94df5e0736991ae00bb4b44e449da371d42e2138395e34ff5d1b76feed7ebe6d8b4b02"
+    },
+    {
+      "name": "v3.17.2",
+      "digest": "ba90437ac55a0a8addda6b80acb576366c75ff5ee23306cb554fce342c94df5e0736991ae00bb4b44e449da371d42e2138395e34ff5d1b76feed7ebe6d8b4b02"
+    },
+    {
+      "name": "v3.17.3",
+      "digest": "ba90437ac55a0a8addda6b80acb576366c75ff5ee23306cb554fce342c94df5e0736991ae00bb4b44e449da371d42e2138395e34ff5d1b76feed7ebe6d8b4b02"
+    },
+    {
+      "name": "v3.18.0",
+      "digest": "ba90437ac55a0a8addda6b80acb576366c75ff5ee23306cb554fce342c94df5e0736991ae00bb4b44e449da371d42e2138395e34ff5d1b76feed7ebe6d8b4b02"
+    },
+    {
+      "name": "v3.18.1",
+      "digest": "ba90437ac55a0a8addda6b80acb576366c75ff5ee23306cb554fce342c94df5e0736991ae00bb4b44e449da371d42e2138395e34ff5d1b76feed7ebe6d8b4b02"
+    },
+    {
+      "name": "v3.18.2",
+      "digest": "ba90437ac55a0a8addda6b80acb576366c75ff5ee23306cb554fce342c94df5e0736991ae00bb4b44e449da371d42e2138395e34ff5d1b76feed7ebe6d8b4b02"
+    },
+    {
+      "name": "v3.18.3",
+      "digest": "ba90437ac55a0a8addda6b80acb576366c75ff5ee23306cb554fce342c94df5e0736991ae00bb4b44e449da371d42e2138395e34ff5d1b76feed7ebe6d8b4b02"
+    },
+    {
+      "name": "v3.19.0",
+      "digest": "26bc4f6bc71794d304b12997cf89e1f1b0d8b259b4c30cf134aca04085bfc8d31708676e62c6148a6cc56ca69b3ff361761e7c87d39f90047dd110c32ac453c0"
+    },
+    {
+      "name": "v3.19.1",
+      "digest": "26bc4f6bc71794d304b12997cf89e1f1b0d8b259b4c30cf134aca04085bfc8d31708676e62c6148a6cc56ca69b3ff361761e7c87d39f90047dd110c32ac453c0"
+    },
+    {
+      "name": "v3.19.2",
+      "digest": "26bc4f6bc71794d304b12997cf89e1f1b0d8b259b4c30cf134aca04085bfc8d31708676e62c6148a6cc56ca69b3ff361761e7c87d39f90047dd110c32ac453c0"
+    },
+    {
+      "name": "v3.19.3",
+      "digest": "26bc4f6bc71794d304b12997cf89e1f1b0d8b259b4c30cf134aca04085bfc8d31708676e62c6148a6cc56ca69b3ff361761e7c87d39f90047dd110c32ac453c0"
+    },
+    {
+      "name": "v3.19.4",
+      "digest": "26bc4f6bc71794d304b12997cf89e1f1b0d8b259b4c30cf134aca04085bfc8d31708676e62c6148a6cc56ca69b3ff361761e7c87d39f90047dd110c32ac453c0"
+    },
+    {
+      "name": "v3.19.5",
+      "digest": "26bc4f6bc71794d304b12997cf89e1f1b0d8b259b4c30cf134aca04085bfc8d31708676e62c6148a6cc56ca69b3ff361761e7c87d39f90047dd110c32ac453c0"
+    },
+    {
+      "name": "v3.19.6",
+      "digest": "26bc4f6bc71794d304b12997cf89e1f1b0d8b259b4c30cf134aca04085bfc8d31708676e62c6148a6cc56ca69b3ff361761e7c87d39f90047dd110c32ac453c0"
+    },
+    {
+      "name": "v3.20.0",
+      "digest": "c4ecb9a94ceb21ddcfa61c672f20b42f8f4d2c5698d2ac61406dd4d7fee94e735c776ceadd6271ef97122cea88845878258d1cb4137a654af6dd1c93b634bde3"
+    },
+    {
+      "name": "v3.20.1",
+      "digest": "c4ecb9a94ceb21ddcfa61c672f20b42f8f4d2c5698d2ac61406dd4d7fee94e735c776ceadd6271ef97122cea88845878258d1cb4137a654af6dd1c93b634bde3"
+    },
+    {
+      "name": "v3.20.2",
+      "digest": "c4ecb9a94ceb21ddcfa61c672f20b42f8f4d2c5698d2ac61406dd4d7fee94e735c776ceadd6271ef97122cea88845878258d1cb4137a654af6dd1c93b634bde3"
+    },
+    {
+      "name": "v3.20.3",
+      "digest": "c4ecb9a94ceb21ddcfa61c672f20b42f8f4d2c5698d2ac61406dd4d7fee94e735c776ceadd6271ef97122cea88845878258d1cb4137a654af6dd1c93b634bde3"
+    },
+    {
+      "name": "v21.0",
+      "digest": "b1768a0e5e6795e05787eb603be20c6192acdfd823320944635f3357ba95f4c00456725dbb80ab54830ceb45f6fcd136451d9297d903917556ee931f0d769256"
+    },
+    {
+      "name": "v21.1",
+      "digest": "b1768a0e5e6795e05787eb603be20c6192acdfd823320944635f3357ba95f4c00456725dbb80ab54830ceb45f6fcd136451d9297d903917556ee931f0d769256"
+    },
+    {
+      "name": "v21.2",
+      "digest": "b1768a0e5e6795e05787eb603be20c6192acdfd823320944635f3357ba95f4c00456725dbb80ab54830ceb45f6fcd136451d9297d903917556ee931f0d769256"
+    },
+    {
+      "name": "v21.3",
+      "digest": "b1768a0e5e6795e05787eb603be20c6192acdfd823320944635f3357ba95f4c00456725dbb80ab54830ceb45f6fcd136451d9297d903917556ee931f0d769256"
+    },
+    {
+      "name": "v21.4",
+      "digest": "b1768a0e5e6795e05787eb603be20c6192acdfd823320944635f3357ba95f4c00456725dbb80ab54830ceb45f6fcd136451d9297d903917556ee931f0d769256"
+    },
+    {
+      "name": "v21.5",
+      "digest": "b1768a0e5e6795e05787eb603be20c6192acdfd823320944635f3357ba95f4c00456725dbb80ab54830ceb45f6fcd136451d9297d903917556ee931f0d769256"
+    },
+    {
+      "name": "v21.6",
+      "digest": "b1768a0e5e6795e05787eb603be20c6192acdfd823320944635f3357ba95f4c00456725dbb80ab54830ceb45f6fcd136451d9297d903917556ee931f0d769256"
+    },
+    {
+      "name": "v21.7",
+      "digest": "b1768a0e5e6795e05787eb603be20c6192acdfd823320944635f3357ba95f4c00456725dbb80ab54830ceb45f6fcd136451d9297d903917556ee931f0d769256"
+    },
+    {
+      "name": "v21.8",
+      "digest": "b1768a0e5e6795e05787eb603be20c6192acdfd823320944635f3357ba95f4c00456725dbb80ab54830ceb45f6fcd136451d9297d903917556ee931f0d769256"
+    },
+    {
+      "name": "v21.9",
+      "digest": "b1768a0e5e6795e05787eb603be20c6192acdfd823320944635f3357ba95f4c00456725dbb80ab54830ceb45f6fcd136451d9297d903917556ee931f0d769256"
+    },
+    {
+      "name": "v21.10",
+      "digest": "b1768a0e5e6795e05787eb603be20c6192acdfd823320944635f3357ba95f4c00456725dbb80ab54830ceb45f6fcd136451d9297d903917556ee931f0d769256"
+    },
+    {
+      "name": "v21.11",
+      "digest": "b1768a0e5e6795e05787eb603be20c6192acdfd823320944635f3357ba95f4c00456725dbb80ab54830ceb45f6fcd136451d9297d903917556ee931f0d769256"
+    },
+    {
+      "name": "v21.12",
+      "digest": "b1768a0e5e6795e05787eb603be20c6192acdfd823320944635f3357ba95f4c00456725dbb80ab54830ceb45f6fcd136451d9297d903917556ee931f0d769256"
+    },
+    {
+      "name": "v22.0",
+      "digest": "1425bbd540b7ef55e8d0afa691930fb4a7ebf1fb08beb6cf421cf89d0ae335da7aeb7ac5cc7681a7fd48d4760cd22becf6be245c9ee20626d4ed516963d41b4f"
+    },
+    {
+      "name": "v22.1",
+      "digest": "1425bbd540b7ef55e8d0afa691930fb4a7ebf1fb08beb6cf421cf89d0ae335da7aeb7ac5cc7681a7fd48d4760cd22becf6be245c9ee20626d4ed516963d41b4f"
+    },
+    {
+      "name": "v22.2",
+      "digest": "1425bbd540b7ef55e8d0afa691930fb4a7ebf1fb08beb6cf421cf89d0ae335da7aeb7ac5cc7681a7fd48d4760cd22becf6be245c9ee20626d4ed516963d41b4f"
+    }
+  ]
+}
