@@ -14,7 +14,7 @@
 
 syntax = "proto3";
 
-package modulestate.v1alpha1;
+package state.v1alpha1;
 
 // GlobalState is a sorted array managed modules, each one with the latest
 // reference from its local array of references. This is kept updated in a

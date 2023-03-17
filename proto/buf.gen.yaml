@@ -5,5 +5,5 @@ managed:
     default: github.com/bufbuild/modules/private/gen
 plugins:
   - plugin: buf.build/protocolbuffers/go
-    out: private/gen
+    out: private/gen/modules
     opt: paths=source_relative
