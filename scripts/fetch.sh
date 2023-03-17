@@ -27,8 +27,7 @@ process_ref() {
   git clean -df
 
   # Copy only curated subset of files from that repo into a tmp module dir.
-  cat "${module_static_path}/rsync.incl" # TODO: remove
-  rsync -amRv --include-from="${module_static_path}/rsync.incl" . "${mod_tmp_path}"
+  rsync -amR --include-from="${module_static_path}/rsync.incl" . "${mod_tmp_path}"
   cp "${module_static_path}/buf.md" "${mod_tmp_path}"
   cp "${module_static_path}/buf.yaml" "${mod_tmp_path}"
 
