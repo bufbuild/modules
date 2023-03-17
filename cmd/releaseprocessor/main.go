@@ -28,9 +28,10 @@ import (
 )
 
 const (
-	ownerFlagName   = "owner"
-	repoFlagName    = "repo"
-	initRefFlagName = "ref"
+	ownerFlagName     = "owner"
+	repoFlagName      = "repo"
+	referenceFlagName = "reference"
+	inclusiveFlagName = "inclusive"
 )
 
 var (
@@ -42,15 +43,17 @@ var (
 )
 
 type command struct {
-	owner string
-	repo  string
-	ref   string
+	owner     string
+	repo      string
+	reference string
+	inclusive bool
 }
 
 func newCmd(
 	owner string,
 	repo string,
-	modRef string,
+	reference string,
+	inclusive bool,
 ) (*command, error) {
 	var err error
 	if len(owner) == 0 {
@@ -59,27 +62,29 @@ func newCmd(
 	if len(repo) == 0 {
 		err = multierr.Append(err, fmt.Errorf("%s is required", repoFlagName))
 	}
-	if len(modRef) == 0 {
-		err = multierr.Append(err, fmt.Errorf("%s is required", initRefFlagName))
+	if len(reference) == 0 {
+		err = multierr.Append(err, fmt.Errorf("%s is required", referenceFlagName))
 	}
 	if err != nil {
 		return nil, err
 	}
 	return &command{
-		owner: owner,
-		repo:  repo,
-		ref:   modRef,
+		owner:     owner,
+		repo:      repo,
+		reference: reference,
+		inclusive: inclusive,
 	}, nil
 }
 
 func main() {
 	var (
-		owner   = flag.String(ownerFlagName, "", "Managed module owner name.")
-		repo    = flag.String(repoFlagName, "", "Managed module repository name.")
-		initRef = flag.String(initRefFlagName, "", "Managed module reference to fetch new release tags from.")
+		owner     = flag.String(ownerFlagName, "", "Managed module owner name.")
+		repo      = flag.String(repoFlagName, "", "Managed module repository name.")
+		reference = flag.String(referenceFlagName, "", "Managed module reference to fetch new release tags from.")
+		inclusive = flag.Bool(inclusiveFlagName, false, "Include passed reference in the output revision list.")
 	)
 	flag.Parse()
-	cmd, err := newCmd(*owner, *repo, *initRef)
+	cmd, err := newCmd(*owner, *repo, *reference, *inclusive)
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "cannot run release processor: %v\n\nusage: releaseprocessor [flags]\n\n", err)
 		flag.PrintDefaults()
@@ -105,7 +110,10 @@ func (c *command) run() error {
 		ignoreTags = make(map[string]struct{}) // avoid nil panic
 	}
 	stableSemverTagNames := semverutil.StableSemverTagNames(semverutil.SemverTagNames(releaseTagNames))
-	filteredSemverTagNames := semverutil.SemverTagNamesExcept(semverutil.SemverTagNamesAtLeast(stableSemverTagNames, c.ref), ignoreTags)
+	filteredSemverTagNames := semverutil.SemverTagNamesExcept(
+		semverutil.SemverTagNamesAtLeast(stableSemverTagNames, c.reference, c.inclusive),
+		ignoreTags,
+	)
 	semverutil.SortSemverTagNames(filteredSemverTagNames)
 	// write the release tags to stdout, separated by line breaks so that
 	// assignment to a bash variable can interpret it as a list
