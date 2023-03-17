@@ -54,10 +54,11 @@ func StableSemverTagNames(semverTagNames []string) []string {
 }
 
 // SemverTagNamesAtLeast gets the semver tag names that are at least the minimum tag name.
-func SemverTagNamesAtLeast(semverTagNames []string, minimumSemverTagName string) []string {
+func SemverTagNamesAtLeast(semverTagNames []string, minimumSemverTagName string, inclusive bool) []string {
 	atLeastTagNames := make([]string, 0, len(semverTagNames))
 	for _, semverTagName := range semverTagNames {
-		if semver.Compare(semverTagName, minimumSemverTagName) >= 0 {
+		compare := semver.Compare(semverTagName, minimumSemverTagName)
+		if compare > 0 || (compare == 0 && inclusive) {
 			atLeastTagNames = append(atLeastTagNames, semverTagName)
 		}
 	}

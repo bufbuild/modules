@@ -86,16 +86,18 @@ sync_references() {
   local rev_list
   if [ "${sync_strategy}" == "releases" ]; then
     rev_list=$(get_release_revlist)
-    # fetch tags so we're able to checkout to them
-    git fetch --tags
   else
     rev_list=$(get_commit_revlist)
   fi
 
-  for reference in $(echo "${rev_list}"); do
-    echo "=== processing reference ${reference}"
-    process_ref "${reference}"
-  done
+  if [ -z "${rev_list}" ]; then
+    echo "skipping module ${owner}/${repo}, no references to sync"
+  else
+    for reference in $(echo "${rev_list}"); do
+      echo "=== processing reference ${reference}"
+      process_ref "${reference}"
+    done
+  fi
   popd > /dev/null
 
   # TODO: remove: useful for local testing
@@ -126,12 +128,15 @@ get_commit_revlist() {
 
 get_release_revlist() {
   local mod_ref
+  local inclusive
   if [ -f "${mod_state_file}" ]; then
     mod_ref="$(cat "${mod_state_file}" | jq -r '.references | last.name')"
+    inclusive=false
     log "latest reference for module ${owner}/${repo}: ${mod_ref}"
   elif [ -f "${mod_initref_file}" ]; then
     log "state file not found: ${mod_state_file}"
     mod_ref="$(cat "${mod_initref_file}")"
+    inclusive=true
     log "falling back to initializing reference for module ${owner}/${repo}: ${mod_ref}"
   else
     log "module ${owner}/${repo} has no initializing reference"
@@ -142,8 +147,13 @@ get_release_revlist() {
   release_rev_list=$(go run "${repo_root}/cmd/releaseprocessor" \
     --owner="${git_owner}" \
     --repo="${git_repo}" \
-    --ref="${mod_ref}")
+    --reference="${mod_ref}" \
+    --inclusive="${inclusive}")
   popd > /dev/null
+  if [ -n "${release_rev_list}" ]; then
+    # fetch tags so we're able to checkout to them
+    git fetch --tags
+  fi
   echo "${release_rev_list}"
 }
 
@@ -168,7 +178,7 @@ trap cleanup EXIT
 # the dependent modules.
 
 # sync_references ${sync_strategy} ${owner} ${repo} ${git_remote} ${opt_proto_subdir}
-# sync_references commits cncf xds https://github.com/cncf/xds # depends on [envoyproxy/protoc-gen-validate, googleapis/googleapis]
+sync_references commits cncf xds https://github.com/cncf/xds # depends on [envoyproxy/protoc-gen-validate, googleapis/googleapis]
 # sync_references commits envoyproxy envoy https://github.com/envoyproxy/envoy api # depends on [cncf/xds, googleapis/googleapis, opencensus/opencensus, opentelemetry/opentelemetry, prometheus/client-model]
 sync_references commits envoyproxy protoc-gen-validate https://github.com/envoyproxy/protoc-gen-validate
 sync_references commits gogo protobuf https://github.com/gogo/protobuf
