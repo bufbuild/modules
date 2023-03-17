@@ -22,7 +22,7 @@ import (
 
 	"github.com/bufbuild/modules/internal/modules"
 	"github.com/bufbuild/modules/private/bufpkg/bufstate"
-	modulestatev1alpha1 "github.com/bufbuild/modules/private/gen/modulestate/v1alpha1"
+	statev1alpha1 "github.com/bufbuild/modules/private/gen/modules/state/v1alpha1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -39,7 +39,7 @@ func TestCalculateNewReleaseModules(t *testing.T) {
 		require.Equal(t, map[string]releaseModuleState{
 			"envoyproxy/envoy": {
 				status: modules.New,
-				references: []*modulestatev1alpha1.ModuleReference{{
+				references: []*statev1alpha1.ModuleReference{{
 					Name:   "bb554f53ad8d3a2a2ae4cbd7102a3e20ae00b558",
 					Digest: "dummyManifestDigestEnvoy",
 				}},
@@ -59,7 +59,7 @@ func TestCalculateNewReleaseModules(t *testing.T) {
 		require.Equal(t, map[string]releaseModuleState{
 			"envoyproxy/envoy": {
 				status: modules.Updated,
-				references: []*modulestatev1alpha1.ModuleReference{{
+				references: []*statev1alpha1.ModuleReference{{
 					Name:   "7850b6bb6494e3bfc093b1aff20282ab30b67940",
 					Digest: "updatedDummyManifestDigestEnvoy",
 				}},
@@ -101,14 +101,14 @@ func TestCalculateNewReleaseModules(t *testing.T) {
 			},
 			"envoyproxy/envoy": {
 				status: modules.Updated,
-				references: []*modulestatev1alpha1.ModuleReference{{
+				references: []*statev1alpha1.ModuleReference{{
 					Name:   "7850b6bb6494e3bfc093b1aff20282ab30b67940",
 					Digest: "updatedDummyManifestDigestEnvoy",
 				}},
 			},
 			"gogo/protobuf": {
 				status: modules.New,
-				references: []*modulestatev1alpha1.ModuleReference{{
+				references: []*statev1alpha1.ModuleReference{{
 					Name:   "8892e00f944642b7dc8d81b419879fd4be12f056",
 					Digest: "newDummyManifestDigestGogoProtobuf",
 				}},
@@ -119,13 +119,13 @@ func TestCalculateNewReleaseModules(t *testing.T) {
 func TestMapGlobalStateReferences(t *testing.T) {
 	t.Parallel()
 	t.Run("nil_state", func(t *testing.T) {
-		var globalState *modulestatev1alpha1.GlobalState
+		var globalState *statev1alpha1.GlobalState
 		got := mapGlobalStateReferences(globalState)
 		require.Equal(t, map[string]string(nil), got)
 	})
 	t.Run("not_nil_state", func(t *testing.T) {
-		globalState := &modulestatev1alpha1.GlobalState{
-			Modules: []*modulestatev1alpha1.GlobalStateReference{
+		globalState := &statev1alpha1.GlobalState{
+			Modules: []*statev1alpha1.GlobalStateReference{
 				{
 					ModuleName:      "test-org/test-repo",
 					LatestReference: "v1.0.0",
@@ -150,7 +150,7 @@ func TestCreateReleaseBody(t *testing.T) {
 		mods := map[string]releaseModuleState{
 			"test-org/test-repo": {
 				status: modules.New,
-				references: []*modulestatev1alpha1.ModuleReference{
+				references: []*statev1alpha1.ModuleReference{
 					{
 						Name:   "v1.0.0",
 						Digest: "fakedigest",
@@ -184,7 +184,7 @@ func TestCreateReleaseBody(t *testing.T) {
 		mods := map[string]releaseModuleState{
 			"test-org/new-repo": {
 				status: modules.New,
-				references: []*modulestatev1alpha1.ModuleReference{
+				references: []*statev1alpha1.ModuleReference{
 					{
 						Name:   "v1.0.0",
 						Digest: "fakedigest",
@@ -196,7 +196,7 @@ func TestCreateReleaseBody(t *testing.T) {
 			},
 			"test-org/updated-repo": {
 				status: modules.Updated,
-				references: []*modulestatev1alpha1.ModuleReference{
+				references: []*statev1alpha1.ModuleReference{
 					{
 						Name:   "v1.0.0",
 						Digest: "fakedigest",
@@ -240,7 +240,7 @@ func TestCreateReleaseBody(t *testing.T) {
 		mods := map[string]releaseModuleState{
 			"test-org/new-repo": {
 				status: modules.New,
-				references: []*modulestatev1alpha1.ModuleReference{
+				references: []*statev1alpha1.ModuleReference{
 					{
 						Name:   "v1.0.0",
 						Digest: "fakedigest",
@@ -249,7 +249,7 @@ func TestCreateReleaseBody(t *testing.T) {
 			},
 			"test-org/updated-repo": {
 				status: modules.Updated,
-				references: []*modulestatev1alpha1.ModuleReference{
+				references: []*statev1alpha1.ModuleReference{
 					{
 						Name:   "v1.0.0",
 						Digest: "fakedigest",
@@ -258,7 +258,7 @@ func TestCreateReleaseBody(t *testing.T) {
 			},
 			"test-org/unchanged-repo": {
 				status: modules.Unchanged,
-				references: []*modulestatev1alpha1.ModuleReference{
+				references: []*statev1alpha1.ModuleReference{
 					{
 						Name:   "v1.0.0",
 						Digest: "fakedigest",
@@ -301,10 +301,10 @@ func TestCreateReleaseBody(t *testing.T) {
 }
 
 func TestWriteReferencesTable(t *testing.T) {
-	populateReferences := func(refsCount int) []*modulestatev1alpha1.ModuleReference {
-		refs := make([]*modulestatev1alpha1.ModuleReference, refsCount)
+	populateReferences := func(refsCount int) []*statev1alpha1.ModuleReference {
+		refs := make([]*statev1alpha1.ModuleReference, refsCount)
 		for i := 0; i < refsCount; i++ {
-			refs[i] = &modulestatev1alpha1.ModuleReference{
+			refs[i] = &statev1alpha1.ModuleReference{
 				Name:   fmt.Sprintf("commit%03d", i),
 				Digest: fmt.Sprintf("digest%03d", i),
 			}

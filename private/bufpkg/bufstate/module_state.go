@@ -19,20 +19,20 @@ import (
 	"fmt"
 	"io"
 
-	modulestatev1alpha1 "github.com/bufbuild/modules/private/gen/modulestate/v1alpha1"
+	statev1alpha1 "github.com/bufbuild/modules/private/gen/modules/state/v1alpha1"
 	"go.uber.org/multierr"
 )
 
 const ModStateFileName = "state.json"
 
 // ReadModStateFile reads a JSON encoded ModuleState from the given reader before closing it.
-func ReadModStateFile(readCloser io.ReadCloser) (_ *modulestatev1alpha1.ModuleState, retErr error) {
+func ReadModStateFile(readCloser io.ReadCloser) (_ *statev1alpha1.ModuleState, retErr error) {
 	defer func() {
 		if err := readCloser.Close(); err != nil {
 			retErr = multierr.Append(retErr, fmt.Errorf("close file: %w", err))
 		}
 	}()
-	var s modulestatev1alpha1.ModuleState
+	var s statev1alpha1.ModuleState
 	if err := json.NewDecoder(readCloser).Decode(&s); err != nil {
 		return nil, fmt.Errorf("read file: %w", err)
 	}
@@ -43,7 +43,7 @@ func ReadModStateFile(readCloser io.ReadCloser) (_ *modulestatev1alpha1.ModuleSt
 }
 
 // WriteModStateFile takes a module state and writes it to the given writer before closing it.
-func WriteModStateFile(writeCloser io.WriteCloser, s *modulestatev1alpha1.ModuleState) (retErr error) {
+func WriteModStateFile(writeCloser io.WriteCloser, s *statev1alpha1.ModuleState) (retErr error) {
 	defer func() {
 		if err := writeCloser.Close(); err != nil {
 			retErr = multierr.Append(retErr, fmt.Errorf("close file: %w", err))
@@ -65,7 +65,7 @@ func WriteModStateFile(writeCloser io.WriteCloser, s *modulestatev1alpha1.Module
 
 // validateModuleState checks there are no repeated reference names or empty values in references or
 // digests.
-func validateModuleState(s *modulestatev1alpha1.ModuleState) error {
+func validateModuleState(s *statev1alpha1.ModuleState) error {
 	refs := make(map[string]struct{}, len(s.GetReferences()))
 	for _, ref := range s.GetReferences() {
 		if len(ref.GetName()) == 0 {
