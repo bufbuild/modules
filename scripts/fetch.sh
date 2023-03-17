@@ -171,7 +171,7 @@ trap cleanup EXIT
 
 # sync_references ${sync_strategy} ${owner} ${repo} ${git_remote} ${opt_proto_subdir}
 sync_references commits cncf xds https://github.com/cncf/xds # depends on [envoyproxy/protoc-gen-validate, googleapis/googleapis]
-# sync_references commits envoyproxy envoy https://github.com/envoyproxy/envoy api # depends on [cncf/xds, googleapis/googleapis, opencensus/opencensus, opentelemetry/opentelemetry, prometheus/client-model]
+sync_references commits envoyproxy envoy https://github.com/envoyproxy/envoy api # depends on [cncf/xds, googleapis/googleapis, opencensus/opencensus, opentelemetry/opentelemetry, prometheus/client-model]
 sync_references commits envoyproxy protoc-gen-validate https://github.com/envoyproxy/protoc-gen-validate
 sync_references commits gogo protobuf https://github.com/gogo/protobuf
 sync_references commits googleapis googleapis https://github.com/googleapis/googleapis
