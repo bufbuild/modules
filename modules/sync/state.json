@@ -1,6 +1,10 @@
 {
   "modules": [
     {
+      "module_name": "cncf/xds",
+      "latest_reference": "32f1caf87195bf3390061c29f18987e51ca56a88"
+    },
+    {
       "module_name": "envoyproxy/protoc-gen-validate",
       "latest_reference": "2540a2dbb00ae2aeb55d4d81be7f7542910570f9"
     },
@@ -10,7 +14,7 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "a17e9d531878c60da5fde21519b082aeb7d50ba9"
+      "latest_reference": "8c3622081e3d8efdbee1444a3494b227e390c560"
     },
     {
       "module_name": "opencensus/opencensus",

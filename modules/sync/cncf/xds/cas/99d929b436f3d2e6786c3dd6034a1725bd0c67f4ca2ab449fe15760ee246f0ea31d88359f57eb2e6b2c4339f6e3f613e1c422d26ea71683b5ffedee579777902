@@ -1,0 +1,5 @@
+version: v1
+name: buf.build/cncf/xds
+deps:
+  - buf.build/envoyproxy/protoc-gen-validate
+  - buf.build/googleapis/googleapis
