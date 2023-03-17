@@ -14,7 +14,11 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "8c3622081e3d8efdbee1444a3494b227e390c560"
+      "latest_reference": "8fa8ae4c7610d3cc2e265c464106abb2ce1e8716"
+    },
+    {
+      "module_name": "grpc/grpc",
+      "latest_reference": "46b300ef7c726aa569b914eb9957353c329117e9"
     },
     {
       "module_name": "opencensus/opencensus",
