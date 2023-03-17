@@ -23,12 +23,11 @@ process_ref() {
   local -r mod_tmp_path="$(mktemp -d)"
   dirs_to_delete+=("${mod_tmp_path}")
   local -r module_static_path="${repo_root}/modules/static/${owner}/${repo}"
-  git -c advice.detachedHead=false checkout "${mod_ref}"
+  git -c advice.detachedHead=false checkout "${mod_ref}" -q
   git clean -df
 
   # Copy only curated subset of files from that repo into a tmp module dir.
-  cat "${module_static_path}/rsync.incl" # TODO: remove
-  rsync -amRv --include-from="${module_static_path}/rsync.incl" . "${mod_tmp_path}"
+  rsync -amR --include-from="${module_static_path}/rsync.incl" . "${mod_tmp_path}"
   cp "${module_static_path}/buf.md" "${mod_tmp_path}"
   cp "${module_static_path}/buf.yaml" "${mod_tmp_path}"
 
@@ -37,10 +36,8 @@ process_ref() {
   # relevant: each BSR cluster will sync itself from the base files and
   # regenerate its own `buf.lock`.
   pushd "${mod_tmp_path}" > /dev/null
-  tree .
-  buf mod update --debug
-  buf build --debug
-  cat buf.lock # TODO: remove
+  buf mod update
+  buf build
   rm buf.lock
   popd > /dev/null
 
@@ -94,16 +91,11 @@ sync_references() {
     echo "skipping module ${owner}/${repo}, no references to sync"
   else
     for reference in $(echo "${rev_list}"); do
-      echo "=== processing reference ${reference}"
+      echo "processing reference ${owner}/${repo}:${reference}"
       process_ref "${reference}"
     done
   fi
   popd > /dev/null
-
-  # TODO: remove: useful for local testing
-  cat "${all_mods_sync_path}/state.json"
-  tree "${mod_sync_path}"
-  cat "${mod_sync_path}/state.json"
 }
 
 get_commit_revlist() {
@@ -183,7 +175,7 @@ sync_references commits cncf xds https://github.com/cncf/xds # depends on [envoy
 sync_references commits envoyproxy protoc-gen-validate https://github.com/envoyproxy/protoc-gen-validate
 sync_references commits gogo protobuf https://github.com/gogo/protobuf
 sync_references commits googleapis googleapis https://github.com/googleapis/googleapis
-# sync_references commits grpc grpc https://github.com/grpc/grpc-proto # depends on [envoyproxy/envoy, googleapis/googleapis]
+sync_references commits grpc grpc https://github.com/grpc/grpc-proto # depends on [envoyproxy/envoy, googleapis/googleapis]
 sync_references commits opencensus opencensus https://github.com/census-instrumentation/opencensus-proto src
 sync_references commits opentelemetry opentelemetry https://github.com/open-telemetry/opentelemetry-proto
 sync_references releases protocolbuffers wellknowntypes https://github.com/protocolbuffers/protobuf src

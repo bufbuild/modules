@@ -158,7 +158,6 @@ func writeBlobInDir(ctx context.Context, blob manifest.Blob, dir string) (retErr
 	_, err := os.Stat(filePath)
 	if err == nil {
 		// no error, file exists
-		_, _ = fmt.Fprintf(os.Stdout, "skipping existing blob %q\n", filePath)
 		return nil
 	}
 	// some error
@@ -167,11 +166,6 @@ func writeBlobInDir(ctx context.Context, blob manifest.Blob, dir string) (retErr
 		return fmt.Errorf("stat file: %w", err)
 	}
 	// error is "not exists", we'll create it
-	defer func() {
-		if retErr == nil {
-			_, _ = fmt.Fprintf(os.Stdout, "blob written %q\n", filePath)
-		}
-	}()
 	file, err := os.Create(filePath)
 	if err != nil {
 		return fmt.Errorf("create file: %w", err)
