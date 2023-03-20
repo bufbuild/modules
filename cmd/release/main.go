@@ -171,6 +171,8 @@ func mapGlobalStateReferences(globalState *statev1alpha1.GlobalState) map[string
 // released by comparing it against the last released version of the module. The resultant list
 // tells us which modules and which of their references have not been released, and the state of
 // each of the modules, whether they're new, updated, or unchanged.
+//
+//nolint:nonamedreturns // `newContent` helps func signature clarity.
 func calculateModulesStates(
 	dir string,
 	prev map[string]string,
