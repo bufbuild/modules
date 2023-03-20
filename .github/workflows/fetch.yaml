@@ -7,7 +7,7 @@ on:
 
 jobs:
   fetch-references:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest-16-cores
     if: github.repository == 'bufbuild/modules'
     steps:
       - name: Generate token
