@@ -31,7 +31,7 @@ jobs:
         id: release
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: go run ./cmd/release . --dry-run # This sets the "did_release" key=value pair in the GHA output ENV var.
+        run: go run ./cmd/release --dry-run . # This sets the "did_release" key=value pair in the GHA output ENV var.
   sync:
     needs: release
     environment: production
