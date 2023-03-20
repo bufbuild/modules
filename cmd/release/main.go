@@ -34,10 +34,8 @@ import (
 )
 
 const (
-	// ghaEnvVarName is the ENV var that's used by github to hold key=value pairs used as GHA outputs.
-	ghaEnvVarName = "GITHUB_OUTPUT"
-	// didReleaseOutputName is the GHA output for the release action.
-	didReleaseOutputName = "did_release"
+	// didReleaseEnvVar is the ENV var that's read by the GHA to know if a release was done or not.
+	didReleaseEnvVar = "DID_RELEASE"
 )
 
 type command struct {
@@ -143,9 +141,8 @@ func (c *command) run() (retErr error) {
 	if err := createRelease(ctx, githubClient, releaseName, modulesStates); err != nil {
 		return fmt.Errorf("create GitHub release: %w", err)
 	}
-	// Set the Github action output "did_release", so sync GHA job is triggered afterwards.
-	if err := os.Setenv(ghaEnvVarName, fmt.Sprintf("%s=true", didReleaseOutputName)); err != nil {
-		return fmt.Errorf("failed to set %s.%s: %w", ghaEnvVarName, didReleaseOutputName, err)
+	if err := os.Setenv(didReleaseEnvVar, "true"); err != nil {
+		return fmt.Errorf("failed to set %s: %w", didReleaseEnvVar, err)
 	}
 	return nil
 }
