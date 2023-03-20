@@ -186,8 +186,8 @@ func (c *Client) AllReleaseTagNames(
 	}
 }
 
-// DownloadReleaseManifest loads the state.json file from the specified GitHub release.
-func (c *Client) DownloadReleaseManifest(
+// DownloadReleaseState loads the state.json file from the specified GitHub release.
+func (c *Client) DownloadReleaseState(
 	ctx context.Context,
 	release *github.RepositoryRelease,
 ) (*statev1alpha1.GlobalState, error) {

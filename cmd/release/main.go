@@ -33,6 +33,13 @@ import (
 	"go.uber.org/multierr"
 )
 
+const (
+	// ghaEnvVarName is the ENV var that's used by github to hold key=value pairs used as GHA outputs.
+	ghaEnvVarName = "GITHUB_OUTPUT"
+	// didReleaseOutputName is the GHA output for the release action.
+	didReleaseOutputName = "did_release"
+)
+
 type command struct {
 	dryRun bool
 }
@@ -65,7 +72,7 @@ func (c *command) run() (retErr error) {
 	if err != nil {
 		return fmt.Errorf("create temporary directory: %w", err)
 	}
-	_, _ = fmt.Fprintf(os.Stdout, "created tmp dir: %s", tmpDir)
+	_, _ = fmt.Fprintf(os.Stdout, "created tmp dir: %s\n", tmpDir)
 	defer func() {
 		if c.dryRun {
 			return
@@ -82,7 +89,7 @@ func (c *command) run() (retErr error) {
 	}
 	var prevReleaseState *statev1alpha1.GlobalState
 	if prevRelease != nil {
-		prevReleaseState, err = githubClient.DownloadReleaseManifest(ctx, prevRelease)
+		prevReleaseState, err = githubClient.DownloadReleaseState(ctx, prevRelease)
 		if err != nil {
 			return err
 		}
@@ -106,11 +113,11 @@ func (c *command) run() (retErr error) {
 	}
 	prevMap := mapGlobalStateReferences(prevReleaseState)
 	currentMap := mapGlobalStateReferences(currentReleaseState)
-	newModuleReleases, err := calculateNewReleaseModules(bufstate.SyncRoot, prevMap, currentMap)
+	modulesStates, newContent, err := calculateModulesStates(bufstate.SyncRoot, prevMap, currentMap)
 	if err != nil {
 		return fmt.Errorf("produce new module list: %w", err)
 	}
-	if len(newModuleReleases) == 0 {
+	if !newContent {
 		errMsg := "no changes to modules - not creating initial release"
 		if tagName := prevRelease.GetTagName(); tagName != "" {
 			errMsg = fmt.Sprintf("no changes to modules since %v", tagName)
@@ -124,19 +131,21 @@ func (c *command) run() (retErr error) {
 		return fmt.Errorf("determine next release name: %w", err)
 	}
 	if c.dryRun {
-		releaseBody, err := createReleaseBody(releaseName, newModuleReleases)
+		releaseBody, err := createReleaseBody(releaseName, modulesStates)
 		if err != nil {
 			return fmt.Errorf("create release body: %w", err)
 		}
-		if err := os.WriteFile(filepath.Join(tmpDir, "RELEASE.md"), []byte(releaseBody), 0644); err != nil { //nolint:gosec
-			return err
-		}
+		_, _ = fmt.Fprintln(os.Stdout, releaseBody)
 		_, _ = fmt.Fprintln(os.Stdout, "skipping GitHub release creation in dry-run mode")
-		_, _ = fmt.Fprintf(os.Stdout, "release assets created in %q", tmpDir)
+		_, _ = fmt.Fprintf(os.Stdout, "release assets created in %q\n", tmpDir)
 		return nil
 	}
-	if err := createRelease(ctx, githubClient, releaseName, newModuleReleases); err != nil {
+	if err := createRelease(ctx, githubClient, releaseName, modulesStates); err != nil {
 		return fmt.Errorf("create GitHub release: %w", err)
+	}
+	// Set the Github action output "did_release", so sync GHA job is triggered afterwards.
+	if err := os.Setenv(ghaEnvVarName, fmt.Sprintf("%s=true", didReleaseOutputName)); err != nil {
+		return fmt.Errorf("failed to set %s.%s: %w", ghaEnvVarName, didReleaseOutputName, err)
 	}
 	return nil
 }
@@ -152,18 +161,21 @@ func mapGlobalStateReferences(globalState *statev1alpha1.GlobalState) map[string
 	return stateMap
 }
 
-// calculateNewReleaseModules accepts the repository's checked out module manifest file `current`, as well
-// as the `prev` from the latest published release. It will build a list of all modules `updatedModules`
-// that have not yet been released and the last version of that module, if present, that was released.
-// Using the `updatedModules` list, it will load the individual module's manifest file from the module`s directory,
-// and determine which versions of the module have not been released by comparing it against the last released version
-// of the module. The resultant list tells us which modules and which of their references have not been released, and
-// the state of each of the modules, whether they're new, updated, or unchanged.
-func calculateNewReleaseModules(
+// calculateModulesStates accepts the repository's checked out module manifest file `current`, as
+// well as the `prev` from the latest published release. It will build a list of all modules
+// `updatedModules` that have not yet been released and the last version of that module, if present,
+// that was released. Using the `updatedModules` list, it will load the individual module's manifest
+// file from the module`s directory, and determine which versions of the module have not been
+// released by comparing it against the last released version of the module. The resultant list
+// tells us which modules and which of their references have not been released, and the state of
+// each of the modules, whether they're new, updated, or unchanged.
+//
+//nolint:nonamedreturns // `newContent` helps func signature clarity.
+func calculateModulesStates(
 	dir string,
 	prev map[string]string,
 	current map[string]string,
-) (map[string]releaseModuleState, error) {
+) (_ map[string]releaseModuleState, newContent bool, _ error) {
 	moduleReferences := make(map[string]releaseModuleState)
 	var updatedModules []modules.Module
 	// If the latest manifest doesn't exist, everything is new
@@ -176,16 +188,16 @@ func calculateNewReleaseModules(
 		for moduleName, currentReference := range current {
 			prevReleaseReference, ok := prev[moduleName]
 			if !ok {
-				// new
+				// module not present in the previous state, it's new
 				updatedModules = append(updatedModules, modules.Module{Name: moduleName})
 				continue
 			}
-			// unchanged, record it now as we don't use the source of this information in the next step
 			if prevReleaseReference == currentReference {
+				// module reference did not change, it's unchanged
 				moduleReferences[moduleName] = releaseModuleState{status: modules.Unchanged}
 				continue
 			}
-			// updated
+			// module reference changed vs previous state, it's changed
 			updatedModules = append(updatedModules, modules.Module{
 				Name:                  moduleName,
 				LastReleasedReference: prevReleaseReference,
@@ -198,17 +210,17 @@ func calculateNewReleaseModules(
 		var moduleManifest *statev1alpha1.ModuleState
 		if _, err := os.Stat(modFilePath); err != nil {
 			if !os.IsNotExist(err) {
-				return nil, fmt.Errorf("stat file: %w", err)
+				return nil, false, fmt.Errorf("stat file: %w", err)
 			}
 			moduleManifest = &statev1alpha1.ModuleState{}
 		} else {
 			modStateFile, err := os.Open(modFilePath)
 			if err != nil {
-				return nil, fmt.Errorf("open file: %w", err)
+				return nil, false, fmt.Errorf("open file: %w", err)
 			}
 			moduleManifest, err = bufstate.ReadModStateFile(modStateFile)
 			if err != nil {
-				return nil, fmt.Errorf("retrieve module state: %w", err)
+				return nil, false, fmt.Errorf("retrieve module state: %w", err)
 			}
 		}
 		if updatedModule.LastReleasedReference == "" {
@@ -221,7 +233,7 @@ func calculateNewReleaseModules(
 		for index, reference := range moduleManifest.GetReferences() {
 			if reference.GetName() == updatedModule.LastReleasedReference {
 				if len(moduleManifest.GetReferences()) == index-1 {
-					return nil, fmt.Errorf("module indicated as having updates, but previous release %s is the latest", updatedModule.LastReleasedReference)
+					return nil, false, fmt.Errorf("module indicated as having updates, but previous release %s is the latest", updatedModule.LastReleasedReference)
 				}
 				moduleReferences[updatedModule.Name] = releaseModuleState{
 					status:     modules.Updated,
@@ -231,7 +243,7 @@ func calculateNewReleaseModules(
 			}
 		}
 	}
-	return moduleReferences, nil
+	return moduleReferences, len(updatedModules) > 0, nil
 }
 
 func calculateNextRelease(now time.Time, prevRelease *github.RepositoryRelease) (string, error) {

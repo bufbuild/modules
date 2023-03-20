@@ -34,9 +34,9 @@ func TestCalculateNewReleaseModules(t *testing.T) {
 		currentRelease := map[string]string{
 			"envoyproxy/envoy": "bb554f53ad8d3a2a2ae4cbd7102a3e20ae00b558",
 		}
-		got, err := calculateNewReleaseModules(filepath.Join("testdata/golden/new-release", bufstate.SyncRoot), nil, currentRelease)
+		got, newContent, err := calculateModulesStates(filepath.Join("testdata/golden/new-release", bufstate.SyncRoot), nil, currentRelease)
 		require.NoError(t, err)
-		require.Equal(t, map[string]releaseModuleState{
+		assert.Equal(t, map[string]releaseModuleState{
 			"envoyproxy/envoy": {
 				status: modules.New,
 				references: []*statev1alpha1.ModuleReference{{
@@ -44,6 +44,7 @@ func TestCalculateNewReleaseModules(t *testing.T) {
 					Digest: "dummyManifestDigestEnvoy",
 				}},
 			}}, got)
+		assert.True(t, newContent)
 	})
 	t.Run("UpdatedRelease-FromPreviousRelease", func(t *testing.T) {
 		t.Parallel()
@@ -54,9 +55,9 @@ func TestCalculateNewReleaseModules(t *testing.T) {
 			"envoyproxy/envoy": "7850b6bb6494e3bfc093b1aff20282ab30b67940", // updated
 
 		}
-		got, err := calculateNewReleaseModules(filepath.Join("testdata/golden/updated-release", bufstate.SyncRoot), prevRelease, currentRelease)
+		got, newContent, err := calculateModulesStates(filepath.Join("testdata/golden/updated-release", bufstate.SyncRoot), prevRelease, currentRelease)
 		require.NoError(t, err)
-		require.Equal(t, map[string]releaseModuleState{
+		assert.Equal(t, map[string]releaseModuleState{
 			"envoyproxy/envoy": {
 				status: modules.Updated,
 				references: []*statev1alpha1.ModuleReference{{
@@ -64,6 +65,7 @@ func TestCalculateNewReleaseModules(t *testing.T) {
 					Digest: "updatedDummyManifestDigestEnvoy",
 				}},
 			}}, got)
+		assert.True(t, newContent)
 	})
 
 	t.Run("NoChangesRelease-FromPreviousRelease", func(t *testing.T) {
@@ -74,12 +76,13 @@ func TestCalculateNewReleaseModules(t *testing.T) {
 		currentRelease := map[string]string{
 			"envoyproxy/envoy": "7850b6bb6494e3bfc093b1aff20282ab30b67940",
 		}
-		got, err := calculateNewReleaseModules(filepath.Join("not-relevant", bufstate.SyncRoot), prevRelease, currentRelease)
+		got, newContent, err := calculateModulesStates(filepath.Join("not-relevant", bufstate.SyncRoot), prevRelease, currentRelease)
 		require.NoError(t, err)
-		require.Equal(t, map[string]releaseModuleState{
+		assert.Equal(t, map[string]releaseModuleState{
 			"envoyproxy/envoy": {
 				status: modules.Unchanged,
 			}}, got)
+		assert.False(t, newContent)
 	})
 
 	t.Run("NewUpdatedAndUnchanged-FromPreviousRelease", func(t *testing.T) {
@@ -93,9 +96,9 @@ func TestCalculateNewReleaseModules(t *testing.T) {
 			"envoyproxy/protoc-gen-validate": "38260ee45796b420276ac925d826ecec8fc3e9a8", // unchanged
 			"gogo/protobuf":                  "8892e00f944642b7dc8d81b419879fd4be12f056", // new
 		}
-		got, err := calculateNewReleaseModules(filepath.Join("testdata/golden/newupdatedandunchanged-release", bufstate.SyncRoot), prevRelease, currentRelease)
+		got, newContent, err := calculateModulesStates(filepath.Join("testdata/golden/newupdatedandunchanged-release", bufstate.SyncRoot), prevRelease, currentRelease)
 		require.NoError(t, err)
-		require.Equal(t, map[string]releaseModuleState{
+		assert.Equal(t, map[string]releaseModuleState{
 			"envoyproxy/protoc-gen-validate": {
 				status: modules.Unchanged,
 			},
@@ -113,6 +116,7 @@ func TestCalculateNewReleaseModules(t *testing.T) {
 					Digest: "newDummyManifestDigestGogoProtobuf",
 				}},
 			}}, got)
+		assert.True(t, newContent)
 	})
 }
 
