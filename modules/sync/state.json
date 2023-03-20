@@ -6,11 +6,11 @@
     },
     {
       "module_name": "envoyproxy/envoy",
-      "latest_reference": "2d82c10a467cbb933ed5cb9bdb7eaae4ffa160de"
+      "latest_reference": "545861ce434dc7bfdde1bbb70d1a179c76922307"
     },
     {
       "module_name": "envoyproxy/protoc-gen-validate",
-      "latest_reference": "74ae60f4bb55aadb791d1f8b62c562108b9a7b95"
+      "latest_reference": "3f5bbe82949e1353711fd60ae2e02be504527613"
     },
     {
       "module_name": "gogo/protobuf",
