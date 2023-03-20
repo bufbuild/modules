@@ -33,11 +33,6 @@ import (
 	"go.uber.org/multierr"
 )
 
-const (
-	// didReleaseEnvVar is the ENV var that's read by the GHA to know if a release was done or not.
-	didReleaseEnvVar = "DID_RELEASE"
-)
-
 type command struct {
 	dryRun bool
 }
@@ -140,9 +135,6 @@ func (c *command) run() (retErr error) {
 	}
 	if err := createRelease(ctx, githubClient, releaseName, modulesStates); err != nil {
 		return fmt.Errorf("create GitHub release: %w", err)
-	}
-	if err := os.Setenv(didReleaseEnvVar, "true"); err != nil {
-		return fmt.Errorf("failed to set %s: %w", didReleaseEnvVar, err)
 	}
 	return nil
 }

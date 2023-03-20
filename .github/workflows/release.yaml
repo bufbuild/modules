@@ -31,15 +31,17 @@ jobs:
         id: release
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        # Go command sets a $DID_RELEASE ENV var to "true" in case a release was produced.
-        run: |
-          go run ./cmd/release .
-          echo "did_release=$DID_RELEASE" >> $GITHUB_OUTPUT
-          cat $GITHUB_OUTPUT
+        run: go run ./cmd/release .
+  # sync job is currently syncing the whole dync directory, it runs
+  # every time, regardless if there was a release or not, or even if the
+  # release job failed. TODO: We can improve efficiency here by doing
+  # two things: (1) only triggering sync job when there's a release
+  # produced from the previous step, and (2) only syncing directories
+  # (or even files) that changed in the rsync invocation.
   sync:
     needs: release
     environment: production
-    if: github.repository == 'bufbuild/modules' && needs.release.outputs.did_release == 'true'
+    if: github.repository == 'bufbuild/modules'
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout repository code
