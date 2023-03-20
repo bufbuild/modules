@@ -31,11 +31,11 @@ jobs:
         id: release
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: go run ./cmd/release . # This sets the "did_release" key=value pair in the GHA output ENV var.
+        run: go run ./cmd/release . --dry-run # This sets the "did_release" key=value pair in the GHA output ENV var.
   sync:
     needs: release
     environment: production
-    if: github.repository == 'bufbuild/modules' && needs.release.outputs.did_release == 'true'
+    if: false && github.repository == 'bufbuild/modules' && needs.release.outputs.did_release == 'true'
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout repository code

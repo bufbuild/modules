@@ -72,7 +72,7 @@ func (c *command) run() (retErr error) {
 	if err != nil {
 		return fmt.Errorf("create temporary directory: %w", err)
 	}
-	_, _ = fmt.Fprintf(os.Stdout, "created tmp dir: %s", tmpDir)
+	_, _ = fmt.Fprintf(os.Stdout, "created tmp dir: %s\n", tmpDir)
 	defer func() {
 		if c.dryRun {
 			return
@@ -89,7 +89,7 @@ func (c *command) run() (retErr error) {
 	}
 	var prevReleaseState *statev1alpha1.GlobalState
 	if prevRelease != nil {
-		prevReleaseState, err = githubClient.DownloadReleaseManifest(ctx, prevRelease)
+		prevReleaseState, err = githubClient.DownloadReleaseState(ctx, prevRelease)
 		if err != nil {
 			return err
 		}
@@ -135,11 +135,9 @@ func (c *command) run() (retErr error) {
 		if err != nil {
 			return fmt.Errorf("create release body: %w", err)
 		}
-		if err := os.WriteFile(filepath.Join(tmpDir, "RELEASE.md"), []byte(releaseBody), 0644); err != nil { //nolint:gosec
-			return err
-		}
+		_, _ = fmt.Fprintln(os.Stdout, releaseBody)
 		_, _ = fmt.Fprintln(os.Stdout, "skipping GitHub release creation in dry-run mode")
-		_, _ = fmt.Fprintf(os.Stdout, "release assets created in %q", tmpDir)
+		_, _ = fmt.Fprintf(os.Stdout, "release assets created in %q\n", tmpDir)
 		return nil
 	}
 	if err := createRelease(ctx, githubClient, releaseName, modulesStates); err != nil {
@@ -190,16 +188,16 @@ func calculateModulesStates(
 		for moduleName, currentReference := range current {
 			prevReleaseReference, ok := prev[moduleName]
 			if !ok {
-				// new
+				// module not present in the previous state, it's new
 				updatedModules = append(updatedModules, modules.Module{Name: moduleName})
 				continue
 			}
-			// unchanged, record it now as we don't use the source of this information in the next step
 			if prevReleaseReference == currentReference {
+				// module reference did not change, it's unchanged
 				moduleReferences[moduleName] = releaseModuleState{status: modules.Unchanged}
 				continue
 			}
-			// updated
+			// module reference changed vs previous state, it's changed
 			updatedModules = append(updatedModules, modules.Module{
 				Name:                  moduleName,
 				LastReleasedReference: prevReleaseReference,
