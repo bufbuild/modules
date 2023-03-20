@@ -1,8 +1,9 @@
 name: Fetch references
 
 on:
-  # schedule:
-  #   - cron: "0 0 * * *" # Run once a day
+  schedule:
+    # At 7:00 EST (12:00 UTC) on every day-of-week from Monday through Friday. https://crontab.guru/#0_12_*_*_1-5
+    - cron: "0 12 * * 1-5"
   workflow_dispatch:
 
 jobs:
