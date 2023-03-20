@@ -34,7 +34,7 @@ jobs:
         # Go command sets a $DID_RELEASE ENV var to "true" in case a release was produced.
         run: |
           go run ./cmd/release .
-          echo "did_release=${DID_RELEASE}" >> $GITHUB_OUTPUT
+          echo "did_release=$DID_RELEASE" >> $GITHUB_OUTPUT
           cat $GITHUB_OUTPUT
   sync:
     needs: release
