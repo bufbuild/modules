@@ -5,6 +5,10 @@
       "latest_reference": "32f1caf87195bf3390061c29f18987e51ca56a88"
     },
     {
+      "module_name": "envoyproxy/envoy",
+      "latest_reference": "4b5c156b7a89e54b9a049073f04da534354fae85"
+    },
+    {
       "module_name": "envoyproxy/protoc-gen-validate",
       "latest_reference": "a25422dc9aa1194bce1c0cc77c7c51891b118794"
     },
