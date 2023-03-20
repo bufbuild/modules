@@ -1,9 +1,8 @@
 name: Sync to GCS
 
 on:
-  # disabled until ready to turn on in earnest, as with other actions
-  #  release:
-  #    types: [published]
+  release:
+    types: [published] # Sync GCS bucket everytime there's a new release.
   workflow_dispatch:
 
 permissions:
