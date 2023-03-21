@@ -153,7 +153,7 @@ func TestMapGlobalStateReferences(t *testing.T) {
 
 func TestCreateReleaseBody(t *testing.T) {
 	t.Parallel()
-	t.Run("Basic", func(t *testing.T) {
+	t.Run("New", func(t *testing.T) {
 		t.Parallel()
 		mods := map[string]releaseModuleState{
 			"test-org/test-repo": {
@@ -173,6 +173,7 @@ func TestCreateReleaseBody(t *testing.T) {
 		const want = `# Buf Modules Release 20230519.1
 
 ## New Modules
+
 <details><summary>test-org/test-repo: 2 update(s)</summary>
 
 | Reference | Manifest Digest |
@@ -219,6 +220,7 @@ func TestCreateReleaseBody(t *testing.T) {
 		const want = `# Buf Modules Release 20230519.1
 
 ## New Modules
+
 <details><summary>test-org/new-repo: 2 update(s)</summary>
 
 | Reference | Manifest Digest |
@@ -229,6 +231,7 @@ func TestCreateReleaseBody(t *testing.T) {
 </details>
 
 ## Updated Modules
+
 <details><summary>test-org/updated-repo: 2 update(s)</summary>
 
 | Reference | Manifest Digest |
@@ -245,40 +248,48 @@ func TestCreateReleaseBody(t *testing.T) {
 	})
 	t.Run("NewUpdatedUnchanged", func(t *testing.T) {
 		t.Parallel()
-		mods := map[string]releaseModuleState{
-			"test-org/new-repo": {
-				status: modules.New,
-				references: []*statev1alpha1.ModuleReference{
-					{
-						Name:   "v1.0.0",
-						Digest: "fakedigest",
-					},
-				},
-			},
-			"test-org/updated-repo": {
-				status: modules.Updated,
-				references: []*statev1alpha1.ModuleReference{
-					{
-						Name:   "v1.0.0",
-						Digest: "fakedigest",
-					},
-				},
-			},
-			"test-org/unchanged-repo": {
-				status: modules.Unchanged,
-				references: []*statev1alpha1.ModuleReference{
-					{
-						Name:   "v1.0.0",
-						Digest: "fakedigest",
-					},
-				},
-			},
+		modulesInBody := map[string]modules.Status{
+			"test-org/aaa-new-repo":        modules.New,
+			"test-org/bbb-new-repo":        modules.New,
+			"test-org/zzz-new-repo":        modules.New,
+			"test-org/ccc-updated-repo":    modules.Updated,
+			"test-org/fff-updated-repo":    modules.Updated,
+			"test-org/ppp-updated-repo":    modules.Updated,
+			"test-org/a111-unchanged-repo": modules.Unchanged,
+			"test-org/a222-unchanged-repo": modules.Unchanged,
+			"test-org/a888-unchanged-repo": modules.Unchanged,
+		}
+		mods := make(map[string]releaseModuleState, len(modulesInBody))
+		for modName, state := range modulesInBody {
+			// map order is not guaranteed
+			mods[modName] = releaseModuleState{
+				status:     state,
+				references: []*statev1alpha1.ModuleReference{{Name: "v1.0.0", Digest: "fakedigest"}},
+			}
 		}
 
+		// we expect a deterministic a-z sorted modules
 		const want = `# Buf Modules Release 20230519.1
 
 ## New Modules
-<details><summary>test-org/new-repo: 1 update(s)</summary>
+
+<details><summary>test-org/aaa-new-repo: 1 update(s)</summary>
+
+| Reference | Manifest Digest |
+|---|---|
+| v1.0.0 | fakedigest |
+
+</details>
+
+<details><summary>test-org/bbb-new-repo: 1 update(s)</summary>
+
+| Reference | Manifest Digest |
+|---|---|
+| v1.0.0 | fakedigest |
+
+</details>
+
+<details><summary>test-org/zzz-new-repo: 1 update(s)</summary>
 
 | Reference | Manifest Digest |
 |---|---|
@@ -287,7 +298,24 @@ func TestCreateReleaseBody(t *testing.T) {
 </details>
 
 ## Updated Modules
-<details><summary>test-org/updated-repo: 1 update(s)</summary>
+
+<details><summary>test-org/ccc-updated-repo: 1 update(s)</summary>
+
+| Reference | Manifest Digest |
+|---|---|
+| v1.0.0 | fakedigest |
+
+</details>
+
+<details><summary>test-org/fff-updated-repo: 1 update(s)</summary>
+
+| Reference | Manifest Digest |
+|---|---|
+| v1.0.0 | fakedigest |
+
+</details>
+
+<details><summary>test-org/ppp-updated-repo: 1 update(s)</summary>
 
 | Reference | Manifest Digest |
 |---|---|
@@ -296,9 +324,12 @@ func TestCreateReleaseBody(t *testing.T) {
 </details>
 
 ## Unchanged Modules
+
 <details><summary>Expand</summary>
 
-- test-org/unchanged-repo
+- test-org/a111-unchanged-repo
+- test-org/a222-unchanged-repo
+- test-org/a888-unchanged-repo
 
 </details>
 `
