@@ -32,7 +32,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: go run ./cmd/release .
-  # sync job is currently syncing the whole dync directory, it runs
+  # sync job is currently syncing the whole sync directory, it runs
   # every time, regardless if there was a release or not, or even if the
   # release job failed. TODO: We can improve efficiency here by doing
   # two things: (1) only triggering sync job when there's a release
