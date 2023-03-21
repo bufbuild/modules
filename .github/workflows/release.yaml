@@ -31,11 +31,17 @@ jobs:
         id: release
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: go run ./cmd/release . # This sets the "did_release" key=value pair in the GHA output ENV var.
+        run: go run ./cmd/release .
+  # sync job is currently syncing the whole sync directory, it runs
+  # every time, regardless if there was a release or not, or even if the
+  # release job failed. TODO: We can improve efficiency here by doing
+  # two things: (1) only triggering sync job when there's a release
+  # produced from the previous step, and (2) only syncing directories
+  # (or even files) that changed in the rsync invocation.
   sync:
     needs: release
     environment: production
-    if: github.repository == 'bufbuild/modules' && needs.release.outputs.did_release == 'true'
+    if: github.repository == 'bufbuild/modules'
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout repository code
