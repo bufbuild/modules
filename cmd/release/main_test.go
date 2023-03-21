@@ -361,7 +361,8 @@ func TestWriteReferencesTable(t *testing.T) {
 		)
 		var strBuilder strings.Builder
 		require.NoError(t, writeUpdatedReferencesTable(&strBuilder, moduleName, populateReferences(refsCount)))
-		const want = `<details><summary>foo/bar: 5 update(s)</summary>
+		const want = `
+<details><summary>foo/bar: 5 update(s)</summary>
 
 | Reference | Manifest Digest |
 |---|---|
@@ -384,7 +385,8 @@ func TestWriteReferencesTable(t *testing.T) {
 		)
 		var strBuilder strings.Builder
 		require.NoError(t, writeUpdatedReferencesTable(&strBuilder, moduleName, populateReferences(refsCount)))
-		const want = `<details><summary>foo/bar: 10 update(s)</summary>
+		const want = `
+<details><summary>foo/bar: 10 update(s)</summary>
 
 | Reference | Manifest Digest |
 |---|---|
@@ -412,7 +414,8 @@ func TestWriteReferencesTable(t *testing.T) {
 		)
 		var strBuilder strings.Builder
 		require.NoError(t, writeUpdatedReferencesTable(&strBuilder, moduleName, populateReferences(refsCount)))
-		const want = `<details><summary>foo/bar: 100 update(s)</summary>
+		const want = `
+<details><summary>foo/bar: 100 update(s)</summary>
 
 | Reference | Manifest Digest |
 |---|---|
