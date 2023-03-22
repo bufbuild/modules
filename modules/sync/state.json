@@ -6,7 +6,7 @@
     },
     {
       "module_name": "envoyproxy/envoy",
-      "latest_reference": "27d6a2d4e2a78b3b7348f4670fa34433688721b6"
+      "latest_reference": "58fc1c3fe4702f825e5cbcff13d945ec95b6931f"
     },
     {
       "module_name": "envoyproxy/protoc-gen-validate",
@@ -18,7 +18,7 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "f978bc05225b6c658980e9755021d08daddaac80"
+      "latest_reference": "04e7048f583bdb2ec2886d115d9274259f72b6aa"
     },
     {
       "module_name": "grpc/grpc",
@@ -30,7 +30,7 @@
     },
     {
       "module_name": "opentelemetry/opentelemetry",
-      "latest_reference": "4b23e936e1c7b76244ac0c3f77e023b42dad7c6e"
+      "latest_reference": "7aa439cb0ba78afbd009d83f32fdda6c128e0342"
     },
     {
       "module_name": "protocolbuffers/wellknowntypes",
