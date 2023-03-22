@@ -305,7 +305,7 @@ func createReleaseBody(name string, moduleStates map[string]releaseModuleState) 
 		return "", err
 	}
 
-	var sortedModNames []string
+	sortedModNames := make([]string, 0, len(moduleStates))
 	for modName := range moduleStates {
 		sortedModNames = append(sortedModNames, modName)
 	}
