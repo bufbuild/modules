@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -304,23 +305,31 @@ func createReleaseBody(name string, moduleStates map[string]releaseModuleState) 
 		return "", err
 	}
 
+	sortedModNames := make([]string, 0, len(moduleStates))
+	for modName := range moduleStates {
+		sortedModNames = append(sortedModNames, modName)
+	}
+	sort.Slice(sortedModNames, func(i, j int) bool {
+		return sortedModNames[i] < sortedModNames[j]
+	})
 	var newStringBuilder, updatedStringBuilder, unchangedStringBuilder strings.Builder
-	for module, modState := range moduleStates {
+	for _, modName := range sortedModNames {
+		modState := moduleStates[modName]
 		switch modState.status {
 		case modules.New:
-			if err := writeUpdatedReferencesTable(&newStringBuilder, module, modState.references); err != nil {
+			if err := writeUpdatedReferencesTable(&newStringBuilder, modName, modState.references); err != nil {
 				return "", fmt.Errorf("write new modules table: %w", err)
 			}
 		case modules.Updated:
-			if err := writeUpdatedReferencesTable(&updatedStringBuilder, module, modState.references); err != nil {
+			if err := writeUpdatedReferencesTable(&updatedStringBuilder, modName, modState.references); err != nil {
 				return "", fmt.Errorf("write updated modules table: %w", err)
 			}
 		case modules.Unchanged:
-			if _, err := unchangedStringBuilder.WriteString(fmt.Sprintf("- %s\n", module)); err != nil {
+			if _, err := unchangedStringBuilder.WriteString(fmt.Sprintf("- %s\n", modName)); err != nil {
 				return "", err
 			}
 		default:
-			return "", fmt.Errorf("module %s has not set a release state", module)
+			return "", fmt.Errorf("module %s has not set a release state", modName)
 		}
 	}
 
@@ -339,7 +348,7 @@ func createReleaseBody(name string, moduleStates map[string]releaseModuleState) 
 	}
 
 	if unchanged := unchangedStringBuilder.String(); unchanged != "" {
-		unchangedModuleHeader := "## Unchanged Modules\n<details><summary>Expand</summary>\n"
+		unchangedModuleHeader := "## Unchanged Modules\n\n<details><summary>Expand</summary>\n"
 		if _, err := mainStringBuilder.WriteString(fmt.Sprintf("%s\n%s\n</details>\n", unchangedModuleHeader, unchanged)); err != nil {
 			return "", err
 		}
@@ -354,7 +363,7 @@ func writeUpdatedReferencesTable(
 ) error {
 	refCount := len(references)
 	if _, err := stringBuilder.WriteString(fmt.Sprintf(
-		"<details><summary>%s: %d update(s)</summary>\n\n| Reference | Manifest Digest |\n|---|---|\n",
+		"\n<details><summary>%s: %d update(s)</summary>\n\n| Reference | Manifest Digest |\n|---|---|\n",
 		moduleName, refCount,
 	)); err != nil {
 		return err
