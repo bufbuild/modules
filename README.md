@@ -11,17 +11,17 @@ Schema Registry][issue-template] issue template and our team will follow up.
 
 We currently sync automatically the following modules:
 
-| Module | Depends on | Source Community Repository |
+| Module | Source Community Repository | Depends on |
 |---|---|---|
-| cncf/xds | - envoyproxy/protoc-gen-validate<br>- googleapis/googleapis | https://github.com/cncf/xds |
-| envoyproxy/envoy | - cncf/xds<br>- googleapis/googleapis<br>- opencensus/opencensus<br>- opentelemetry/opentelemetry<br>- prometheus/client-model | https://github.com/envoyproxy/envoy |
-| envoyproxy/protoc-gen-validate |  | https://github.com/envoyproxy/protoc-gen-validate |
-| gogo/protobuf |  | https://github.com/gogo/protobuf |
-| googleapis/googleapis |  | https://github.com/googleapis/googleapis |
-| grpc/grpc | - envoyproxy/envoy<br>- googleapis/googleapis | https://github.com/grpc/grpc-proto |
-| opencensus/opencensus |  | https://github.com/census-instrumentation/opencensus-proto |
-| opentelemetry/opentelemetry |  | https://github.com/open-telemetry/opentelemetry-proto |
-| protocolbuffers/wellknowntypes |  | https://github.com/protocolbuffers/protobuf |
+| cncf/xds | https://github.com/cncf/xds | - envoyproxy/protoc-gen-validate<br>- googleapis/googleapis |
+| envoyproxy/envoy | https://github.com/envoyproxy/envoy | - cncf/xds<br>- googleapis/googleapis<br>- opencensus/opencensus<br>- opentelemetry/opentelemetry<br>- prometheus/client-model |
+| envoyproxy/protoc-gen-validate | https://github.com/envoyproxy/protoc-gen-validate |  |
+| gogo/protobuf | https://github.com/gogo/protobuf |  |
+| googleapis/googleapis | https://github.com/googleapis/googleapis |  |
+| grpc/grpc | https://github.com/grpc/grpc-proto | - envoyproxy/envoy<br>- googleapis/googleapis |
+| opencensus/opencensus | https://github.com/census-instrumentation/opencensus-proto |  |
+| opentelemetry/opentelemetry | https://github.com/open-telemetry/opentelemetry-proto |  |
+| protocolbuffers/wellknowntypes | https://github.com/protocolbuffers/protobuf |  |
 
 ## Community
 
