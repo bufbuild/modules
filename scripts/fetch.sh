@@ -169,13 +169,14 @@ trap cleanup EXIT
 # any BSR cluster, so we are not immediately receiving the updated versions of the dependencies in
 # the dependent modules.
 
+# Keep this module list synced with README.md
 # sync_references ${sync_strategy} ${owner} ${repo} ${git_remote} ${opt_proto_subdir}
-sync_references commits cncf xds https://github.com/cncf/xds # depends on [envoyproxy/protoc-gen-validate, googleapis/googleapis]
-sync_references commits envoyproxy envoy https://github.com/envoyproxy/envoy api # depends on [cncf/xds, googleapis/googleapis, opencensus/opencensus, opentelemetry/opentelemetry, prometheus/client-model]
+sync_references commits cncf xds https://github.com/cncf/xds
+sync_references commits envoyproxy envoy https://github.com/envoyproxy/envoy api
 sync_references commits envoyproxy protoc-gen-validate https://github.com/envoyproxy/protoc-gen-validate
 sync_references commits gogo protobuf https://github.com/gogo/protobuf
 sync_references commits googleapis googleapis https://github.com/googleapis/googleapis
-sync_references commits grpc grpc https://github.com/grpc/grpc-proto # depends on [envoyproxy/envoy, googleapis/googleapis]
+sync_references commits grpc grpc https://github.com/grpc/grpc-proto
 sync_references commits opencensus opencensus https://github.com/census-instrumentation/opencensus-proto src
 sync_references commits opentelemetry opentelemetry https://github.com/open-telemetry/opentelemetry-proto
 sync_references releases protocolbuffers wellknowntypes https://github.com/protocolbuffers/protobuf src
