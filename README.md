@@ -21,6 +21,7 @@ We currently sync automatically the following modules:
 | grpc/grpc | https://github.com/grpc/grpc-proto | - envoyproxy/envoy<br>- googleapis/googleapis |
 | opencensus/opencensus | https://github.com/census-instrumentation/opencensus-proto |  |
 | opentelemetry/opentelemetry | https://github.com/open-telemetry/opentelemetry-proto |  |
+| prometheus/client-model | https://github.com/prometheus/client_model |  |
 | protocolbuffers/wellknowntypes | https://github.com/protocolbuffers/protobuf |  |
 
 ## Community
