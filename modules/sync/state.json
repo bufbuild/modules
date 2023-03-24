@@ -33,6 +33,10 @@
       "latest_reference": "7aa439cb0ba78afbd009d83f32fdda6c128e0342"
     },
     {
+      "module_name": "prometheus/client-model",
+      "latest_reference": "63fb9822ca3ba7a4ba5184071fb8f2ea000a99ef"
+    },
+    {
       "module_name": "protocolbuffers/wellknowntypes",
       "latest_reference": "v22.2"
     }
