@@ -6,7 +6,7 @@
     },
     {
       "module_name": "envoyproxy/envoy",
-      "latest_reference": "9d5c20d00ad73b67ce81101479d8c68285eb8174"
+      "latest_reference": "4256e460ea5e8e386fff57f309797d4fa68324e4"
     },
     {
       "module_name": "envoyproxy/protoc-gen-validate",
@@ -18,7 +18,7 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "2205f23a4ef0e505a5f9abf3cb54531fb4e959d9"
+      "latest_reference": "9595f234007197daa47112c006fcf18865acfaca"
     },
     {
       "module_name": "grpc/grpc",
