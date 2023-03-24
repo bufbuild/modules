@@ -179,6 +179,7 @@ sync_references commits googleapis googleapis https://github.com/googleapis/goog
 sync_references commits grpc grpc https://github.com/grpc/grpc-proto
 sync_references commits opencensus opencensus https://github.com/census-instrumentation/opencensus-proto src
 sync_references commits opentelemetry opentelemetry https://github.com/open-telemetry/opentelemetry-proto
+sync_references commits prometheus client-model https://github.com/prometheus/client_model
 sync_references releases protocolbuffers wellknowntypes https://github.com/protocolbuffers/protobuf src
 
 popd > /dev/null
