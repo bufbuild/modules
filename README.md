@@ -24,6 +24,14 @@ We currently sync automatically the following modules:
 | prometheus/client-model | https://github.com/prometheus/client_model |  |
 | protocolbuffers/wellknowntypes | https://github.com/protocolbuffers/protobuf |  |
 
+### How we handle dependencies
+
+Dependencies are an essential part of these community modules as they help developers reuse well known Protobuf types, reduce errors and speed up the development process. However, we at Buf do not have control over the source of these modules, and managing and pinning dependencies to their exact commit can be difficult, especially when multiple modules sources and build systems are involved.
+
+Our current approach for BSR instances is as follows; first we sort the order in which we sync these modules such that standalone modules are synced first, then after they succeed sync the ones that depends on them, which would use the latest pushed dependency commit. As long as the dependencies don’t have any breaking change in the source code, this should be sufficient and stable for upstream modules.
+
+We know this is not ideal, and that’s why we’ve started to get more involved in those source repositories, trying to steer them into using Buf tools to manage their protos (e.g. [envoyproxy/envoy](https://github.com/envoyproxy/envoy/pull/17515)), so we can better interpret their `buf.yaml` file(s), and can do a better job pinning their dependencies.
+
 ## Community
 
 For help and discussion regarding Protobuf managed modules, join us on
