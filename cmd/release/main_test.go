@@ -357,6 +357,28 @@ func TestWriteReferencesTable(t *testing.T) {
 
 		const (
 			moduleName = "foo/bar"
+			refsCount  = 3
+		)
+		var strBuilder strings.Builder
+		require.NoError(t, writeUpdatedReferencesTable(&strBuilder, moduleName, populateReferences(refsCount)))
+		const want = `
+<details><summary>foo/bar: 3 update(s)</summary>
+
+| Reference | Manifest Digest |
+|---|---|
+| commit000 | digest000 |
+| commit001 | digest001 |
+| commit002 | digest002 |
+
+</details>
+`
+		assert.Equal(t, want, strBuilder.String())
+	})
+	t.Run("rightInTheLimit", func(t *testing.T) {
+		t.Parallel()
+
+		const (
+			moduleName = "foo/bar"
 			refsCount  = 5
 		)
 		var strBuilder strings.Builder
@@ -376,33 +398,29 @@ func TestWriteReferencesTable(t *testing.T) {
 `
 		assert.Equal(t, want, strBuilder.String())
 	})
-	t.Run("rightInTheLimit", func(t *testing.T) {
+	t.Run("oneAfterLimit", func(t *testing.T) {
 		t.Parallel()
 
 		const (
 			moduleName = "foo/bar"
-			refsCount  = 10
+			refsCount  = 6
 		)
 		var strBuilder strings.Builder
 		require.NoError(t, writeUpdatedReferencesTable(&strBuilder, moduleName, populateReferences(refsCount)))
 		const want = `
-<details><summary>foo/bar: 10 update(s)</summary>
+<details><summary>foo/bar: 6 update(s)</summary>
 
 | Reference | Manifest Digest |
 |---|---|
 | commit000 | digest000 |
 | commit001 | digest001 |
-| commit002 | digest002 |
-| commit003 | digest003 |
+| ... 2 references skipped ... | ... 2 references skipped ... |
 | commit004 | digest004 |
 | commit005 | digest005 |
-| commit006 | digest006 |
-| commit007 | digest007 |
-| commit008 | digest008 |
-| commit009 | digest009 |
 
 </details>
 `
+
 		assert.Equal(t, want, strBuilder.String())
 	})
 	t.Run("afterLimit", func(t *testing.T) {
@@ -421,13 +439,7 @@ func TestWriteReferencesTable(t *testing.T) {
 |---|---|
 | commit000 | digest000 |
 | commit001 | digest001 |
-| commit002 | digest002 |
-| commit003 | digest003 |
-| commit004 | digest004 |
-| ... 90 references skipped ... | ... 90 references skipped ... |
-| commit095 | digest095 |
-| commit096 | digest096 |
-| commit097 | digest097 |
+| ... 96 references skipped ... | ... 96 references skipped ... |
 | commit098 | digest098 |
 | commit099 | digest099 |
 
