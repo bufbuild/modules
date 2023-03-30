@@ -420,7 +420,6 @@ func TestWriteReferencesTable(t *testing.T) {
 
 </details>
 `
-
 		assert.Equal(t, want, strBuilder.String())
 	})
 	t.Run("afterLimit", func(t *testing.T) {
