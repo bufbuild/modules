@@ -381,7 +381,8 @@ func writeUpdatedReferencesTable(
 	if fitsInTable {
 		refsToWrite = references // write them all
 	} else {
-		refsToWrite = append(references[0:topRows], references[refCount-bottomRows:]...)
+		refsToWrite = references[0:topRows]
+		refsToWrite = append(refsToWrite, references[refCount-bottomRows:]...)
 	}
 	// write table
 	for i, ref := range refsToWrite {
