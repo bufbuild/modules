@@ -6,7 +6,7 @@
     },
     {
       "module_name": "envoyproxy/envoy",
-      "latest_reference": "aa02be22f513d0d14fd0038c9d960c233cf92295"
+      "latest_reference": "fe3e54fce125e2574eaccbf9bc8daeeb68d8ff5a"
     },
     {
       "module_name": "envoyproxy/protoc-gen-validate",
@@ -18,11 +18,11 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "53d620a8e2434c972b3c2808efaa5402051d44c7"
+      "latest_reference": "4c3b682f501bb965d34c3d4fc3461edfccf962db"
     },
     {
       "module_name": "grpc/grpc",
-      "latest_reference": "46b300ef7c726aa569b914eb9957353c329117e9"
+      "latest_reference": "26635376b3f47a11126a0f4b4b5b6de7fe5a074a"
     },
     {
       "module_name": "opencensus/opencensus",
