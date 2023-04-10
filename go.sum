@@ -1,5 +1,5 @@
-github.com/bufbuild/buf v1.16.0 h1:4nkXfWujY4BOjpOI1pGeDNNOp47WeCy9QEy4cTTyq2I=
-github.com/bufbuild/buf v1.16.0/go.mod h1:nJBexoxW5QqvXVY+j1NqWMLusm91Atwv6kSRq4g1dvA=
+github.com/bufbuild/buf v1.17.0 h1:HqfVS5v81r1Q+vWm91V1uqdB77vO48uSjU1LAYC2DyE=
+github.com/bufbuild/buf v1.17.0/go.mod h1:V//7h3wKBA+VVE2cv8CUox57dt9Y6JQ6tCM6cF2ptF8=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
