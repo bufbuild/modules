@@ -395,7 +395,7 @@ func writeUpdatedReferencesTable(
 				return err
 			}
 		}
-		if _, err := stringBuilder.WriteString(fmt.Sprintf("| %s | %s |\n", ref.GetName(), ref.GetDigest())); err != nil {
+		if _, err := stringBuilder.WriteString(fmt.Sprintf("| `%s` | `%s` |\n", ref.GetName(), ref.GetDigest())); err != nil {
 			return err
 		}
 	}

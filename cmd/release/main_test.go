@@ -178,8 +178,8 @@ func TestCreateReleaseBody(t *testing.T) {
 
 | Reference | Manifest Digest |
 |---|---|
-| v1.0.0 | fakedigest |
-| v1.1.0 | fakedigest |
+| ` + "`v1.0.0`" + ` | ` + "`fakedigest`" + ` |
+| ` + "`v1.1.0`" + ` | ` + "`fakedigest`" + ` |
 
 </details>
 
@@ -225,8 +225,8 @@ func TestCreateReleaseBody(t *testing.T) {
 
 | Reference | Manifest Digest |
 |---|---|
-| v1.0.0 | fakedigest |
-| v1.1.0 | fakedigest |
+| ` + "`v1.0.0`" + ` | ` + "`fakedigest`" + ` |
+| ` + "`v1.1.0`" + ` | ` + "`fakedigest`" + ` |
 
 </details>
 
@@ -236,8 +236,8 @@ func TestCreateReleaseBody(t *testing.T) {
 
 | Reference | Manifest Digest |
 |---|---|
-| v1.0.0 | fakedigest |
-| v1.1.0 | fakedigest |
+| ` + "`v1.0.0`" + ` | ` + "`fakedigest`" + ` |
+| ` + "`v1.1.0`" + ` | ` + "`fakedigest`" + ` |
 
 </details>
 
@@ -277,7 +277,7 @@ func TestCreateReleaseBody(t *testing.T) {
 
 | Reference | Manifest Digest |
 |---|---|
-| v1.0.0 | fakedigest |
+| ` + "`v1.0.0`" + ` | ` + "`fakedigest`" + ` |
 
 </details>
 
@@ -285,7 +285,7 @@ func TestCreateReleaseBody(t *testing.T) {
 
 | Reference | Manifest Digest |
 |---|---|
-| v1.0.0 | fakedigest |
+| ` + "`v1.0.0`" + ` | ` + "`fakedigest`" + ` |
 
 </details>
 
@@ -293,7 +293,7 @@ func TestCreateReleaseBody(t *testing.T) {
 
 | Reference | Manifest Digest |
 |---|---|
-| v1.0.0 | fakedigest |
+| ` + "`v1.0.0`" + ` | ` + "`fakedigest`" + ` |
 
 </details>
 
@@ -303,7 +303,7 @@ func TestCreateReleaseBody(t *testing.T) {
 
 | Reference | Manifest Digest |
 |---|---|
-| v1.0.0 | fakedigest |
+| ` + "`v1.0.0`" + ` | ` + "`fakedigest`" + ` |
 
 </details>
 
@@ -311,7 +311,7 @@ func TestCreateReleaseBody(t *testing.T) {
 
 | Reference | Manifest Digest |
 |---|---|
-| v1.0.0 | fakedigest |
+| ` + "`v1.0.0`" + ` | ` + "`fakedigest`" + ` |
 
 </details>
 
@@ -319,7 +319,7 @@ func TestCreateReleaseBody(t *testing.T) {
 
 | Reference | Manifest Digest |
 |---|---|
-| v1.0.0 | fakedigest |
+| ` + "`v1.0.0`" + ` | ` + "`fakedigest`" + ` |
 
 </details>
 
@@ -366,9 +366,9 @@ func TestWriteReferencesTable(t *testing.T) {
 
 | Reference | Manifest Digest |
 |---|---|
-| commit000 | digest000 |
-| commit001 | digest001 |
-| commit002 | digest002 |
+| ` + "`commit000`" + ` | ` + "`digest000`" + ` |
+| ` + "`commit001`" + ` | ` + "`digest001`" + ` |
+| ` + "`commit002`" + ` | ` + "`digest002`" + ` |
 
 </details>
 `
@@ -388,11 +388,11 @@ func TestWriteReferencesTable(t *testing.T) {
 
 | Reference | Manifest Digest |
 |---|---|
-| commit000 | digest000 |
-| commit001 | digest001 |
-| commit002 | digest002 |
-| commit003 | digest003 |
-| commit004 | digest004 |
+| ` + "`commit000`" + ` | ` + "`digest000`" + ` |
+| ` + "`commit001`" + ` | ` + "`digest001`" + ` |
+| ` + "`commit002`" + ` | ` + "`digest002`" + ` |
+| ` + "`commit003`" + ` | ` + "`digest003`" + ` |
+| ` + "`commit004`" + ` | ` + "`digest004`" + ` |
 
 </details>
 `
@@ -412,11 +412,11 @@ func TestWriteReferencesTable(t *testing.T) {
 
 | Reference | Manifest Digest |
 |---|---|
-| commit000 | digest000 |
-| commit001 | digest001 |
+| ` + "`commit000`" + ` | ` + "`digest000`" + ` |
+| ` + "`commit001`" + ` | ` + "`digest001`" + ` |
 | ... 2 references skipped ... | ... 2 references skipped ... |
-| commit004 | digest004 |
-| commit005 | digest005 |
+| ` + "`commit004`" + ` | ` + "`digest004`" + ` |
+| ` + "`commit005`" + ` | ` + "`digest005`" + ` |
 
 </details>
 `
@@ -436,11 +436,11 @@ func TestWriteReferencesTable(t *testing.T) {
 
 | Reference | Manifest Digest |
 |---|---|
-| commit000 | digest000 |
-| commit001 | digest001 |
+| ` + "`commit000`" + ` | ` + "`digest000`" + ` |
+| ` + "`commit001`" + ` | ` + "`digest001`" + ` |
 | ... 96 references skipped ... | ... 96 references skipped ... |
-| commit098 | digest098 |
-| commit099 | digest099 |
+| ` + "`commit098`" + ` | ` + "`digest098`" + ` |
+| ` + "`commit099`" + ` | ` + "`digest099`" + ` |
 
 </details>
 `
