@@ -81,8 +81,8 @@ sync_references() {
 
   # If there is a LICENSE file in the root of the repo, but not in the proto subdir (if provided)
   # copy it to the proto subdir so that it's included in the module as part of process_ref().
-  if [ ! -e "${proto_subdir}/LICENSE" ] && [ -s "LICENSE" ]; then
-    cp "LICENSE" "${proto_subdir}"
+  if [ ! -e "${git_owner}/${git_repo}/${proto_subdir}/LICENSE" ] && [ -s "LICENSE" ]; then
+    cp "LICENSE" "${git_owner}/${git_repo}/${proto_subdir}"
   fi
 
   pushd "${git_owner}/${git_repo}/${proto_subdir}" > /dev/null
