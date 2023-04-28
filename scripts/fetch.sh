@@ -13,11 +13,9 @@ log() {
   >&2 echo "$@"
 }
 
-# process_ref should be called within the appropriate proto src directory
-# where files will be copied from. Rsync file should be relative to this
-# dir. This func process a reference, checks out to it, copies relevant
-# files and stores them in CAS format. It updates references in state
-# files.
+# process_ref should be called within the appropriate proto src directory where files will be copied
+# from. Rsync file should be relative to this dir. This func process a reference, checks out to it,
+# copies relevant files and stores them in CAS format. It updates references in state files.
 process_ref() {
   local -r mod_ref="${1}"
   local -r mod_tmp_path="$(mktemp -d)"
@@ -26,14 +24,20 @@ process_ref() {
   git -c advice.detachedHead=false checkout "${mod_ref}" -q
   git clean -df
 
+  # If there was a proto_subdir set, and there is no LICENSE file in the current path (subdir), and
+  # there is a LICENSE at root of the repo, copy it here (subdir) so that it's included in the
+  # module reference.
+  if [ "${proto_subdir}" != "." ] && [ ! -e "LICENSE" ] && [ -s "${module_root}/${git_owner}/${git_repo}/LICENSE" ]; then
+    cp "${module_root}/${git_owner}/${git_repo}/LICENSE" .
+  fi
+
   # Copy only curated subset of files from that repo into a tmp module dir.
   rsync -amR --include-from="${module_static_path}/rsync.incl" . "${mod_tmp_path}"
   cp "${module_static_path}/buf.md" "${mod_tmp_path}"
   cp "${module_static_path}/buf.yaml" "${mod_tmp_path}"
 
-  # Go into the copied files, make sure it has right files and is
-  # buildable. Then remove `buf.lock` file since it's no longer
-  # relevant: each BSR cluster will sync itself from the base files and
+  # Go into the copied files, make sure it has right files and is buildable. Then remove `buf.lock`
+  # file since it's no longer relevant: each BSR cluster will sync itself from the base files and
   # regenerate its own `buf.lock`.
   pushd "${mod_tmp_path}" > /dev/null
   buf mod update
@@ -41,9 +45,8 @@ process_ref() {
   rm buf.lock
   popd > /dev/null
 
-  # process the prepared module: convert it to CAS from the tmp mod
-  # directory and put blob files in the cas path in the repo, and update
-  # the state file.
+  # process the prepared module: convert it to CAS from the tmp mod directory and put blob files in
+  # the cas path in the repo, and update the state file.
   pushd "${repo_root}" > /dev/null
   go run "${repo_root}/cmd/modprocessor" \
     --root-sync-dir="${all_mods_sync_path}" \
@@ -56,8 +59,7 @@ process_ref() {
 
 # sync_references ${sync_strategy} ${owner} ${repo} ${git_remote} ${opt_proto_subdir}
 #
-# iterates over all git references, and syncs their content to the sync
-# dir.
+# iterates over all git references, and syncs their content to the sync dir.
 sync_references() {
   local -r sync_strategy="${1}"
   local -r owner="${2}"
@@ -79,12 +81,7 @@ sync_references() {
   fi
   git clone --single-branch "${git_remote}" "${git_owner}/${git_repo}"
 
-  # If there is a LICENSE file in the root of the repo, but not in the proto subdir (if provided)
-  # copy it to the proto subdir so that it's included in the module as part of process_ref().
-  if [ ! -e "${git_owner}/${git_repo}/${proto_subdir}/LICENSE" ] && [ -s "${git_owner}/${git_repo}/LICENSE" ]; then
-    cp "${git_owner}/${git_repo}/LICENSE" "${git_owner}/${git_repo}/${proto_subdir}"
-  fi
-
+  local -r module_root=$(pwd)
   pushd "${git_owner}/${git_repo}/${proto_subdir}" > /dev/null
 
   local rev_list
