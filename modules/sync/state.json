@@ -22,7 +22,7 @@
     },
     {
       "module_name": "grpc-ecosystem/grpc-gateway",
-      "latest_reference": "01a4f182abc61c70ae0171d36d72d22618c712f9"
+      "latest_reference": "59601f95f498379ea7082af90a812b4812a4795c"
     },
     {
       "module_name": "grpc/grpc",
