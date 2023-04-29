@@ -2,7 +2,7 @@
 
 set -eo pipefail
 
-# echo "${BUF_TOKEN}" | buf registry login --debug --token-stdin --username "${BUF_USER}"
+echo "${BUF_TOKEN}" | buf registry login --debug --token-stdin --username "${BUF_USER}"
 
 repo_root="$(cd "$(dirname "${0}")/.." && pwd)"
 all_mods_sync_path="${repo_root}/modules/sync"
@@ -175,16 +175,16 @@ trap cleanup EXIT
 
 # Keep this module list synced with README.md
 # sync_references ${sync_strategy} ${owner} ${repo} ${git_remote} ${opt_proto_subdir}
-# sync_references commits cncf xds https://github.com/cncf/xds
-# sync_references commits envoyproxy envoy https://github.com/envoyproxy/envoy api
-# sync_references commits envoyproxy protoc-gen-validate https://github.com/envoyproxy/protoc-gen-validate
-# sync_references commits gogo protobuf https://github.com/gogo/protobuf
-# sync_references commits googleapis googleapis https://github.com/googleapis/googleapis
-# sync_references commits grpc grpc https://github.com/grpc/grpc-proto
+sync_references commits cncf xds https://github.com/cncf/xds
+sync_references commits envoyproxy envoy https://github.com/envoyproxy/envoy api
+sync_references commits envoyproxy protoc-gen-validate https://github.com/envoyproxy/protoc-gen-validate
+sync_references commits gogo protobuf https://github.com/gogo/protobuf
+sync_references commits googleapis googleapis https://github.com/googleapis/googleapis
+sync_references commits grpc grpc https://github.com/grpc/grpc-proto
 sync_references commits grpc-ecosystem grpc-gateway https://github.com/grpc-ecosystem/grpc-gateway
-# sync_references commits opencensus opencensus https://github.com/census-instrumentation/opencensus-proto src
-# sync_references commits opentelemetry opentelemetry https://github.com/open-telemetry/opentelemetry-proto
-# sync_references commits prometheus client-model https://github.com/prometheus/client_model
-# sync_references releases protocolbuffers wellknowntypes https://github.com/protocolbuffers/protobuf src
+sync_references commits opencensus opencensus https://github.com/census-instrumentation/opencensus-proto src
+sync_references commits opentelemetry opentelemetry https://github.com/open-telemetry/opentelemetry-proto
+sync_references commits prometheus client-model https://github.com/prometheus/client_model
+sync_references releases protocolbuffers wellknowntypes https://github.com/protocolbuffers/protobuf src
 
 popd > /dev/null
