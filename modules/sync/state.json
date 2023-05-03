@@ -6,7 +6,7 @@
     },
     {
       "module_name": "envoyproxy/envoy",
-      "latest_reference": "338c4fc9a0f65106e3a2410be94ed7f065795471"
+      "latest_reference": "047f3c8f2952a52542d5ee79196259e1c63df4cd"
     },
     {
       "module_name": "envoyproxy/protoc-gen-validate",
@@ -18,11 +18,11 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "e7e64adb50cf675189a078a8c30136b319b44e79"
+      "latest_reference": "4f9e1a058e186df999eb85d7abec8fb092b7a145"
     },
     {
       "module_name": "grpc-ecosystem/grpc-gateway",
-      "latest_reference": "01a4f182abc61c70ae0171d36d72d22618c712f9"
+      "latest_reference": "dffaa62acc4819a3357c49fcc67ff9cc0af9ff75"
     },
     {
       "module_name": "grpc/grpc",
@@ -30,7 +30,7 @@
     },
     {
       "module_name": "opencensus/opencensus",
-      "latest_reference": "3619b5dda8bff26ff1974714c24de8f6d4953811"
+      "latest_reference": "1664cc961550be8f3058ddd29390350242f44f1f"
     },
     {
       "module_name": "opentelemetry/opentelemetry",
@@ -38,7 +38,7 @@
     },
     {
       "module_name": "prometheus/client-model",
-      "latest_reference": "63fb9822ca3ba7a4ba5184071fb8f2ea000a99ef"
+      "latest_reference": "91c3945f2cfbfb9040e34a0b6764d804b5a5a490"
     },
     {
       "module_name": "protocolbuffers/wellknowntypes",
