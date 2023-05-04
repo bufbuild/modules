@@ -25,6 +25,18 @@ We currently sync automatically the following modules:
 | prometheus/client-model | https://github.com/prometheus/client_model |  |
 | protocolbuffers/wellknowntypes | https://github.com/protocolbuffers/protobuf |  |
 
+### How we handle dependencies
+
+Dependencies are an essential part of these community modules as they help developers reuse well
+known Protobuf types, reduce errors and speed up the development process. We do not control the
+source of these modules, and managing and pinning dependencies to their exact commit can be
+difficult, especially when multiple module sources and build systems are involved.
+
+To minimize issues with pinned dependencies on these modules, we sync them in the following order.
+First, we sync standalone modules. After they succeed, we then sync the modules that depend on them,
+which use the latest pushed dependency commit. As long as the dependencies don’t have any breaking
+change in the source code, this should be sufficient and stable for upstream modules.
+
 ## Community
 
 For help and discussion regarding Protobuf managed modules, join us on
