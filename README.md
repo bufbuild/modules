@@ -28,15 +28,14 @@ We currently sync automatically the following modules:
 ### How we handle dependencies
 
 Dependencies are an essential part of these community modules as they help developers reuse well
-known Protobuf types, reduce errors and speed up the development process. However, we at Buf do not
-have control over the source of these modules, and managing and pinning dependencies to their exact
-commit can be difficult, especially when multiple modules sources and build systems are involved.
+known Protobuf types, reduce errors and speed up the development process. We do not control the
+source of these modules, and managing and pinning dependencies to their exact commit can be
+difficult, especially when multiple module sources and build systems are involved.
 
-Our current approach for BSR instances is as follows; first we sort the order in which we sync these
-modules such that standalone modules are synced first, then after they succeed sync the ones that
-depends on them, which would use the latest pushed dependency commit. As long as the dependencies
-don’t have any breaking change in the source code, this should be sufficient and stable for upstream
-modules.
+To minimize issues with pinned dependencies on these modules, we sync them in the following order.
+First, we sync standalone modules. After they succeed, we then sync the modules that depend on them,
+which use the latest pushed dependency commit. As long as the dependencies don’t have any breaking
+change in the source code, this should be sufficient and stable for upstream modules.
 
 ## Community
 
