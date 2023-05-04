@@ -368,30 +368,35 @@ func writeUpdatedReferencesTable(
 	)); err != nil {
 		return err
 	}
-	// maxRows maximum amount of reference rows in a table
-	const maxRows = 10
-	if refCount <= maxRows { //nolint:nestif
-		for _, ref := range references {
-			if _, err := stringBuilder.WriteString(fmt.Sprintf("| %s | %s |\n", ref.GetName(), ref.GetDigest())); err != nil {
+	const (
+		topRows    = 2
+		bottomRows = 2
+		// maxRows is the maximum amount of reference rows in a table
+		maxRows = topRows + bottomRows + 1 // +1 middle row saying something was skipped
+	)
+	var (
+		refsToWrite []*statev1alpha1.ModuleReference
+		fitsInTable = refCount <= maxRows
+	)
+	if fitsInTable {
+		refsToWrite = references // write them all
+	} else {
+		refsToWrite = references[0:topRows]
+		refsToWrite = append(refsToWrite, references[refCount-bottomRows:]...)
+	}
+	// write table
+	for i, ref := range refsToWrite {
+		if !fitsInTable && i == topRows {
+			skippedRows := refCount - topRows - bottomRows
+			if _, err := stringBuilder.WriteString(fmt.Sprintf(
+				"| ... %d references skipped ... | ... %d references skipped ... |\n",
+				skippedRows, skippedRows,
+			)); err != nil {
 				return err
 			}
 		}
-	} else {
-		for i, ref := range references {
-			// write only maxRows amount, first 5, last 5
-			if (i < maxRows/2) || (i >= refCount-(maxRows/2)) {
-				if _, err := stringBuilder.WriteString(fmt.Sprintf("| %s | %s |\n", ref.GetName(), ref.GetDigest())); err != nil {
-					return err
-				}
-			}
-			if i == maxRows/2 {
-				if _, err := stringBuilder.WriteString(fmt.Sprintf(
-					"| ... %d references skipped ... | ... %d references skipped ... |\n",
-					refCount-maxRows, refCount-maxRows,
-				)); err != nil {
-					return err
-				}
-			}
+		if _, err := stringBuilder.WriteString(fmt.Sprintf("| `%s` | `%s` |\n", ref.GetName(), ref.GetDigest())); err != nil {
+			return err
 		}
 	}
 	if _, err := stringBuilder.WriteString("\n</details>\n"); err != nil {
