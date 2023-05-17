@@ -53,7 +53,7 @@ jobs:
           check-latest: true
           cache: true
       - name: Auth To GCP
-        uses: google-github-actions/auth@ef5d53e30bbcd8d0836f4288f5e50ff3e086997d
+        uses: google-github-actions/auth@35b0e87d162680511bf346c299f71c9c5c379033
         with:
           workload_identity_provider: projects/252484117105/locations/global/workloadIdentityPools/modules-workload-pool/providers/modules-workload-provider
           service_account: buf-modules-1-publisher@buf-modules-1.iam.gserviceaccount.com
