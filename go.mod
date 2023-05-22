@@ -6,7 +6,7 @@ require (
 	github.com/bufbuild/buf v1.19.0
 	github.com/google/go-github/v48 v48.2.0
 	github.com/hashicorp/go-retryablehttp v0.7.2
-	github.com/stretchr/testify v1.8.2
+	github.com/stretchr/testify v1.8.3
 	go.uber.org/multierr v1.11.0
 	golang.org/x/mod v0.10.0
 	golang.org/x/oauth2 v0.8.0
