@@ -19,6 +19,10 @@ Example, the source code for the `googleapis/googleapis` module is found here:
 
 https://github.com/googleapis/googleapis/tree/master/google
 
+**Do the proto files declare a package?**
+
+For example, we will accept modules that [declare a package](https://github.com/googleapis/googleapis/blob/master/google/api/annotations.proto#L15-L27), 
+but will reject those that [do not](https://github.com/GoogleChrome/lighthouse/blob/main/proto/lighthouse-result.proto#L1-L10).
 
 ## Optional
 
