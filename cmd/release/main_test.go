@@ -118,6 +118,42 @@ func TestCalculateNewReleaseModules(t *testing.T) {
 			}}, got)
 		assert.True(t, newContent)
 	})
+
+	t.Run("NewAndRemoved-FromPreviousRelease", func(t *testing.T) {
+		t.Parallel()
+		prevRelease := map[string]string{
+			"old/foo": "ref1",
+			"old/bar": "ref2",
+		}
+		currentRelease := map[string]string{
+			"new/foo": "ref3",
+			"new/bar": "ref4",
+		}
+		got, newContent, err := calculateModulesStates(filepath.Join("testdata/golden/newandremoved-release", bufstate.SyncRoot), prevRelease, currentRelease)
+		require.NoError(t, err)
+		assert.Equal(t, map[string]releaseModuleState{
+			"old/foo": {
+				status: modules.Removed,
+			},
+			"old/bar": {
+				status: modules.Removed,
+			},
+			"new/foo": {
+				status: modules.New,
+				references: []*statev1alpha1.ModuleReference{{
+					Name:   "ref3",
+					Digest: "dummyManifestDigestNewFoo",
+				}},
+			},
+			"new/bar": {
+				status: modules.New,
+				references: []*statev1alpha1.ModuleReference{{
+					Name:   "ref4",
+					Digest: "dummyManifestDigestNewBar",
+				}},
+			}}, got)
+		assert.True(t, newContent)
+	})
 }
 
 func TestMapGlobalStateReferences(t *testing.T) {
@@ -246,7 +282,7 @@ func TestCreateReleaseBody(t *testing.T) {
 		require.NoError(t, err)
 		require.Equal(t, want, got)
 	})
-	t.Run("NewUpdatedUnchanged", func(t *testing.T) {
+	t.Run("NewUpdatedUnchangedRemoved", func(t *testing.T) {
 		t.Parallel()
 		modulesInBody := map[string]modules.Status{
 			"test-org/aaa-new-repo":        modules.New,
@@ -258,13 +294,21 @@ func TestCreateReleaseBody(t *testing.T) {
 			"test-org/a111-unchanged-repo": modules.Unchanged,
 			"test-org/a222-unchanged-repo": modules.Unchanged,
 			"test-org/a888-unchanged-repo": modules.Unchanged,
+			"test-org/a111-removed-repo":   modules.Removed,
+			"test-org/a222-removed-repo":   modules.Removed,
+			"test-org/a888-removed-repo":   modules.Removed,
 		}
 		mods := make(map[string]releaseModuleState, len(modulesInBody))
 		for modName, state := range modulesInBody {
+			var references []*statev1alpha1.ModuleReference
+			switch state {
+			case modules.New, modules.Updated:
+				references = []*statev1alpha1.ModuleReference{{Name: "v1.0.0", Digest: "fakedigest"}}
+			}
 			// map order is not guaranteed
 			mods[modName] = releaseModuleState{
 				status:     state,
-				references: []*statev1alpha1.ModuleReference{{Name: "v1.0.0", Digest: "fakedigest"}},
+				references: references,
 			}
 		}
 
@@ -330,6 +374,16 @@ func TestCreateReleaseBody(t *testing.T) {
 - test-org/a111-unchanged-repo
 - test-org/a222-unchanged-repo
 - test-org/a888-unchanged-repo
+
+</details>
+
+## Removed Modules
+
+<details><summary>Expand</summary>
+
+- test-org/a111-removed-repo
+- test-org/a222-removed-repo
+- test-org/a888-removed-repo
 
 </details>
 `

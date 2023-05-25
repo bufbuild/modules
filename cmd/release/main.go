@@ -374,7 +374,7 @@ func createReleaseBody(name string, moduleStates map[string]releaseModuleState) 
 
 	if removed := removedStringBuilder.String(); removed != "" {
 		removedModuleHeader := "## Removed Modules\n\n<details><summary>Expand</summary>\n"
-		if _, err := mainStringBuilder.WriteString(fmt.Sprintf("%s\n%s\n</details>\n", removedModuleHeader, removed)); err != nil {
+		if _, err := mainStringBuilder.WriteString(fmt.Sprintf("\n%s\n%s\n</details>\n", removedModuleHeader, removed)); err != nil {
 			return "", err
 		}
 	}
