@@ -21,10 +21,6 @@
       "latest_reference": "d6b7eb591353e5fb41fa58c0d3127a18b278cefd"
     },
     {
-      "module_name": "googlechrome/lighthouse",
-      "latest_reference": "v10.2.0"
-    },
-    {
       "module_name": "grpc-ecosystem/grpc-gateway",
       "latest_reference": "bf0b9afcf8965eb2ebd585ace1ccce0536839a92"
     },
