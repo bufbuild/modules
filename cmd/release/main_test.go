@@ -34,7 +34,7 @@ func TestCalculateNewReleaseModules(t *testing.T) {
 		currentRelease := map[string]string{
 			"envoyproxy/envoy": "bb554f53ad8d3a2a2ae4cbd7102a3e20ae00b558",
 		}
-		got, newContent, err := calculateModulesStates(filepath.Join("testdata/golden/new-release", bufstate.SyncRoot), nil, currentRelease)
+		got, err := calculateModulesStates(filepath.Join("testdata/golden/new-release", bufstate.SyncRoot), nil, currentRelease)
 		require.NoError(t, err)
 		assert.Equal(t, map[string]releaseModuleState{
 			"envoyproxy/envoy": {
@@ -44,7 +44,7 @@ func TestCalculateNewReleaseModules(t *testing.T) {
 					Digest: "dummyManifestDigestEnvoy",
 				}},
 			}}, got)
-		assert.True(t, newContent)
+		assert.True(t, shouldRelease(got))
 	})
 	t.Run("UpdatedRelease-FromPreviousRelease", func(t *testing.T) {
 		t.Parallel()
@@ -55,7 +55,7 @@ func TestCalculateNewReleaseModules(t *testing.T) {
 			"envoyproxy/envoy": "7850b6bb6494e3bfc093b1aff20282ab30b67940", // updated
 
 		}
-		got, newContent, err := calculateModulesStates(filepath.Join("testdata/golden/updated-release", bufstate.SyncRoot), prevRelease, currentRelease)
+		got, err := calculateModulesStates(filepath.Join("testdata/golden/updated-release", bufstate.SyncRoot), prevRelease, currentRelease)
 		require.NoError(t, err)
 		assert.Equal(t, map[string]releaseModuleState{
 			"envoyproxy/envoy": {
@@ -65,7 +65,7 @@ func TestCalculateNewReleaseModules(t *testing.T) {
 					Digest: "updatedDummyManifestDigestEnvoy",
 				}},
 			}}, got)
-		assert.True(t, newContent)
+		assert.True(t, shouldRelease(got))
 	})
 
 	t.Run("NoChangesRelease-FromPreviousRelease", func(t *testing.T) {
@@ -76,13 +76,13 @@ func TestCalculateNewReleaseModules(t *testing.T) {
 		currentRelease := map[string]string{
 			"envoyproxy/envoy": "7850b6bb6494e3bfc093b1aff20282ab30b67940",
 		}
-		got, newContent, err := calculateModulesStates(filepath.Join("not-relevant", bufstate.SyncRoot), prevRelease, currentRelease)
+		got, err := calculateModulesStates(filepath.Join("not-relevant", bufstate.SyncRoot), prevRelease, currentRelease)
 		require.NoError(t, err)
 		assert.Equal(t, map[string]releaseModuleState{
 			"envoyproxy/envoy": {
 				status: modules.Unchanged,
 			}}, got)
-		assert.False(t, newContent)
+		assert.False(t, shouldRelease(got))
 	})
 
 	t.Run("NewUpdatedAndUnchanged-FromPreviousRelease", func(t *testing.T) {
@@ -96,7 +96,7 @@ func TestCalculateNewReleaseModules(t *testing.T) {
 			"envoyproxy/protoc-gen-validate": "38260ee45796b420276ac925d826ecec8fc3e9a8", // unchanged
 			"gogo/protobuf":                  "8892e00f944642b7dc8d81b419879fd4be12f056", // new
 		}
-		got, newContent, err := calculateModulesStates(filepath.Join("testdata/golden/newupdatedandunchanged-release", bufstate.SyncRoot), prevRelease, currentRelease)
+		got, err := calculateModulesStates(filepath.Join("testdata/golden/newupdatedandunchanged-release", bufstate.SyncRoot), prevRelease, currentRelease)
 		require.NoError(t, err)
 		assert.Equal(t, map[string]releaseModuleState{
 			"envoyproxy/protoc-gen-validate": {
@@ -116,7 +116,7 @@ func TestCalculateNewReleaseModules(t *testing.T) {
 					Digest: "newDummyManifestDigestGogoProtobuf",
 				}},
 			}}, got)
-		assert.True(t, newContent)
+		assert.True(t, shouldRelease(got))
 	})
 
 	t.Run("NewAndRemoved-FromPreviousRelease", func(t *testing.T) {
@@ -129,7 +129,7 @@ func TestCalculateNewReleaseModules(t *testing.T) {
 			"new/foo": "ref3",
 			"new/bar": "ref4",
 		}
-		got, newContent, err := calculateModulesStates(filepath.Join("testdata/golden/newandremoved-release", bufstate.SyncRoot), prevRelease, currentRelease)
+		got, err := calculateModulesStates(filepath.Join("testdata/golden/newandremoved-release", bufstate.SyncRoot), prevRelease, currentRelease)
 		require.NoError(t, err)
 		assert.Equal(t, map[string]releaseModuleState{
 			"old/foo": {
@@ -152,7 +152,7 @@ func TestCalculateNewReleaseModules(t *testing.T) {
 					Digest: "dummyManifestDigestNewBar",
 				}},
 			}}, got)
-		assert.True(t, newContent)
+		assert.True(t, shouldRelease(got))
 	})
 }
 
