@@ -18,6 +18,7 @@ We currently sync automatically the following modules:
 | envoyproxy/protoc-gen-validate | https://github.com/envoyproxy/protoc-gen-validate |  |
 | gogo/protobuf | https://github.com/gogo/protobuf |  |
 | googleapis/googleapis | https://github.com/googleapis/googleapis |  |
+| googlechrome/lighthouse | https://github.com/GoogleChrome/lighthouse |  |
 | grpc/grpc | https://github.com/grpc/grpc-proto | - envoyproxy/envoy<br>- googleapis/googleapis |
 | grpc-ecosystem/grpc-gateway | https://github.com/grpc-ecosystem/grpc-gateway | - googleapis/googleapis |
 | opencensus/opencensus | https://github.com/census-instrumentation/opencensus-proto |  |
