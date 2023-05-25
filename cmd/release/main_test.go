@@ -301,6 +301,7 @@ func TestCreateReleaseBody(t *testing.T) {
 		mods := make(map[string]releaseModuleState, len(modulesInBody))
 		for modName, state := range modulesInBody {
 			var references []*statev1alpha1.ModuleReference
+			//nolint:exhaustive // other module states should not have any reference
 			switch state {
 			case modules.New, modules.Updated:
 				references = []*statev1alpha1.ModuleReference{{Name: "v1.0.0", Digest: "fakedigest"}}
