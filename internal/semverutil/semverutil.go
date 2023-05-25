@@ -67,6 +67,10 @@ func SemverTagNamesAtLeast(semverTagNames []string, minimumSemverTagName string,
 
 // SemverTagNamesExcept gets the semver tag names minus the skip tag names.
 func SemverTagNamesExcept(semverTagNames []string, skipTagNames map[string]struct{}) []string {
+	if len(skipTagNames) == 0 {
+		// nothing to skip
+		return semverTagNames
+	}
 	exceptTagNames := make([]string, 0, len(semverTagNames))
 	for _, semverTagName := range semverTagNames {
 		if _, ok := skipTagNames[semverTagName]; !ok {

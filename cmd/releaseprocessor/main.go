@@ -97,6 +97,9 @@ func main() {
 	os.Exit(0)
 }
 
+// run executes a releaseprocessor job, which fetches all tagged releases from the Github's API,
+// filters only stable semver tags, filters out skipped semver tags defined in a global variable,
+// sorts them in ascending order (semver-sort, not timestamp sort), and prints them out.
 func (c *command) run() error {
 	ctx := context.Background()
 	githubClient := githubutil.NewClient(ctx)
@@ -105,14 +108,10 @@ func (c *command) run() error {
 	if err != nil {
 		return fmt.Errorf("fetch all release tag names: %w", err)
 	}
-	ignoreTags, hasIgnoredTags := skipTags[filepath.Join(c.owner, c.repo)]
-	if !hasIgnoredTags {
-		ignoreTags = make(map[string]struct{}) // avoid nil panic
-	}
 	stableSemverTagNames := semverutil.StableSemverTagNames(semverutil.SemverTagNames(releaseTagNames))
 	filteredSemverTagNames := semverutil.SemverTagNamesExcept(
 		semverutil.SemverTagNamesAtLeast(stableSemverTagNames, c.reference, c.inclusive),
-		ignoreTags,
+		skipTags[filepath.Join(c.owner, c.repo)],
 	)
 	semverutil.SortSemverTagNames(filteredSemverTagNames)
 	// write the release tags to stdout, separated by line breaks so that
