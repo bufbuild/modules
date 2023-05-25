@@ -175,11 +175,17 @@ func calculateModulesStates(
 		}
 	} else {
 		// otherwise, determine individually new modules
+		seenModules := make(map[string]struct{}, len(current))
+		// compare current vs previous to get [new, updated, unchanged] modules
 		for moduleName, currentReference := range current {
+			seenModules[moduleName] = struct{}{}
 			prevReleaseReference, ok := prev[moduleName]
 			if !ok {
 				// module not present in the previous state, it's new
-				updatedModules = append(updatedModules, modules.Module{Name: moduleName})
+				updatedModules = append(updatedModules, modules.Module{
+					Name: moduleName,
+					// no LastReleasedReference means New
+				})
 				continue
 			}
 			if prevReleaseReference == currentReference {
@@ -192,6 +198,14 @@ func calculateModulesStates(
 				Name:                  moduleName,
 				LastReleasedReference: prevReleaseReference,
 			})
+		}
+		// compare previous vs current to get removed modules
+		for moduleName := range prev {
+			if _, seen := seenModules[moduleName]; !seen {
+				// module present in previous but not in current, it's removed
+				moduleReferences[moduleName] = releaseModuleState{status: modules.Removed}
+				seenModules[moduleName] = struct{}{}
+			}
 		}
 	}
 
@@ -312,7 +326,7 @@ func createReleaseBody(name string, moduleStates map[string]releaseModuleState) 
 	sort.Slice(sortedModNames, func(i, j int) bool {
 		return sortedModNames[i] < sortedModNames[j]
 	})
-	var newStringBuilder, updatedStringBuilder, unchangedStringBuilder strings.Builder
+	var newStringBuilder, updatedStringBuilder, unchangedStringBuilder, removedStringBuilder strings.Builder
 	for _, modName := range sortedModNames {
 		modState := moduleStates[modName]
 		switch modState.status {
@@ -326,6 +340,10 @@ func createReleaseBody(name string, moduleStates map[string]releaseModuleState) 
 			}
 		case modules.Unchanged:
 			if _, err := unchangedStringBuilder.WriteString(fmt.Sprintf("- %s\n", modName)); err != nil {
+				return "", err
+			}
+		case modules.Removed:
+			if _, err := removedStringBuilder.WriteString(fmt.Sprintf("- %s\n", modName)); err != nil {
 				return "", err
 			}
 		default:
@@ -353,6 +371,14 @@ func createReleaseBody(name string, moduleStates map[string]releaseModuleState) 
 			return "", err
 		}
 	}
+
+	if removed := removedStringBuilder.String(); removed != "" {
+		removedModuleHeader := "## Removed Modules\n\n<details><summary>Expand</summary>\n"
+		if _, err := mainStringBuilder.WriteString(fmt.Sprintf("%s\n%s\n</details>\n", removedModuleHeader, removed)); err != nil {
+			return "", err
+		}
+	}
+
 	return mainStringBuilder.String(), nil
 }
 
