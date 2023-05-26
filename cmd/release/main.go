@@ -107,11 +107,11 @@ func (c *command) run() (retErr error) {
 	}
 	prevMap := mapGlobalStateReferences(prevReleaseState)
 	currentMap := mapGlobalStateReferences(currentReleaseState)
-	modulesStates, newContent, err := calculateModulesStates(bufstate.SyncRoot, prevMap, currentMap)
+	modulesStates, err := calculateModulesStates(bufstate.SyncRoot, prevMap, currentMap)
 	if err != nil {
 		return fmt.Errorf("produce new module list: %w", err)
 	}
-	if !newContent {
+	if !shouldRelease(modulesStates) {
 		errMsg := "no changes to modules - not creating initial release"
 		if tagName := prevRelease.GetTagName(); tagName != "" {
 			errMsg = fmt.Sprintf("no changes to modules since %v", tagName)
@@ -159,13 +159,11 @@ func mapGlobalStateReferences(globalState *statev1alpha1.GlobalState) map[string
 // released by comparing it against the last released version of the module. The resultant list
 // tells us which modules and which of their references have not been released, and the state of
 // each of the modules, whether they're new, updated, or unchanged.
-//
-//nolint:nonamedreturns // `newContent` helps func signature clarity.
 func calculateModulesStates(
 	dir string,
 	prev map[string]string,
 	current map[string]string,
-) (_ map[string]releaseModuleState, newContent bool, _ error) {
+) (map[string]releaseModuleState, error) {
 	moduleReferences := make(map[string]releaseModuleState)
 	var updatedModules []modules.Module
 	// If the latest manifest doesn't exist, everything is new
@@ -175,11 +173,17 @@ func calculateModulesStates(
 		}
 	} else {
 		// otherwise, determine individually new modules
+		seenModules := make(map[string]struct{}, len(current))
+		// compare current vs previous to get [new, updated, unchanged] modules
 		for moduleName, currentReference := range current {
+			seenModules[moduleName] = struct{}{}
 			prevReleaseReference, ok := prev[moduleName]
 			if !ok {
 				// module not present in the previous state, it's new
-				updatedModules = append(updatedModules, modules.Module{Name: moduleName})
+				updatedModules = append(updatedModules, modules.Module{
+					Name: moduleName,
+					// no LastReleasedReference means New
+				})
 				continue
 			}
 			if prevReleaseReference == currentReference {
@@ -193,6 +197,14 @@ func calculateModulesStates(
 				LastReleasedReference: prevReleaseReference,
 			})
 		}
+		// compare previous vs current to get removed modules
+		for moduleName := range prev {
+			if _, seen := seenModules[moduleName]; !seen {
+				// module present in previous but not in current, it's removed
+				moduleReferences[moduleName] = releaseModuleState{status: modules.Removed}
+				seenModules[moduleName] = struct{}{}
+			}
+		}
 	}
 
 	for _, updatedModule := range updatedModules {
@@ -200,17 +212,17 @@ func calculateModulesStates(
 		var moduleManifest *statev1alpha1.ModuleState
 		if _, err := os.Stat(modFilePath); err != nil {
 			if !os.IsNotExist(err) {
-				return nil, false, fmt.Errorf("stat file: %w", err)
+				return nil, fmt.Errorf("stat file: %w", err)
 			}
 			moduleManifest = &statev1alpha1.ModuleState{}
 		} else {
 			modStateFile, err := os.Open(modFilePath)
 			if err != nil {
-				return nil, false, fmt.Errorf("open file: %w", err)
+				return nil, fmt.Errorf("open file: %w", err)
 			}
 			moduleManifest, err = bufstate.ReadModStateFile(modStateFile)
 			if err != nil {
-				return nil, false, fmt.Errorf("retrieve module state: %w", err)
+				return nil, fmt.Errorf("retrieve module state: %w", err)
 			}
 		}
 		if updatedModule.LastReleasedReference == "" {
@@ -223,7 +235,7 @@ func calculateModulesStates(
 		for index, reference := range moduleManifest.GetReferences() {
 			if reference.GetName() == updatedModule.LastReleasedReference {
 				if len(moduleManifest.GetReferences()) == index-1 {
-					return nil, false, fmt.Errorf("module indicated as having updates, but previous release %s is the latest", updatedModule.LastReleasedReference)
+					return nil, fmt.Errorf("module indicated as having updates, but previous release %s is the latest", updatedModule.LastReleasedReference)
 				}
 				moduleReferences[updatedModule.Name] = releaseModuleState{
 					status:     modules.Updated,
@@ -233,7 +245,7 @@ func calculateModulesStates(
 			}
 		}
 	}
-	return moduleReferences, len(updatedModules) > 0, nil
+	return moduleReferences, nil
 }
 
 func calculateNextRelease(now time.Time, prevRelease *github.RepositoryRelease) (string, error) {
@@ -254,6 +266,17 @@ func calculateNextRelease(now time.Time, prevRelease *github.RepositoryRelease) 
 		return "", err
 	}
 	return currentDate + "." + strconv.Itoa(currentRevision+1), nil
+}
+
+// shouldRelease checks if any module status is different than "unchanged", so we do releases for
+// new, updated, or removed modules.
+func shouldRelease(modulesStates map[string]releaseModuleState) bool {
+	for _, state := range modulesStates {
+		if state.status != modules.Unchanged {
+			return true
+		}
+	}
+	return false
 }
 
 func createRelease(
@@ -312,7 +335,7 @@ func createReleaseBody(name string, moduleStates map[string]releaseModuleState) 
 	sort.Slice(sortedModNames, func(i, j int) bool {
 		return sortedModNames[i] < sortedModNames[j]
 	})
-	var newStringBuilder, updatedStringBuilder, unchangedStringBuilder strings.Builder
+	var newStringBuilder, updatedStringBuilder, unchangedStringBuilder, removedStringBuilder strings.Builder
 	for _, modName := range sortedModNames {
 		modState := moduleStates[modName]
 		switch modState.status {
@@ -326,6 +349,10 @@ func createReleaseBody(name string, moduleStates map[string]releaseModuleState) 
 			}
 		case modules.Unchanged:
 			if _, err := unchangedStringBuilder.WriteString(fmt.Sprintf("- %s\n", modName)); err != nil {
+				return "", err
+			}
+		case modules.Removed:
+			if _, err := removedStringBuilder.WriteString(fmt.Sprintf("- %s\n", modName)); err != nil {
 				return "", err
 			}
 		default:
@@ -353,6 +380,14 @@ func createReleaseBody(name string, moduleStates map[string]releaseModuleState) 
 			return "", err
 		}
 	}
+
+	if removed := removedStringBuilder.String(); removed != "" {
+		removedModuleHeader := "## Removed Modules\n\n<details><summary>Expand</summary>\n"
+		if _, err := mainStringBuilder.WriteString(fmt.Sprintf("\n%s\n%s\n</details>\n", removedModuleHeader, removed)); err != nil {
+			return "", err
+		}
+	}
+
 	return mainStringBuilder.String(), nil
 }
 

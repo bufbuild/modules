@@ -20,6 +20,7 @@ const (
 	New Status = iota + 1
 	Updated
 	Unchanged
+	Removed
 )
 
 type Module struct {

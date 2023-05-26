@@ -1,0 +1,8 @@
+{
+  "references": [
+    {
+      "name": "ref4",
+      "digest": "dummyManifestDigestNewBar"
+    }
+  ]
+}

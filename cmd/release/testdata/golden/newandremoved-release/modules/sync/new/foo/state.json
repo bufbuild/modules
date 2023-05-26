@@ -1,0 +1,8 @@
+{
+  "references": [
+    {
+      "name": "ref3",
+      "digest": "dummyManifestDigestNewFoo"
+    }
+  ]
+}
