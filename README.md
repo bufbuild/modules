@@ -2,7 +2,7 @@
 
 ## Description
 
-This repository contains third-party modules synced and published to the [Buf Schema Registry][bsr].
+This repository contains first and third-party modules synced and published to the [Buf Schema Registry][bsr].
 
 If you'd like a common third-party module to be managed by Buf, open an issue using the [Managed Module Request for Buf 
 Schema Registry][issue-template] issue template and our team will follow up.
@@ -13,6 +13,8 @@ We currently sync automatically the following modules:
 
 | Module | Source Community Repository | Depends on |
 |---|---|---|
+| bufbuild/protovalidate | https://github.com/bufbuild/protovalidate |  |
+| bufbuild/protovalidate-testing | https://github.com/bufbuild/protovalidate | - bufbuild/protovalidate |
 | cncf/xds | https://github.com/cncf/xds | - envoyproxy/protoc-gen-validate<br>- googleapis/googleapis |
 | envoyproxy/envoy | https://github.com/envoyproxy/envoy | - cncf/xds<br>- googleapis/googleapis<br>- opencensus/opencensus<br>- opentelemetry/opentelemetry<br>- prometheus/client-model |
 | envoyproxy/protoc-gen-validate | https://github.com/envoyproxy/protoc-gen-validate |  |
