@@ -1,12 +1,20 @@
 {
   "modules": [
     {
+      "module_name": "bufbuild/protovalidate",
+      "latest_reference": "v0.1.6"
+    },
+    {
+      "module_name": "bufbuild/protovalidate-testing",
+      "latest_reference": "v0.1.6"
+    },
+    {
       "module_name": "cncf/xds",
       "latest_reference": "4003588d1b747e37e911baa5a9c1c07fde4ca518"
     },
     {
       "module_name": "envoyproxy/envoy",
-      "latest_reference": "4942648504249567f41691ca8fe3258ad1acd3f6"
+      "latest_reference": "e20ba06ff3719862212780d413b2405de8f06460"
     },
     {
       "module_name": "envoyproxy/protoc-gen-validate",
@@ -18,7 +26,7 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "804400c54989a1a7431c04ccc33b3e0595232004"
+      "latest_reference": "a343156af590be7595165e2e4fd64cb0289cf6b9"
     },
     {
       "module_name": "grpc-ecosystem/grpc-gateway",
