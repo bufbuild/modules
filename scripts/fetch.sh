@@ -33,8 +33,8 @@ process_ref() {
 
   # Copy only curated subset of files from that repo into a tmp module dir.
   rsync -amR --include-from="${module_static_path}/rsync.incl" . "${mod_tmp_path}"
-  cp "${module_static_path}/buf.md" "${mod_tmp_path}"
-  cp "${module_static_path}/buf.yaml" "${mod_tmp_path}"
+  [ ! -e "${module_static_path}/buf.md" ] || cp "${module_static_path}/buf.md" "${mod_tmp_path}"
+  [ ! -e "${module_static_path}/buf.yaml" ] || cp "${module_static_path}/buf.yaml" "${mod_tmp_path}"
 
   # Go into the copied files, make sure it has right files and is buildable. Then remove `buf.lock`
   # file since it's no longer relevant: each BSR cluster will sync itself from the base files and
@@ -79,7 +79,7 @@ sync_references() {
     log "git remote ${git_remote} is malformed, cannot recognize owner/repo"
     exit 2
   fi
-  git clone --single-branch "${git_remote}" "${git_owner}/${git_repo}"
+  [ -d "${git_owner}/${git_repo}" ] || git clone --single-branch "${git_remote}" "${git_owner}/${git_repo}"
 
   local -r module_root=$(pwd)
   pushd "${git_owner}/${git_repo}/${proto_subdir}" > /dev/null
@@ -175,6 +175,8 @@ trap cleanup EXIT
 
 # Keep this module list synced with README.md
 # sync_references ${sync_strategy} ${owner} ${repo} ${git_remote} ${opt_proto_subdir}
+sync_references releases bufbuild protovalidate https://github.com/bufbuild/protovalidate proto/protovalidate
+sync_references releases bufbuild protovalidate-testing https://github.com/bufbuild/protovalidate proto/protovalidate-testing
 sync_references commits cncf xds https://github.com/cncf/xds
 sync_references commits envoyproxy envoy https://github.com/envoyproxy/envoy api
 sync_references commits envoyproxy protoc-gen-validate https://github.com/envoyproxy/protoc-gen-validate
