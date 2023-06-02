@@ -1,9 +1,0 @@
-version: v1
-name: buf.build/envoyproxy/envoy
-deps:
-  - buf.build/cncf/xds
-  - buf.build/envoyproxy/protoc-gen-validate
-  - buf.build/googleapis/googleapis
-  - buf.build/opencensus/opencensus
-  - buf.build/opentelemetry/opentelemetry
-  - buf.build/prometheus/client-model
