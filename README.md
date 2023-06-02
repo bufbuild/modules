@@ -16,7 +16,7 @@ We currently sync automatically the following modules:
 | bufbuild/protovalidate | https://github.com/bufbuild/protovalidate |  |
 | bufbuild/protovalidate-testing | https://github.com/bufbuild/protovalidate | - bufbuild/protovalidate |
 | cncf/xds | https://github.com/cncf/xds | - envoyproxy/protoc-gen-validate<br>- googleapis/googleapis |
-| envoyproxy/envoy | https://github.com/envoyproxy/envoy | - cncf/xds<br>- googleapis/googleapis<br>- opencensus/opencensus<br>- opentelemetry/opentelemetry<br>- prometheus/client-model |
+| envoyproxy/envoy | https://github.com/envoyproxy/envoy | - cncf/xds<br>- envoyproxy/protoc-gen-validate<br>- googleapis/googleapis<br>- opencensus/opencensus<br>- opentelemetry/opentelemetry<br>- prometheus/client-model |
 | envoyproxy/protoc-gen-validate | https://github.com/envoyproxy/protoc-gen-validate |  |
 | gogo/protobuf | https://github.com/gogo/protobuf |  |
 | googleapis/googleapis | https://github.com/googleapis/googleapis |  |
