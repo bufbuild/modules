@@ -1,3 +1,4 @@
++ LICENSE
 + protoc-gen-openapiv2/
 + protoc-gen-openapiv2/options/
 + protoc-gen-openapiv2/options/*.proto
