@@ -1,0 +1,20 @@
+{
+  "references": [
+    {
+      "name": "e7a6d39fafc69cb83a20bda589ea413f4825cb5a",
+      "digest": "2a7aade5d7d894f8f3d2fa9cd9f4bbf9ad369d3a5310a371e78de0a135b3ec1ed609e2397295d554a0ef0a80b53340a977c26138da9a214052572cf7b29fb81d"
+    },
+    {
+      "name": "06f17aee52a91f1671291f89de1fcba8ab2c735c",
+      "digest": "2a7aade5d7d894f8f3d2fa9cd9f4bbf9ad369d3a5310a371e78de0a135b3ec1ed609e2397295d554a0ef0a80b53340a977c26138da9a214052572cf7b29fb81d"
+    },
+    {
+      "name": "47eb8b9b3dea6b15edf5919f51accdb1dea547ac",
+      "digest": "2a7aade5d7d894f8f3d2fa9cd9f4bbf9ad369d3a5310a371e78de0a135b3ec1ed609e2397295d554a0ef0a80b53340a977c26138da9a214052572cf7b29fb81d"
+    },
+    {
+      "name": "186e1804ae7757b6a975c9a8b8af1a5e9b67f81e",
+      "digest": "2a7aade5d7d894f8f3d2fa9cd9f4bbf9ad369d3a5310a371e78de0a135b3ec1ed609e2397295d554a0ef0a80b53340a977c26138da9a214052572cf7b29fb81d"
+    }
+  ]
+}
