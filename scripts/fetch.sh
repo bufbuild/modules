@@ -182,6 +182,9 @@ sync_references commits envoyproxy envoy https://github.com/envoyproxy/envoy api
 sync_references commits envoyproxy protoc-gen-validate https://github.com/envoyproxy/protoc-gen-validate
 sync_references commits gogo protobuf https://github.com/gogo/protobuf
 sync_references commits googleapis googleapis https://github.com/googleapis/googleapis
+# TODO: replace to sync releases once they release the latest proto change:
+# https://github.com/GoogleChrome/lighthouse/pull/15116#issuecomment-1569261877
+sync_references commits googlechrome lighthouse https://github.com/GoogleChrome/lighthouse proto
 sync_references commits grpc grpc https://github.com/grpc/grpc-proto
 sync_references commits grpc-ecosystem grpc-gateway https://github.com/grpc-ecosystem/grpc-gateway
 sync_references commits opencensus opencensus https://github.com/census-instrumentation/opencensus-proto src
