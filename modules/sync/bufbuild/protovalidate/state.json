@@ -23,6 +23,14 @@
     {
       "name": "v0.1.8",
       "digest": "3ab7486950ff114cf932ab10d89d70d1c465265595c71dca8cfde3f4692b0b111b4adccef56112b76a519b0f53dee6b11dfaa24dab30aa07bf9624a94b8f69c9"
+    },
+    {
+      "name": "v0.1.9",
+      "digest": "2ec5ce1c574db1621a1390992cc1215add1c061eacaac6adfea920ef49963a44d2b0fa01ec511bf978328280314d151e24cf69d4c26696fbca4bae245b6a44c9"
+    },
+    {
+      "name": "v0.1.10",
+      "digest": "2ec5ce1c574db1621a1390992cc1215add1c061eacaac6adfea920ef49963a44d2b0fa01ec511bf978328280314d151e24cf69d4c26696fbca4bae245b6a44c9"
     }
   ]
 }
