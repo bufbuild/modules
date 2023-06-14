@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/bufbuild/buf v1.21.0
 	github.com/google/go-github/v48 v48.2.0
-	github.com/hashicorp/go-retryablehttp v0.7.2
+	github.com/hashicorp/go-retryablehttp v0.7.4
 	github.com/stretchr/testify v1.8.4
 	go.uber.org/multierr v1.11.0
 	golang.org/x/mod v0.10.0
