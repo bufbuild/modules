@@ -2,11 +2,11 @@
   "modules": [
     {
       "module_name": "bufbuild/protovalidate",
-      "latest_reference": "v0.1.14"
+      "latest_reference": "v0.1.15"
     },
     {
       "module_name": "bufbuild/protovalidate-testing",
-      "latest_reference": "v0.1.14"
+      "latest_reference": "v0.1.15"
     },
     {
       "module_name": "cncf/xds",
@@ -14,7 +14,7 @@
     },
     {
       "module_name": "envoyproxy/envoy",
-      "latest_reference": "d8a5d372bc68ce38db119e6534c4bde321699ffa"
+      "latest_reference": "4c20670c6dfc9af9a4dda995819503bf11bb1ae2"
     },
     {
       "module_name": "envoyproxy/protoc-gen-validate",
@@ -26,15 +26,15 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "4981ecb4dbd0b87271bea42413ed274118ab821f"
+      "latest_reference": "2b006afc7a392006602ce0868c22341b5aeef4a8"
     },
     {
       "module_name": "googlechrome/lighthouse",
-      "latest_reference": "540f55ea3c15e9428a22ad180cc74d10e07eed27"
+      "latest_reference": "3b0950cb84ebe872dd09859004d681e32804818b"
     },
     {
       "module_name": "grpc-ecosystem/grpc-gateway",
-      "latest_reference": "e26f0ebd69b95dd63b3cfc35dc5ae7817ccfd1bc"
+      "latest_reference": "e640f5db60c65f15cdf43e1aca405eab4cad965b"
     },
     {
       "module_name": "grpc/grpc",
@@ -46,7 +46,7 @@
     },
     {
       "module_name": "opentelemetry/opentelemetry",
-      "latest_reference": "c4dfbc51f3cd4089778555a2ac5d9bc093ed2956"
+      "latest_reference": "e041293e5ec69b64df8dcfe0a154b6dc6146bd2f"
     },
     {
       "module_name": "prometheus/client-model",
