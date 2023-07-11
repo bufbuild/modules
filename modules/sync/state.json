@@ -2,11 +2,11 @@
   "modules": [
     {
       "module_name": "bufbuild/protovalidate",
-      "latest_reference": "v0.1.15"
+      "latest_reference": "v0.2.0"
     },
     {
       "module_name": "bufbuild/protovalidate-testing",
-      "latest_reference": "v0.1.15"
+      "latest_reference": "v0.2.0"
     },
     {
       "module_name": "cncf/xds",
@@ -14,7 +14,7 @@
     },
     {
       "module_name": "envoyproxy/envoy",
-      "latest_reference": "bd836c22030b20624142c78fc16773d4bb2e582e"
+      "latest_reference": "7f438cbb9fcf5a6114abdd2c1a50223cff9ccb4e"
     },
     {
       "module_name": "envoyproxy/protoc-gen-validate",
@@ -30,7 +30,7 @@
     },
     {
       "module_name": "googlechrome/lighthouse",
-      "latest_reference": "c90b73a8a0066a5e9f6258defe4c13920f31ffe2"
+      "latest_reference": "24a62145533ee6a31ad16871c3882fd8c78b6da0"
     },
     {
       "module_name": "grpc-ecosystem/grpc-gateway",
@@ -50,7 +50,7 @@
     },
     {
       "module_name": "prometheus/client-model",
-      "latest_reference": "91c3945f2cfbfb9040e34a0b6764d804b5a5a490"
+      "latest_reference": "2b34b1e13df1b1a2ab1bea746c48004848caca1a"
     },
     {
       "module_name": "protocolbuffers/wellknowntypes",
