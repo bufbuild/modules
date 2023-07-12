@@ -2,11 +2,11 @@
   "modules": [
     {
       "module_name": "bufbuild/protovalidate",
-      "latest_reference": "v0.2.0"
+      "latest_reference": "v0.2.1"
     },
     {
       "module_name": "bufbuild/protovalidate-testing",
-      "latest_reference": "v0.2.0"
+      "latest_reference": "v0.2.1"
     },
     {
       "module_name": "cncf/xds",
@@ -14,11 +14,11 @@
     },
     {
       "module_name": "envoyproxy/envoy",
-      "latest_reference": "f76b5950b59497f529d4229ea801c698037cd404"
+      "latest_reference": "3b18bc650237ce923176becc1e7ee0bd8de4b701"
     },
     {
       "module_name": "envoyproxy/protoc-gen-validate",
-      "latest_reference": "b833ccfcc7022d8e3211c2e1985781ee9d059894"
+      "latest_reference": "04e84b10ceef0008673460bcf06f036b2add8d80"
     },
     {
       "module_name": "gogo/protobuf",
@@ -26,7 +26,7 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "c15f42683f882eea2e101348e862fea8b48af8c5"
+      "latest_reference": "1bd12d77dee2fc6e9c51fe5999c92e814e78b4e3"
     },
     {
       "module_name": "googlechrome/lighthouse",
