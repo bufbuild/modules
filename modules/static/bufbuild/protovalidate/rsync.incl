@@ -1,6 +1,7 @@
 + LICENSE
 + README.md
 + buf.yaml
++ buf.lock
 + **/
 + *.proto
 - *
