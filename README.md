@@ -13,6 +13,7 @@ We currently sync automatically the following modules:
 
 | Module | Source Community Repository | Depends on |
 |---|---|---|
+| bufbuild/confluent | https://github.com/bufbuild/confluent-proto |  |
 | bufbuild/protovalidate | https://github.com/bufbuild/protovalidate |  |
 | bufbuild/protovalidate-testing | https://github.com/bufbuild/protovalidate | - bufbuild/protovalidate |
 | cncf/xds | https://github.com/cncf/xds | - envoyproxy/protoc-gen-validate<br>- googleapis/googleapis |
