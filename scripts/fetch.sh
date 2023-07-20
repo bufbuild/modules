@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -eo pipefail
+set -x -eo pipefail
 
 echo "${BUF_TOKEN}" | buf registry login --debug --token-stdin --username "${BUF_USER}"
 
