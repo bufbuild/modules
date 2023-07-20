@@ -1,6 +1,10 @@
 {
   "modules": [
     {
+      "module_name": "bufbuild/confluent",
+      "latest_reference": "18c83a31d7e710e1b8978fca46a392381bf2fa7e"
+    },
+    {
       "module_name": "bufbuild/protovalidate",
       "latest_reference": "v0.2.3"
     },
