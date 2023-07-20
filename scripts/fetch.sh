@@ -114,7 +114,7 @@ get_commit_revlist() {
     mod_init_ref="$(cat "${mod_initref_file}")"
     log "falling back to initializing reference for module ${owner}/${repo}: ${mod_init_ref}"
     # revisions from initial init_ref...HEAD (inclusive)
-    commit_rev_list=$(git rev-list ^"${mod_init_ref}"~ HEAD --first-parent --reverse)
+    commit_rev_list=$(git rev-list "${mod_init_ref}" HEAD --first-parent --reverse)
   else
     log "module ${owner}/${repo} has no initializing reference"
     exit 2
