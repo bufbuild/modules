@@ -6,11 +6,11 @@
     },
     {
       "module_name": "bufbuild/protovalidate",
-      "latest_reference": "v0.2.4"
+      "latest_reference": "v0.2.5"
     },
     {
       "module_name": "bufbuild/protovalidate-testing",
-      "latest_reference": "v0.2.3"
+      "latest_reference": "v0.2.5"
     },
     {
       "module_name": "cncf/xds",
@@ -34,11 +34,11 @@
     },
     {
       "module_name": "googlechrome/lighthouse",
-      "latest_reference": "6be91541e4099f5beb6750f191a2b932b9919911"
+      "latest_reference": "75876050d7f18ef1112a7f55b765fed85e3f2a86"
     },
     {
       "module_name": "grpc-ecosystem/grpc-gateway",
-      "latest_reference": "9d72895eb29648c7546fd48ce086cfffcf069653"
+      "latest_reference": "fb2f2382edb0a0d2ec2b988764b2a4036075c8d1"
     },
     {
       "module_name": "grpc/grpc",
