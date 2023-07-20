@@ -175,6 +175,7 @@ trap cleanup EXIT
 
 # Keep this module list synced with README.md
 # sync_references ${sync_strategy} ${owner} ${repo} ${git_remote} ${opt_proto_subdir}
+sync_references commits bufbuild confluent https://github.com/bufbuild/confluent-proto
 sync_references releases bufbuild protovalidate https://github.com/bufbuild/protovalidate proto/protovalidate
 sync_references releases bufbuild protovalidate-testing https://github.com/bufbuild/protovalidate proto/protovalidate-testing
 sync_references commits cncf xds https://github.com/cncf/xds
