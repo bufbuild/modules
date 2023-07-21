@@ -6,11 +6,11 @@
     },
     {
       "module_name": "bufbuild/protovalidate",
-      "latest_reference": "v0.2.6"
+      "latest_reference": "v0.2.7"
     },
     {
       "module_name": "bufbuild/protovalidate-testing",
-      "latest_reference": "v0.2.6"
+      "latest_reference": "v0.2.7"
     },
     {
       "module_name": "cncf/xds",
@@ -38,7 +38,7 @@
     },
     {
       "module_name": "grpc-ecosystem/grpc-gateway",
-      "latest_reference": "fb2f2382edb0a0d2ec2b988764b2a4036075c8d1"
+      "latest_reference": "46a1bac443c8bf5b0ad0b655322dcaf66b62364d"
     },
     {
       "module_name": "grpc/grpc",
