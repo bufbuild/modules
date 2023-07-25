@@ -20,11 +20,6 @@ of unused generated code for the vast majority of developers. To use Google's co
 own module that has a `dep` on `buf.build/googleapis/googleapis` with the specific packages you want
 to use.
 
-Note that this slimming down was a recent breaking change - likely the only breaking change we will
-make before promoting BSR to v1. We taking breaking changes very seriously once launching into v1,
-and we apologize for any disruption as we wrap up the beta. See [the
-FAQ](https://docs.buf.build/faq#googleapis-failure) for more details.
-
 Updates to the [source repository](https://github.com/googleapis/googleapis) are automatically
 synced on a periodic basis, and each BSR commit is tagged with corresponding Git commits.
 
