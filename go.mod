@@ -3,7 +3,7 @@ module github.com/bufbuild/modules
 go 1.19
 
 require (
-	github.com/bufbuild/buf v1.24.0
+	github.com/bufbuild/buf v1.25.0
 	github.com/google/go-github/v48 v48.2.0
 	github.com/hashicorp/go-retryablehttp v0.7.4
 	github.com/stretchr/testify v1.8.4
