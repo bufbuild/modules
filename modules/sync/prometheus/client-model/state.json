@@ -51,6 +51,10 @@
     {
       "name": "95a0733b38a006c8ce82a377c5641a5fa0e14705",
       "digest": "324bb2642a3beaccf7b74d2a61b70dd9ddbcce6b566b18f8f6fcc7bf2761867379d26b9024386c9021497d8db64c6e861a92f1bc4d8a5d17b21ad1b50240db66"
+    },
+    {
+      "name": "cfbcccb0dfbcac5fd3cfb2c12c039d3fcde01f56",
+      "digest": "85b03b5162b13dff4d6b5b73dab654ef8736ae70767247571f2baed84b6bdb4cb83ce082ffe90c6b8206e237258b5cce7985a539bcf18b82ae5aa6e8a4ef1749"
     }
   ]
 }
