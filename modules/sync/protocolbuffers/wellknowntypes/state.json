@@ -335,6 +335,10 @@
     {
       "name": "v23.4",
       "digest": "398eef937c983c83a506f82dab35aca5a4c7f61c01c1b134ccca50e1c74adea80b7d73333e1d3d62004ac9aa2032093416220f46ae8c35ceb025b486263a5ccf"
+    },
+    {
+      "name": "v24.0",
+      "digest": "da856c7079d6b173d4ac1963b9680780bd25ca668c9e3ac2420f684a27a71462d4618bc20ac2b64e2954dfc1e98c3974aaa7b6f816b0e774092c1be28e8d34b3"
     }
   ]
 }
