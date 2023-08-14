@@ -18,11 +18,11 @@
     },
     {
       "module_name": "envoyproxy/envoy",
-      "latest_reference": "db586f42fe3c109d4ddea90ef8a0b5e6e7f5b90a"
+      "latest_reference": "a0c50af79c7790227294f8e3a2523fd2b6255b67"
     },
     {
       "module_name": "envoyproxy/protoc-gen-validate",
-      "latest_reference": "04e84b10ceef0008673460bcf06f036b2add8d80"
+      "latest_reference": "1614d32f584d2d401db9d8b8e62167263ec6a448"
     },
     {
       "module_name": "gogo/protobuf",
@@ -30,19 +30,19 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "92435df75a611c473b104232704213b5f1065426"
+      "latest_reference": "fdb078e5014c0528fc538f5a779103720d02fc70"
     },
     {
       "module_name": "googlechrome/lighthouse",
-      "latest_reference": "e955992ea00e05b95f9c13496b88abee72a67af1"
+      "latest_reference": "53c1b7bf975d83ce24d953c2140fdef67a5cf085"
     },
     {
       "module_name": "grpc-ecosystem/grpc-gateway",
-      "latest_reference": "f662473c5e5054b897f3c7cf4d7ebf9830360ab8"
+      "latest_reference": "790d61d8aad542b93a554af536603eced2a3d7df"
     },
     {
       "module_name": "grpc/grpc",
-      "latest_reference": "56149c8ff3fffa3c81f0d90ab426cd64859e4eab"
+      "latest_reference": "0f54062205b06ccb9e19a490c19d765696ef74cc"
     },
     {
       "module_name": "opencensus/opencensus",
