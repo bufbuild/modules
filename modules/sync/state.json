@@ -18,7 +18,7 @@
     },
     {
       "module_name": "envoyproxy/envoy",
-      "latest_reference": "97a340c19398f6000f504a05a3cb909960cb8922"
+      "latest_reference": "d191b2a583d693c29243b4722da3508eabe2d71c"
     },
     {
       "module_name": "envoyproxy/protoc-gen-validate",
@@ -30,19 +30,19 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "f468ecf949741d817fe806aebabb7adae1609585"
+      "latest_reference": "29374574304f3356e64423acc9ad059fe43f09b5"
     },
     {
       "module_name": "googlechrome/lighthouse",
-      "latest_reference": "e799ddcd4a2888789d1ca9e2e4e8ec7e3ae49fb3"
+      "latest_reference": "958177dc80775363390495c33fe0f71270a1aafe"
     },
     {
       "module_name": "grpc-ecosystem/grpc-gateway",
-      "latest_reference": "f72a1032e98608387772153e97803e8c6fe63635"
+      "latest_reference": "9e33e38f15cb7d2f11096366e62ea391a3459ba9"
     },
     {
       "module_name": "grpc/grpc",
-      "latest_reference": "0f54062205b06ccb9e19a490c19d765696ef74cc"
+      "latest_reference": "ae3260836429d2d060df01356932debf043f1ea9"
     },
     {
       "module_name": "opencensus/opencensus",
