@@ -99,6 +99,10 @@
     {
       "name": "v0.4.0",
       "digest": "b085855b39d341533f98418d0930a1d451bd30f65640e417b804d340517dbee02071cfa862948270b6445b1b0bece41fc7df4e37b66f6fd76ca98d024197ebbc"
+    },
+    {
+      "name": "v0.4.1",
+      "digest": "362088421a9aa657e3fe3e8e2515e9b1a3a0f6ab2ee36d52b0e7a67d1ca11bcfe24bc11282b8a0caad98c0bf0fd5fc24f01da1ca4d402d379dae9fd2e6382a2d"
     }
   ]
 }
