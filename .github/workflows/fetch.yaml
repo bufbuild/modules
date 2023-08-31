@@ -47,5 +47,5 @@ jobs:
           delete-branch: true
           title: "Found new managed modules references"
           body: "New managed modules references found. Please review."
-          reviewers: unmultimedio, pgmitche
+          reviewers: bufbuild/bsr-team
           token: ${{ steps.generate_token.outputs.token }}
