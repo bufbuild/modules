@@ -6,11 +6,11 @@
     },
     {
       "module_name": "bufbuild/protovalidate",
-      "latest_reference": "v0.4.2"
+      "latest_reference": "v0.4.3"
     },
     {
       "module_name": "bufbuild/protovalidate-testing",
-      "latest_reference": "v0.4.2"
+      "latest_reference": "v0.4.3"
     },
     {
       "module_name": "cncf/xds",
@@ -18,7 +18,7 @@
     },
     {
       "module_name": "envoyproxy/envoy",
-      "latest_reference": "39bd68f9d50be0e6bac4df5434fc76ccd8101079"
+      "latest_reference": "5fc711eafc9b07288823cfb31173d261cdf58fe7"
     },
     {
       "module_name": "envoyproxy/protoc-gen-validate",
@@ -50,7 +50,7 @@
     },
     {
       "module_name": "opentelemetry/opentelemetry",
-      "latest_reference": "d1468b7700309cec0a3fdfffbfba4e84acf94072"
+      "latest_reference": "ac3242b03157295e4ee9e616af53b81517b06559"
     },
     {
       "module_name": "prometheus/client-model",
