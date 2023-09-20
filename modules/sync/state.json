@@ -18,7 +18,7 @@
     },
     {
       "module_name": "envoyproxy/envoy",
-      "latest_reference": "3f1115d30ddb5613c0e937c846f0bf7f331768df"
+      "latest_reference": "a116d19b3db9be630f1406dedf0690f679284eed"
     },
     {
       "module_name": "envoyproxy/protoc-gen-validate",
@@ -30,19 +30,19 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "385d899ef3db77c4c97b4e2e40eb4b98784b124b"
+      "latest_reference": "1e1f87aa23488297fe83491491aa86e74201ec40"
     },
     {
       "module_name": "googlechrome/lighthouse",
-      "latest_reference": "dac27623ce691fc87204cf38569b4710704bc726"
+      "latest_reference": "1602beb49261db9337484d2ece815ef1915d55cb"
     },
     {
       "module_name": "grpc-ecosystem/grpc-gateway",
-      "latest_reference": "c1efe109c2c772e6e741e701d7a8626030321a27"
+      "latest_reference": "0f5779e24ef35789fe08db3faa20f1f4d1b10e48"
     },
     {
       "module_name": "grpc/grpc",
-      "latest_reference": "6565a1ba38af695ace7c3ce6e6ff837ee87d4c10"
+      "latest_reference": "74783ccc164dc3aed879071bb927754222600d30"
     },
     {
       "module_name": "opencensus/opencensus",
@@ -54,7 +54,7 @@
     },
     {
       "module_name": "prometheus/client-model",
-      "latest_reference": "7b38251dafdf93181a208fd7b6d8d287e8444183"
+      "latest_reference": "baaa0384eac5ae108f5b7c5131dab6b7e6e27381"
     },
     {
       "module_name": "protocolbuffers/wellknowntypes",
