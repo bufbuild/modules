@@ -18,7 +18,7 @@
     },
     {
       "module_name": "envoyproxy/envoy",
-      "latest_reference": "b5a8ba636ddef18bd3aae687e3fdbea0bafcab47"
+      "latest_reference": "c1c0cc2e721155146099d1f915034070f94a010d"
     },
     {
       "module_name": "envoyproxy/protoc-gen-validate",
@@ -30,7 +30,7 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "1a3ea87492d9f8bf347e875c4b301b548d44dad1"
+      "latest_reference": "38894df9fd8faebe373d15f25da07119582c82f3"
     },
     {
       "module_name": "googlechrome/lighthouse",
@@ -38,7 +38,7 @@
     },
     {
       "module_name": "grpc-ecosystem/grpc-gateway",
-      "latest_reference": "5c46b145f2c98d325353203cae8e3ce02bcc6681"
+      "latest_reference": "baf936d1122a4ed0db28975c29a2977319b1169f"
     },
     {
       "module_name": "grpc/grpc",
