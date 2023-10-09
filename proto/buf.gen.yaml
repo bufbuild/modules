@@ -4,6 +4,7 @@ managed:
   go_package_prefix:
     default: github.com/bufbuild/modules/private/gen
 plugins:
-  - plugin: buf.build/protocolbuffers/go
+  - plugin: go
+    path: .tmp/bin/protoc-gen-go
     out: private/gen/modules
     opt: paths=source_relative

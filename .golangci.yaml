@@ -24,6 +24,7 @@ linters:
   disable:
     - cyclop            # covered by gocyclo
     - deadcode          # abandoned
+    - depguard          # requires configuration for all non-stdlib deps
     - exhaustruct       # irrelevant for modules
     - exhaustivestruct  # replaced by exhaustruct
     - funlen            # rely on code review to limit function length
