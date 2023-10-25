@@ -22,8 +22,8 @@ We currently sync automatically the following modules:
 | gogo/protobuf | https://github.com/gogo/protobuf |  |
 | googleapis/googleapis | https://github.com/googleapis/googleapis |  |
 | googlechrome/lighthouse | https://github.com/GoogleChrome/lighthouse |  |
-| grpc/grpc | https://github.com/grpc/grpc-proto | - envoyproxy/envoy<br>- googleapis/googleapis |
-| grpc-ecosystem/grpc-gateway | https://github.com/grpc-ecosystem/grpc-gateway | - googleapis/googleapis |
+| grpc/grpc | https://github.com/grpc/grpc-proto | - googleapis/googleapis |
+| grpc-ecosystem/grpc-gateway | https://github.com/grpc-ecosystem/grpc-gateway |  |
 | opencensus/opencensus | https://github.com/census-instrumentation/opencensus-proto |  |
 | opentelemetry/opentelemetry | https://github.com/open-telemetry/opentelemetry-proto |  |
 | prometheus/client-model | https://github.com/prometheus/client_model |  |
