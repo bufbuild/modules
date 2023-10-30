@@ -115,6 +115,10 @@
     {
       "name": "v0.4.4",
       "digest": "ab165e8507785404328fd869b90547931022ea3f4b99b92d4ba2f2ad9337ce16c019f53d499179ce4abe781c21aa0e009efa4fed43fbda786174fc68807cd3bb"
+    },
+    {
+      "name": "v0.5.0",
+      "digest": "b0ccf7984d48bbd1d1d33b19ac2ec7c5bddc17f138fe6bb0bebe36fef25b88d865f89c58d3cdf139c6340f594f8f81afdb7b6c77094f34516cefcc6c4197b21d"
     }
   ]
 }
