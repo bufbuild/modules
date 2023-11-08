@@ -60,4 +60,4 @@ jobs:
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@e30db14379863a8c79331b04a9969f4c1e225e0b
       - name: Upload To Release Bucket
-        run: gsutil rsync -r modules/sync gs://buf-modules
+        run: gsutil -m rsync -c -r modules/sync gs://buf-modules
