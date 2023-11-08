@@ -18,7 +18,7 @@
     },
     {
       "module_name": "envoyproxy/envoy",
-      "latest_reference": "a9d8eb366cf7525e8663491bd2cb11a1b14b9ba8"
+      "latest_reference": "4b65ba175a72e5ca3248819f95ca9b8799d360ea"
     },
     {
       "module_name": "envoyproxy/protoc-gen-validate",
@@ -30,7 +30,7 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "492e772e24f4122600c0e106945075a8ff3f6255"
+      "latest_reference": "0c9912b3783e732f2a52b843cdcf908e76ea41c9"
     },
     {
       "module_name": "googlechrome/lighthouse",
@@ -38,7 +38,7 @@
     },
     {
       "module_name": "grpc-ecosystem/grpc-gateway",
-      "latest_reference": "6dff99462f4a0ffe4589a167d37316038e48673c"
+      "latest_reference": "ab9cccf405a5a2a09de1b203cb23e332708ca9de"
     },
     {
       "module_name": "grpc/grpc",
@@ -50,7 +50,7 @@
     },
     {
       "module_name": "opentelemetry/opentelemetry",
-      "latest_reference": "ac3242b03157295e4ee9e616af53b81517b06559"
+      "latest_reference": "f674adf15f7e779c6b83ef0dce240fa286b860d8"
     },
     {
       "module_name": "prometheus/client-model",
