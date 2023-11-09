@@ -18,11 +18,11 @@
     },
     {
       "module_name": "envoyproxy/envoy",
-      "latest_reference": "4b65ba175a72e5ca3248819f95ca9b8799d360ea"
+      "latest_reference": "e93e55643d7bbe7766741f35ac79a0b2083a39cb"
     },
     {
       "module_name": "envoyproxy/protoc-gen-validate",
-      "latest_reference": "53d835564305d73b17e9b122d58e5001b2e93fc6"
+      "latest_reference": "4a8ffc4942463929c4289407cd4b8c8328ff5422"
     },
     {
       "module_name": "gogo/protobuf",
@@ -30,7 +30,7 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "0c9912b3783e732f2a52b843cdcf908e76ea41c9"
+      "latest_reference": "92a6b0fc959905f68e567dd60f766167772594bd"
     },
     {
       "module_name": "googlechrome/lighthouse",
@@ -38,7 +38,7 @@
     },
     {
       "module_name": "grpc-ecosystem/grpc-gateway",
-      "latest_reference": "ab9cccf405a5a2a09de1b203cb23e332708ca9de"
+      "latest_reference": "facff3509d5572ce9ddff759b10f4959f677ca68"
     },
     {
       "module_name": "grpc/grpc",
@@ -54,7 +54,7 @@
     },
     {
       "module_name": "prometheus/client-model",
-      "latest_reference": "1c92cadf7d8fa1726bae12e6025cca9b86d2ba5f"
+      "latest_reference": "f095bcd61f08b9057af128af605b7c3f8063dc45"
     },
     {
       "module_name": "protocolbuffers/wellknowntypes",
