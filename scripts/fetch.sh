@@ -113,8 +113,8 @@ get_commit_revlist() {
     log "state file not found: ${mod_state_file}"
     mod_init_ref="$(cat "${mod_initref_file}")"
     log "falling back to initializing reference for module ${owner}/${repo}: ${mod_init_ref}"
-    # revisions from initial init_ref...HEAD (inclusive)
-    # verified with both repos with one commit (bufbuild/confluent-proto) and those with multiple
+    # Prints revisions on the main branch, stopping when ${mod_init_ref} is
+    # encountered, and using tac to reverse the revisions (includes init_ref).
     commit_rev_list=$(git rev-list HEAD --first-parent | sed "/${mod_init_ref}/q" | tac)
   else
     log "module ${owner}/${repo} has no initializing reference"
