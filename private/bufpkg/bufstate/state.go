@@ -55,7 +55,7 @@ func AppendModuleReference(
 			return fmt.Errorf("read module state file: %w", err)
 		}
 	}
-	modState.References = append(modState.References, &statev1alpha1.ModuleReference{Name: reference, Digest: digest})
+	modState.References = append(modState.GetReferences(), &statev1alpha1.ModuleReference{Name: reference, Digest: digest})
 	// As the state file read/write functions both close after their operations,
 	// we need to re-open another io.WriteCloser here, the easiest way is to
 	// truncate the file with Create if it exists.

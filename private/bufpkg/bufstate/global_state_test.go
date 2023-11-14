@@ -18,18 +18,18 @@ import (
 	"testing"
 
 	statev1alpha1 "github.com/bufbuild/modules/private/gen/modules/state/v1alpha1"
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestValidGlobalStates(t *testing.T) {
 	t.Parallel()
 	t.Run("empty", func(t *testing.T) {
 		t.Parallel()
-		assert.NoError(t, validateGlobalState(&statev1alpha1.GlobalState{}))
+		require.NoError(t, validateGlobalState(&statev1alpha1.GlobalState{}))
 	})
 	t.Run("valid", func(t *testing.T) {
 		t.Parallel()
-		assert.NoError(t, validateGlobalState(&statev1alpha1.GlobalState{
+		require.NoError(t, validateGlobalState(&statev1alpha1.GlobalState{
 			Modules: []*statev1alpha1.GlobalStateReference{
 				{ModuleName: "aaa/bbb", LatestReference: "foo"},
 				{ModuleName: "ccc/ddd", LatestReference: "bar"},
@@ -38,7 +38,7 @@ func TestValidGlobalStates(t *testing.T) {
 	})
 	t.Run("repeatedReferencesForDifferentModules", func(t *testing.T) {
 		t.Parallel()
-		assert.NoError(t, validateGlobalState(&statev1alpha1.GlobalState{
+		require.NoError(t, validateGlobalState(&statev1alpha1.GlobalState{
 			Modules: []*statev1alpha1.GlobalStateReference{
 				{ModuleName: "aaa/bbb", LatestReference: "foo"},
 				{ModuleName: "ccc/ddd", LatestReference: "foo"},
@@ -51,7 +51,7 @@ func TestInvalidGlobalStates(t *testing.T) {
 	t.Parallel()
 	t.Run("repeatedModules", func(t *testing.T) {
 		t.Parallel()
-		assert.Error(t, validateGlobalState(&statev1alpha1.GlobalState{
+		require.Error(t, validateGlobalState(&statev1alpha1.GlobalState{
 			Modules: []*statev1alpha1.GlobalStateReference{
 				{ModuleName: "aaa/bbb", LatestReference: "foo"},
 				{ModuleName: "aaa/bbb", LatestReference: "bar"},
@@ -61,7 +61,7 @@ func TestInvalidGlobalStates(t *testing.T) {
 	})
 	t.Run("emptyReferences", func(t *testing.T) {
 		t.Parallel()
-		assert.Error(t, validateGlobalState(&statev1alpha1.GlobalState{
+		require.Error(t, validateGlobalState(&statev1alpha1.GlobalState{
 			Modules: []*statev1alpha1.GlobalStateReference{
 				{ModuleName: "aaa/bbb", LatestReference: "foo"},
 				{ModuleName: "aaa/ccc", LatestReference: ""},
@@ -71,7 +71,7 @@ func TestInvalidGlobalStates(t *testing.T) {
 	})
 	t.Run("emptyModuleNames", func(t *testing.T) {
 		t.Parallel()
-		assert.Error(t, validateGlobalState(&statev1alpha1.GlobalState{
+		require.Error(t, validateGlobalState(&statev1alpha1.GlobalState{
 			Modules: []*statev1alpha1.GlobalStateReference{
 				{ModuleName: "aaa/bbb", LatestReference: "foo"},
 				{ModuleName: "", LatestReference: "foo"},

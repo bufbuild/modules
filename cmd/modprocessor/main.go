@@ -15,14 +15,16 @@
 package main
 
 import (
+	"bytes"
 	"context"
+	"encoding/hex"
 	"flag"
 	"fmt"
 	"io"
 	"os"
 	"path/filepath"
 
-	"github.com/bufbuild/buf/private/pkg/manifest"
+	"github.com/bufbuild/buf/private/bufpkg/bufcas"
 	"github.com/bufbuild/buf/private/pkg/storage/storageos"
 	"github.com/bufbuild/modules/private/bufpkg/bufstate"
 	"go.uber.org/multierr"
@@ -109,11 +111,12 @@ func main() {
 
 func (c *command) run() error {
 	ctx := context.Background()
-	mDigest, err := c.convertToCAS(ctx)
+	manifestDigest, err := c.convertToCAS(ctx)
 	if err != nil {
 		return fmt.Errorf("convert module to CAS: %w", err)
 	}
-	if err := bufstate.AppendModuleReference(c.rootSyncDir, c.owner, c.repo, c.ref, mDigest.Hex()); err != nil {
+	manifestHexDigest := hex.EncodeToString(manifestDigest.Value())
+	if err := bufstate.AppendModuleReference(c.rootSyncDir, c.owner, c.repo, c.ref, manifestHexDigest); err != nil {
 		return fmt.Errorf("update mod reference: %w", err)
 	}
 	return nil
@@ -122,19 +125,19 @@ func (c *command) run() error {
 // convertToCAS converts all files in the source directory to blobs, and a saves
 // them in the module destination directory using its manifest digest hex string
 // as filenames.
-func (c *command) convertToCAS(ctx context.Context) (*manifest.Digest, error) {
+func (c *command) convertToCAS(ctx context.Context) (bufcas.Digest, error) {
 	storageosProvider := storageos.NewProvider()
 	bucket, err := storageosProvider.NewReadWriteBucket(c.srcDir)
 	if err != nil {
 		return nil, fmt.Errorf("new bucket from buf dir: %w", err)
 	}
-	m, blobSet, err := manifest.NewFromBucket(ctx, bucket)
+	fileSet, err := bufcas.NewFileSetForBucket(ctx, bucket)
 	if err != nil {
-		return nil, fmt.Errorf("new manifest from bucket: %w", err)
+		return nil, fmt.Errorf("new file set from bucket: %w", err)
 	}
-	mBlob, err := m.Blob()
+	manifestBlob, err := bufcas.ManifestToBlob(fileSet.Manifest())
 	if err != nil {
-		return nil, fmt.Errorf("manifest blob: %w", err)
+		return nil, fmt.Errorf("manifest to blob: %w", err)
 	}
 	modSyncDir := filepath.Join(c.rootSyncDir, c.owner, c.repo, "cas")
 	// mkdir directory in case this is the first time a reference is being synced for this module.
@@ -142,18 +145,19 @@ func (c *command) convertToCAS(ctx context.Context) (*manifest.Digest, error) {
 		return nil, fmt.Errorf("make module sync cas dir: %w", err)
 	}
 	// TODO: parallelize
-	for _, blob := range append([]manifest.Blob{mBlob}, blobSet.Blobs()...) {
-		if err := writeBlobInDir(ctx, blob, modSyncDir); err != nil {
-			return nil, fmt.Errorf("write blob %q to file: %w", blob.Digest().Hex(), err)
+	for _, blob := range append([]bufcas.Blob{manifestBlob}, fileSet.BlobSet().Blobs()...) {
+		if err := writeBlobInDir(blob, modSyncDir); err != nil {
+			hexDigest := hex.EncodeToString(blob.Digest().Value())
+			return nil, fmt.Errorf("write blob %q to file: %w", hexDigest, err)
 		}
 	}
-	return mBlob.Digest(), nil
+	return manifestBlob.Digest(), nil
 }
 
 // writeBlobInDir takes a blob and writes its content to a file named as its
 // digest hex in the given directory (only if it doesn't exist already).
-func writeBlobInDir(ctx context.Context, blob manifest.Blob, dir string) (retErr error) {
-	fileName := blob.Digest().Hex()
+func writeBlobInDir(blob bufcas.Blob, dir string) (retErr error) {
+	fileName := hex.EncodeToString(blob.Digest().Value())
 	filePath := filepath.Join(dir, fileName)
 	_, err := os.Stat(filePath)
 	if err == nil {
@@ -175,16 +179,7 @@ func writeBlobInDir(ctx context.Context, blob manifest.Blob, dir string) (retErr
 			retErr = multierr.Append(retErr, fmt.Errorf("close file: %w", err))
 		}
 	}()
-	readCloser, err := blob.Open(ctx)
-	if err != nil {
-		return fmt.Errorf("open blob: %w", err)
-	}
-	defer func() {
-		if err := readCloser.Close(); err != nil {
-			retErr = multierr.Append(retErr, fmt.Errorf("close blob: %w", err))
-		}
-	}()
-	if _, err := io.Copy(file, readCloser); err != nil {
+	if _, err := io.Copy(file, bytes.NewReader(blob.Content())); err != nil {
 		return fmt.Errorf("copy to file: %w", err)
 	}
 	return nil

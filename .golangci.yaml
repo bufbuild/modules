@@ -57,4 +57,7 @@ issues:
       path: private/bufpkg/bufstate/global_state_test.go
     - linters: [ dupl ]
       path: private/bufpkg/bufstate/module_state_test.go
+    - linters:
+        - goconst
+      path: cmd/release/main_test.go
 
