@@ -41,6 +41,7 @@ linters:
     - maligned          # readability trumps efficient struct packing
     - nlreturn          # generous whitespace violates house style
     - nosnakecase       # deprecated in https://github.com/golangci/golangci-lint/pull/3065
+    - protogetter
     - scopelint         # deprecated by author
     - structcheck       # abandoned
     - testpackage       # internal tests are fine
@@ -57,4 +58,7 @@ issues:
       path: private/bufpkg/bufstate/global_state_test.go
     - linters: [ dupl ]
       path: private/bufpkg/bufstate/module_state_test.go
+    - linters:
+        - goconst
+      path: cmd/release/main_test.go
 
