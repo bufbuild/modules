@@ -176,24 +176,24 @@ trap cleanup EXIT
 
 # Keep this module list synced with README.md
 # sync_references ${sync_strategy} ${owner} ${repo} ${git_remote} ${opt_proto_subdir}
-# sync_references commits bufbuild confluent https://github.com/bufbuild/confluent-proto
-# sync_references releases bufbuild protovalidate https://github.com/bufbuild/protovalidate proto/protovalidate
-# sync_references releases bufbuild protovalidate-testing https://github.com/bufbuild/protovalidate proto/protovalidate-testing
-# # TODO: reenable once the new dep is also synced https://github.com/bufbuild/modules/issues/339
-# # sync_references commits cncf xds https://github.com/cncf/xds
-# sync_references commits envoyproxy envoy https://github.com/envoyproxy/envoy api
-# sync_references commits envoyproxy protoc-gen-validate https://github.com/envoyproxy/protoc-gen-validate
-# sync_references commits gogo protobuf https://github.com/gogo/protobuf
+sync_references commits bufbuild confluent https://github.com/bufbuild/confluent-proto
+sync_references releases bufbuild protovalidate https://github.com/bufbuild/protovalidate proto/protovalidate
+sync_references releases bufbuild protovalidate-testing https://github.com/bufbuild/protovalidate proto/protovalidate-testing
+# TODO: reenable once the new dep is also synced https://github.com/bufbuild/modules/issues/339
+# sync_references commits cncf xds https://github.com/cncf/xds
+sync_references commits envoyproxy envoy https://github.com/envoyproxy/envoy api
+sync_references commits envoyproxy protoc-gen-validate https://github.com/envoyproxy/protoc-gen-validate
+sync_references commits gogo protobuf https://github.com/gogo/protobuf
 sync_references releases google cel-spec https://github.com/google/cel-spec proto
-# sync_references commits googleapis googleapis https://github.com/googleapis/googleapis
-# # TODO: replace to sync releases once they release the latest proto change:
-# # https://github.com/GoogleChrome/lighthouse/pull/15116#issuecomment-1569261877
-# sync_references commits googlechrome lighthouse https://github.com/GoogleChrome/lighthouse proto
-# sync_references commits grpc grpc https://github.com/grpc/grpc-proto
-# sync_references commits grpc-ecosystem grpc-gateway https://github.com/grpc-ecosystem/grpc-gateway
-# sync_references commits opencensus opencensus https://github.com/census-instrumentation/opencensus-proto src
-# sync_references commits opentelemetry opentelemetry https://github.com/open-telemetry/opentelemetry-proto
-# sync_references commits prometheus client-model https://github.com/prometheus/client_model
-# sync_references releases protocolbuffers wellknowntypes https://github.com/protocolbuffers/protobuf src
+sync_references commits googleapis googleapis https://github.com/googleapis/googleapis
+# TODO: replace to sync releases once they release the latest proto change:
+# https://github.com/GoogleChrome/lighthouse/pull/15116#issuecomment-1569261877
+sync_references commits googlechrome lighthouse https://github.com/GoogleChrome/lighthouse proto
+sync_references commits grpc grpc https://github.com/grpc/grpc-proto
+sync_references commits grpc-ecosystem grpc-gateway https://github.com/grpc-ecosystem/grpc-gateway
+sync_references commits opencensus opencensus https://github.com/census-instrumentation/opencensus-proto src
+sync_references commits opentelemetry opentelemetry https://github.com/open-telemetry/opentelemetry-proto
+sync_references commits prometheus client-model https://github.com/prometheus/client_model
+sync_references releases protocolbuffers wellknowntypes https://github.com/protocolbuffers/protobuf src
 
 popd > /dev/null
