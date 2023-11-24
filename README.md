@@ -20,6 +20,7 @@ We currently sync automatically the following modules:
 | envoyproxy/envoy | https://github.com/envoyproxy/envoy | - cncf/xds<br>- envoyproxy/protoc-gen-validate<br>- googleapis/googleapis<br>- opencensus/opencensus<br>- opentelemetry/opentelemetry<br>- prometheus/client-model |
 | envoyproxy/protoc-gen-validate | https://github.com/envoyproxy/protoc-gen-validate |  |
 | gogo/protobuf | https://github.com/gogo/protobuf |  |
+| google/cel-spec | https://github.com/google/cel-spec | - googleapis/googleapis |
 | googleapis/googleapis | https://github.com/googleapis/googleapis |  |
 | googlechrome/lighthouse | https://github.com/GoogleChrome/lighthouse |  |
 | grpc/grpc | https://github.com/grpc/grpc-proto | - googleapis/googleapis |
