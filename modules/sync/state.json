@@ -29,6 +29,10 @@
       "latest_reference": "f67b8970b736e53dbd7d0a27146c8f1ac52f74e5"
     },
     {
+      "module_name": "google/cel-spec",
+      "latest_reference": "v0.13.0"
+    },
+    {
       "module_name": "googleapis/googleapis",
       "latest_reference": "0be2364c751b0061b458a526df7f00ed0b826231"
     },
