@@ -184,6 +184,7 @@ sync_references releases bufbuild protovalidate-testing https://github.com/bufbu
 sync_references commits envoyproxy envoy https://github.com/envoyproxy/envoy api
 sync_references commits envoyproxy protoc-gen-validate https://github.com/envoyproxy/protoc-gen-validate
 sync_references commits gogo protobuf https://github.com/gogo/protobuf
+sync_references releases google cel-spec https://github.com/google/cel-spec proto
 sync_references commits googleapis googleapis https://github.com/googleapis/googleapis
 # TODO: replace to sync releases once they release the latest proto change:
 # https://github.com/GoogleChrome/lighthouse/pull/15116#issuecomment-1569261877
