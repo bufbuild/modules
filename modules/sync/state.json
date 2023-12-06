@@ -18,7 +18,7 @@
     },
     {
       "module_name": "envoyproxy/envoy",
-      "latest_reference": "93c26ebe938e261c3fd4e15f67f28a5a1c008075"
+      "latest_reference": "148fd48bb086742f1878877fde2b2fa55d7b58ad"
     },
     {
       "module_name": "envoyproxy/protoc-gen-validate",
@@ -27,6 +27,10 @@
     {
       "module_name": "gogo/protobuf",
       "latest_reference": "f67b8970b736e53dbd7d0a27146c8f1ac52f74e5"
+    },
+    {
+      "module_name": "google/cel-spec",
+      "latest_reference": "v0.13.0"
     },
     {
       "module_name": "googleapis/googleapis",
