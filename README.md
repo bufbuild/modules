@@ -16,7 +16,7 @@ We currently sync automatically the following modules:
 | bufbuild/confluent | https://github.com/bufbuild/confluent-proto |  |
 | bufbuild/protovalidate | https://github.com/bufbuild/protovalidate |  |
 | bufbuild/protovalidate-testing | https://github.com/bufbuild/protovalidate | - bufbuild/protovalidate |
-| cncf/xds | https://github.com/cncf/xds | - envoyproxy/protoc-gen-validate<br>- googleapis/googleapis |
+| cncf/xds | https://github.com/cncf/xds | - envoyproxy/protoc-gen-validate<br>- google/cel-spec<br>- googleapis/googleapis |
 | envoyproxy/envoy | https://github.com/envoyproxy/envoy | - cncf/xds<br>- envoyproxy/protoc-gen-validate<br>- googleapis/googleapis<br>- opencensus/opencensus<br>- opentelemetry/opentelemetry<br>- prometheus/client-model |
 | envoyproxy/protoc-gen-validate | https://github.com/envoyproxy/protoc-gen-validate |  |
 | gogo/protobuf | https://github.com/gogo/protobuf |  |
@@ -27,6 +27,7 @@ We currently sync automatically the following modules:
 | grpc-ecosystem/grpc-gateway | https://github.com/grpc-ecosystem/grpc-gateway |  |
 | opencensus/opencensus | https://github.com/census-instrumentation/opencensus-proto |  |
 | opentelemetry/opentelemetry | https://github.com/open-telemetry/opentelemetry-proto |  |
+| planetscale/vitess | https://github.com/planetscale/vitess-types |  |
 | prometheus/client-model | https://github.com/prometheus/client_model |  |
 | protocolbuffers/wellknowntypes | https://github.com/protocolbuffers/protobuf |  |
 
