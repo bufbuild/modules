@@ -32,7 +32,7 @@ process_ref() {
   fi
 
   # Copy only curated subset of files from that repo into a tmp module dir.
-  rsync -amR --include-from="${module_static_path}/rsync.incl" . "${mod_tmp_path}"
+  rsync -amRL --include-from="${module_static_path}/rsync.incl" . "${mod_tmp_path}"
   [ ! -e "${module_static_path}/buf.md" ] || cp "${module_static_path}/buf.md" "${mod_tmp_path}"
   [ ! -e "${module_static_path}/buf.yaml" ] || cp "${module_static_path}/buf.yaml" "${mod_tmp_path}"
 
@@ -193,7 +193,7 @@ sync_references commits grpc grpc https://github.com/grpc/grpc-proto
 sync_references commits grpc-ecosystem grpc-gateway https://github.com/grpc-ecosystem/grpc-gateway
 sync_references commits opencensus opencensus https://github.com/census-instrumentation/opencensus-proto src
 sync_references commits opentelemetry opentelemetry https://github.com/open-telemetry/opentelemetry-proto
-sync_references commits planetscale vitess https://github.com/prometheus/client_model src
+sync_references commits planetscale vitess https://github.com/planetscale/vitess-types src
 sync_references commits prometheus client-model https://github.com/prometheus/client_model
 sync_references releases protocolbuffers wellknowntypes https://github.com/protocolbuffers/protobuf src
 
