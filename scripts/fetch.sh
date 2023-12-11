@@ -179,8 +179,7 @@ trap cleanup EXIT
 sync_references commits bufbuild confluent https://github.com/bufbuild/confluent-proto
 sync_references releases bufbuild protovalidate https://github.com/bufbuild/protovalidate proto/protovalidate
 sync_references releases bufbuild protovalidate-testing https://github.com/bufbuild/protovalidate proto/protovalidate-testing
-# TODO: reenable once the new dep is also synced https://github.com/bufbuild/modules/issues/339
-# sync_references commits cncf xds https://github.com/cncf/xds
+sync_references commits cncf xds https://github.com/cncf/xds
 sync_references commits envoyproxy envoy https://github.com/envoyproxy/envoy api
 sync_references commits envoyproxy protoc-gen-validate https://github.com/envoyproxy/protoc-gen-validate
 sync_references commits gogo protobuf https://github.com/gogo/protobuf
