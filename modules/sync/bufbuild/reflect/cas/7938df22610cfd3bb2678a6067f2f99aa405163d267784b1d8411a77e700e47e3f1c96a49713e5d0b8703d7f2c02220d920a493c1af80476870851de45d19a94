@@ -1,0 +1,100 @@
+// Copyright 2022-2023 Buf Technologies, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+package buf.reflect.v1beta1;
+
+import "google/protobuf/descriptor.proto";
+
+// FileDescriptorSetService is implemented by a schema registry. It allows clients to download
+// Protobuf schemas. The schema is returned in the form of a FileDescriptorSet, which is also
+// the same form produced by the `protoc` reference compiler (and is compatible with the format
+// produced by `buf`).
+//
+// Protobuf runtimes that support descriptors and dynamic messages provide APIs for taking
+// these FileDescriptorSet proto messages and turning those into a usable dynamic schema,
+// allowing clients to interpret and manipulate messages of arbitrary types, including
+// interpreting the Protobuf binary format.
+service FileDescriptorSetService {
+  // GetFileDescriptorSet returns a set of file descriptors that can be used to build
+  // dynamic representations of a schema and/or service interfaces. This can also be
+  // used for server reflection.
+  rpc GetFileDescriptorSet(GetFileDescriptorSetRequest) returns (GetFileDescriptorSetResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+  }
+}
+
+message GetFileDescriptorSetRequest {
+  // The name of the module that contains the schema of interest.
+  //
+  // Some servers may host multiple modules and thus require this field. Others may host a
+  // single module and not support this field. The format of the module name depends on the
+  // server implementation.
+  //
+  // For Buf Schema Registries, the module name is required. An "Invalid Argument" error
+  // will occur if it is missing. Buf Schema Registries require the module name to be in
+  // the following format (note that the domain name of the registry must be included):
+  //    buf.build/acme/weather
+  //
+  // If the given module is not known to the server, a "Not Found" error is returned. If
+  // a module name is given but not supported by this server or if the module name is in
+  // an incorrect format, an "Invalid Argument" error is returned.
+  string module = 1;
+
+  // The version of the module to use.
+  //
+  // Some servers may not support multiple versions and thus not support this field. If
+  // the field is supported by the server but not provided by the client, the server will
+  // respond with the latest version of the requested module and indicate the version in
+  // the response. The format of the module version depends on the server implementation.
+  //
+  // For Buf Schema Registries, this field can be a commit. But it can also be a tag, a
+  // draft name, or "main" (which is the same as omitting it, since it will also resolve
+  // to the latest version).
+  //
+  // If specified but the requested module has no such version, a "Not Found" error is
+  // returned.
+  string version = 2;
+
+  // Zero or more symbol names. The names may refer to packages, messages, enums,
+  // services, methods, or extensions. All names must be fully-qualified but should
+  // NOT start with a period. If any name is invalid, the request will fail with an
+  // "Invalid Argument" error. If any name is unresolvable/not present in the
+  // requested module, the request will fail with a "Failed Precondition" error.
+  //
+  // If no names are provided, the full schema for the module is returned.
+  // Otherwise, the resulting schema contains only the named elements and all of
+  // their dependencies. This is enough information for the caller to construct
+  // a dynamic message for any requested message types or to dynamically invoke
+  // an RPC for any requested methods or services. If a package is named, that is
+  // equivalent to specifying the names of all messages, enums, extensions, and
+  // services defined in that package.
+  repeated string symbols = 3;
+}
+
+message GetFileDescriptorSetResponse {
+  // The schema, which is a set of file descriptors that include the requested symbols
+  // and their dependencies.
+  //
+  // The returned file descriptors will be topologically sorted.
+  google.protobuf.FileDescriptorSet file_descriptor_set = 1;
+  // The version of the returned schema. May not be set, such as if the server does not
+  // support multiple versions of schemas. May be different from the requested version,
+  // such as if the requested version was a name or tag that is resolved to another form.
+  //
+  // For Buf Schema Registries, if the requested version is a tag, draft name, or "main",
+  // the returned version will be the corresponding commit.
+  string version = 2;
+}
