@@ -1,0 +1,10 @@
+version: v1
+name: buf.build/bufbuild/reflect
+lint:
+  use:
+    - DEFAULT
+breaking:
+  use:
+    - FILE
+  except:
+    - RPC_SAME_IDEMPOTENCY_LEVEL
