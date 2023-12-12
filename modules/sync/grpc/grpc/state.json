@@ -83,6 +83,10 @@
     {
       "name": "2b62aeba3ac6968785dd1c60ab72de2ddec7dfd4",
       "digest": "00395d57d8f5f02c32365a52ee26a7aef89fe88beed15a601e74a05ffb34877291f813615419888b3e172fcba2ec202935801e5b6a250d60c8c342923ee40ee4"
+    },
+    {
+      "name": "cf2eafda7a5985c6a930373f1460af27763e11f2",
+      "digest": "017b648de2e77762a7fde54374fedaf52423cd1fdbb54adf3082628ea38a7e08ea7873ddb4dbf03d71bcda8f0ac0dfbe6a843d56ed0c0493f084fd8eb212dfd0"
     }
   ]
 }
