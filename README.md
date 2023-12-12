@@ -16,6 +16,7 @@ We currently sync automatically the following modules:
 | bufbuild/confluent | https://github.com/bufbuild/confluent-proto |  |
 | bufbuild/protovalidate | https://github.com/bufbuild/protovalidate |  |
 | bufbuild/protovalidate-testing | https://github.com/bufbuild/protovalidate | - bufbuild/protovalidate |
+| bufbuild/reflect | https://github.com/bufbuild/reflect | |
 | cncf/xds | https://github.com/cncf/xds | - envoyproxy/protoc-gen-validate<br>- google/cel-spec<br>- googleapis/googleapis |
 | envoyproxy/envoy | https://github.com/envoyproxy/envoy | - cncf/xds<br>- envoyproxy/protoc-gen-validate<br>- googleapis/googleapis<br>- opencensus/opencensus<br>- opentelemetry/opentelemetry<br>- prometheus/client-model |
 | envoyproxy/protoc-gen-validate | https://github.com/envoyproxy/protoc-gen-validate |  |
@@ -55,6 +56,6 @@ For feature requests, bugs, or technical questions, email us at [dev@buf.build](
 Offered under the [Apache 2 license][license].
 
 [bsr]: https://buf.build/explore 
-[issue-template]: https://github.com/bufbuild/modules/issues/new?assignees=&labels=Feature&template=managed-module-request-for-buf-schema-registry.md&title=Managed+Module+request+for+Buf+Schema+Registry
+[issue-template]: https://github.com/bufbuild/modules/issues/new?template=managed-module-request-for-buf-schema-registry.md
 [license]: https://github.com/bufbuild/modules/blob/main/LICENSE
 [slack]: https://buf.build/links/slack
