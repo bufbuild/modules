@@ -31,8 +31,27 @@ process_ref() {
     cp "${module_root}/${git_owner}/${git_repo}/LICENSE" .
   fi
 
-  # Copy only curated subset of files from that repo into a tmp module dir.
-  rsync -amRL --include-from="${module_static_path}/rsync.incl" . "${mod_tmp_path}"
+  # rsync flags: https://linux.die.net/man/1/rsync
+  rsync_args=(
+    # Archive mode is a shortcut to preserve files modification times, permissions, recursive
+    # folders, among others: https://serverfault.com/questions/141773/what-is-archive-mode-in-rsync
+    --archive
+
+    # Prune empty directory chains from file-list
+    --prune-empty-dirs
+
+    # Use relative path names
+    --relative
+
+    # Copy symlinks as content, not as symlinks, it overrides the --links option embedded in
+    # --archive that copies symlinks as symlinks (eg LICENSE for planetscale/vitess)
+    --copy-links
+
+    # Copy only curated subset of files from that repo into a tmp module dir using `rsync.incl` file
+    # on each module's static dir
+    --include-from="${module_static_path}/rsync.incl"
+  )
+  rsync "${rsync_args[@]}" . "${mod_tmp_path}"
   [ ! -e "${module_static_path}/buf.md" ] || cp "${module_static_path}/buf.md" "${mod_tmp_path}"
   [ ! -e "${module_static_path}/buf.yaml" ] || cp "${module_static_path}/buf.yaml" "${mod_tmp_path}"
 
