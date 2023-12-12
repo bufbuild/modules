@@ -1,0 +1,117 @@
+/*
+Copyright 2019 The Vitess Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+// This file contains the service VtTablet exposes for queries.
+
+syntax = "proto3";
+
+package vitess.queryservice.v18;
+option go_package = "github.com/planetscale/vitess-types/gen/vitess/queryservice/v18;queryservicev18";
+
+import "vitess/query/v18/query.proto";
+import "vitess/binlogdata/v18/binlogdata.proto";
+
+// Query defines the tablet query service, implemented by vttablet.
+service Query {
+  // Execute executes the specified SQL query (might be in a
+  // transaction context, if Query.transaction_id is set).
+  rpc Execute(vitess.query.v18.ExecuteRequest) returns (vitess.query.v18.ExecuteResponse) {};
+
+  // StreamExecute executes a streaming query. Use this method if the
+  // query returns a large number of rows. The first QueryResult will
+  // contain the Fields, subsequent QueryResult messages will contain
+  // the rows.
+  rpc StreamExecute(vitess.query.v18.StreamExecuteRequest) returns (stream vitess.query.v18.StreamExecuteResponse) {};
+
+  // Begin a transaction.
+  rpc Begin(vitess.query.v18.BeginRequest) returns (vitess.query.v18.BeginResponse) {};
+
+  // Commit a transaction.
+  rpc Commit(vitess.query.v18.CommitRequest) returns (vitess.query.v18.CommitResponse) {};
+
+  // Rollback a transaction.
+  rpc Rollback(vitess.query.v18.RollbackRequest) returns (vitess.query.v18.RollbackResponse) {};
+
+  // Prepare preares a transaction.
+  rpc Prepare(vitess.query.v18.PrepareRequest) returns (vitess.query.v18.PrepareResponse) {};
+
+  // CommitPrepared commits a prepared transaction.
+  rpc CommitPrepared(vitess.query.v18.CommitPreparedRequest) returns (vitess.query.v18.CommitPreparedResponse) {};
+
+  // RollbackPrepared rolls back a prepared transaction.
+  rpc RollbackPrepared(vitess.query.v18.RollbackPreparedRequest) returns (vitess.query.v18.RollbackPreparedResponse) {};
+
+  // CreateTransaction creates the metadata for a 2pc transaction.
+  rpc CreateTransaction(vitess.query.v18.CreateTransactionRequest) returns (vitess.query.v18.CreateTransactionResponse) {};
+
+  // StartCommit initiates a commit for a 2pc transaction.
+  rpc StartCommit(vitess.query.v18.StartCommitRequest) returns (vitess.query.v18.StartCommitResponse) {};
+
+  // SetRollback marks the 2pc transaction for rollback.
+  rpc SetRollback(vitess.query.v18.SetRollbackRequest) returns (vitess.query.v18.SetRollbackResponse) {};
+
+  // ConcludeTransaction marks the 2pc transaction as resolved.
+  rpc ConcludeTransaction(vitess.query.v18.ConcludeTransactionRequest) returns (vitess.query.v18.ConcludeTransactionResponse) {};
+
+  // ReadTransaction returns the 2pc transaction info.
+  rpc ReadTransaction(vitess.query.v18.ReadTransactionRequest) returns (vitess.query.v18.ReadTransactionResponse) {};
+
+  // BeginExecute executes a begin and the specified SQL query.
+  rpc BeginExecute(vitess.query.v18.BeginExecuteRequest) returns (vitess.query.v18.BeginExecuteResponse) {};
+
+  // BeginStreamExecute executes a begin and the specified SQL query.
+  rpc BeginStreamExecute(vitess.query.v18.BeginStreamExecuteRequest) returns (stream vitess.query.v18.BeginStreamExecuteResponse) {};
+
+  // MessageStream streams messages from a message table.
+  rpc MessageStream(vitess.query.v18.MessageStreamRequest) returns (stream vitess.query.v18.MessageStreamResponse) {};
+
+  // MessageAck acks messages for a table.
+  rpc MessageAck(vitess.query.v18.MessageAckRequest) returns (vitess.query.v18.MessageAckResponse) {};
+
+  // ReserveExecute executes a query on a reserved connection
+  rpc ReserveExecute(vitess.query.v18.ReserveExecuteRequest) returns (vitess.query.v18.ReserveExecuteResponse) {};
+
+  // ReserveBeginExecute starts a transaction and executes a query in the transaction on a reserved connection
+  rpc ReserveBeginExecute(vitess.query.v18.ReserveBeginExecuteRequest) returns (vitess.query.v18.ReserveBeginExecuteResponse) {};
+
+  // ReserveStreamExecute executes a streaming query on a reserved connection
+  rpc ReserveStreamExecute(vitess.query.v18.ReserveStreamExecuteRequest) returns (stream vitess.query.v18.ReserveStreamExecuteResponse) {};
+
+  // ReserveBeginStreamExecute starts a transaction and executes a streaming query in the transaction on a reserved connection
+  rpc ReserveBeginStreamExecute(vitess.query.v18.ReserveBeginStreamExecuteRequest) returns (stream vitess.query.v18.ReserveBeginStreamExecuteResponse) {};
+
+  // Release releases the connection
+  rpc Release(vitess.query.v18.ReleaseRequest) returns (vitess.query.v18.ReleaseResponse) {};
+
+  // StreamHealth runs a streaming RPC to the tablet, that returns the
+  // current health of the tablet on a regular basis.
+  rpc StreamHealth(vitess.query.v18.StreamHealthRequest) returns (stream vitess.query.v18.StreamHealthResponse) {};
+
+  // VStream streams vreplication events.
+  rpc VStream(vitess.binlogdata.v18.VStreamRequest) returns (stream vitess.binlogdata.v18.VStreamResponse) {};
+
+  // VStreamRows streams rows from the specified starting point.
+  rpc VStreamRows(vitess.binlogdata.v18.VStreamRowsRequest) returns (stream vitess.binlogdata.v18.VStreamRowsResponse) {};
+
+  // VStreamTables streams rows from the specified starting point.
+  rpc VStreamTables(vitess.binlogdata.v18.VStreamTablesRequest) returns (stream vitess.binlogdata.v18.VStreamTablesResponse) {};
+
+  // VStreamResults streams results along with the gtid of the snapshot.
+  rpc VStreamResults(vitess.binlogdata.v18.VStreamResultsRequest) returns (stream vitess.binlogdata.v18.VStreamResultsResponse) {};
+
+  // GetSchema returns the schema information.
+  rpc GetSchema(vitess.query.v18.GetSchemaRequest) returns (stream vitess.query.v18.GetSchemaResponse) {};
+}
