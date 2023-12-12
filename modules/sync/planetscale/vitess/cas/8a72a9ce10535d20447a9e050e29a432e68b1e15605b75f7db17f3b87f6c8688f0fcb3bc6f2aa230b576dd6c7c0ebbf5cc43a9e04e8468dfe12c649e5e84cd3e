@@ -1,0 +1,669 @@
+/*
+Copyright 2019 The Vitess Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+// This file contains all the types and servers necessary to make
+// RPC calls to VtTablet for the management API.
+
+syntax = "proto3";
+option go_package = "github.com/planetscale/vitess-types/gen/vitess/tabletmanagerdata/v18;tabletmanagerdatav18";
+
+package vitess.tabletmanagerdata.v18;
+
+import "vitess/binlogdata/v18/binlogdata.proto";
+import "vitess/query/v18/query.proto";
+import "vitess/topodata/v18/topodata.proto";
+import "vitess/replicationdata/v18/replicationdata.proto";
+import "vitess/logutil/v18/logutil.proto";
+import "vitess/vttime/v18/vttime.proto";
+import "vitess/vtrpc/v18/vtrpc.proto";
+
+//
+// Data structures
+//
+
+// This structure allows us to manage tablet selection preferences
+// which are eventually passed to a TabletPicker.
+enum TabletSelectionPreference {
+  ANY = 0;
+  INORDER = 1;
+  UNKNOWN = 3; // Don't change any existing value
+}
+
+message TableDefinition {
+  // the table name
+  string name = 1;
+
+  // the SQL to run to create the table
+  string schema = 2;
+
+  // the columns in the order that will be used to dump and load the data
+  repeated string columns = 3;
+
+  // the primary key columns in the primary key order
+  repeated string primary_key_columns = 4;
+
+  // type is either mysqlctl.TableBaseTable or mysqlctl.TableView
+  string type = 5;
+
+  // how much space the data file takes.
+  uint64 data_length = 6;
+
+  // approximate number of rows
+  uint64 row_count = 7;
+
+  // column names along with their types.
+  // NOTE: this is a superset of columns.
+  repeated vitess.query.v18.Field fields = 8;
+}
+
+message SchemaDefinition {
+  string database_schema = 1;
+  repeated TableDefinition table_definitions = 2;
+  reserved 3;
+}
+
+message SchemaChangeResult {
+  // before_schema holds the schema before each change.
+  SchemaDefinition before_schema = 1;
+  // after_schema holds the schema after each change.
+  SchemaDefinition after_schema = 2;
+}
+
+// UserPermission describes a single row in the mysql.user table
+// Primary key is Host+User
+// PasswordChecksum is the crc64 of the password, for security reasons
+message UserPermission {
+  string host = 1;
+  string user = 2;
+  uint64 password_checksum = 3;
+  map<string, string> privileges = 4;
+}
+
+// DbPermission describes a single row in the mysql.db table
+// Primary key is Host+Db+User
+message DbPermission {
+  string host = 1;
+  string db = 2;
+  string user = 3;
+  map<string, string> privileges = 4;
+}
+
+// Permissions have all the rows in mysql.{user,db} tables,
+// (all rows are sorted by primary key)
+message Permissions {
+  repeated UserPermission user_permissions = 1;
+  repeated DbPermission db_permissions = 2;
+}
+
+//
+// RPC payloads
+//
+
+message PingRequest {
+  string payload = 1;
+}
+
+message PingResponse {
+  string payload = 1;
+}
+
+message SleepRequest {
+  // duration is in nanoseconds
+  int64 duration = 1;
+}
+
+message SleepResponse {
+}
+
+message ExecuteHookRequest {
+  string name = 1;
+  repeated string parameters = 2;
+  map<string, string> extra_env = 3;
+}
+
+message ExecuteHookResponse {
+  int64 exit_status = 1;
+  string stdout = 2;
+  string stderr = 3;
+}
+
+message GetSchemaRequest {
+  repeated string tables = 1;
+  bool include_views = 2;
+  repeated string exclude_tables = 3;
+  // TableSchemaOnly specifies whether to limit the results to just table/view
+  // schema definition (CREATE TABLE/VIEW statements) and skip column/field information
+  bool table_schema_only = 4;
+}
+
+message GetSchemaResponse {
+  SchemaDefinition schema_definition = 1;
+}
+
+message GetPermissionsRequest {
+}
+
+message GetPermissionsResponse {
+  Permissions permissions = 1;
+}
+
+message SetReadOnlyRequest {
+}
+
+message SetReadOnlyResponse {
+}
+
+message SetReadWriteRequest {
+}
+
+message SetReadWriteResponse {
+}
+
+message ChangeTypeRequest {
+  vitess.topodata.v18.TabletType tablet_type = 1;
+  bool semiSync = 2;
+}
+
+message ChangeTypeResponse {
+}
+
+message RefreshStateRequest {
+}
+
+message RefreshStateResponse {
+}
+
+message RunHealthCheckRequest {
+}
+
+message RunHealthCheckResponse {
+}
+
+message ReloadSchemaRequest {
+  // wait_position allows scheduling a schema reload to occur after a
+  // given DDL has replicated to this server, by specifying a replication
+  // position to wait for. Leave empty to trigger the reload immediately.
+  string wait_position = 1;
+}
+
+message ReloadSchemaResponse {
+}
+
+message PreflightSchemaRequest {
+  repeated string changes = 1;
+}
+
+message PreflightSchemaResponse {
+  // change_results has for each change the schema before and after it.
+  // The number of elements is identical to the length of "changes" in the request.
+  repeated SchemaChangeResult change_results = 1;
+}
+
+message ApplySchemaRequest {
+  string sql = 1;
+  bool force = 2;
+  bool allow_replication = 3;
+  SchemaDefinition before_schema = 4;
+  SchemaDefinition after_schema = 5;
+  string sql_mode = 6;
+  // BatchSize indicates how many queries to apply together
+  int64 batch_size = 7;
+}
+
+message ApplySchemaResponse {
+  SchemaDefinition before_schema = 1;
+  SchemaDefinition after_schema = 2;
+}
+
+message LockTablesRequest {
+}
+
+message LockTablesResponse {
+}
+
+message UnlockTablesRequest {
+}
+
+message UnlockTablesResponse {
+}
+
+message ExecuteQueryRequest {
+  bytes query = 1;
+  string db_name = 2;
+  uint64 max_rows = 3;
+  // caller_id identifies the caller. This is the effective caller ID,
+  // set by the application to further identify the caller.
+  vitess.vtrpc.v18.CallerID caller_id = 4;
+}
+
+message ExecuteQueryResponse {
+  vitess.query.v18.QueryResult result = 1;
+}
+
+message ExecuteFetchAsDbaRequest {
+  bytes query = 1;
+  string db_name = 2;
+  uint64 max_rows = 3;
+  bool disable_binlogs = 4;
+  bool reload_schema = 5;
+}
+
+message ExecuteFetchAsDbaResponse {
+  vitess.query.v18.QueryResult result = 1;
+}
+
+message ExecuteFetchAsAllPrivsRequest {
+  bytes query = 1;
+  string db_name = 2;
+  uint64 max_rows = 3;
+  bool reload_schema = 4;
+}
+
+message ExecuteFetchAsAllPrivsResponse {
+  vitess.query.v18.QueryResult result = 1;
+}
+
+message ExecuteFetchAsAppRequest {
+  bytes query = 1;
+  uint64 max_rows = 2;
+}
+
+message ExecuteFetchAsAppResponse {
+  vitess.query.v18.QueryResult result = 1;
+}
+
+message ReplicationStatusRequest {
+}
+
+message ReplicationStatusResponse {
+  vitess.replicationdata.v18.Status status = 1;
+}
+
+message PrimaryStatusRequest {
+}
+
+message PrimaryStatusResponse {
+  vitess.replicationdata.v18.PrimaryStatus status = 1;
+}
+
+message PrimaryPositionRequest {
+}
+
+message PrimaryPositionResponse {
+  string position = 1;
+}
+
+message WaitForPositionRequest {
+  string position = 1;
+}
+
+message WaitForPositionResponse {
+}
+
+message StopReplicationRequest {
+}
+
+message StopReplicationResponse {
+}
+
+message StopReplicationMinimumRequest {
+  string position = 1;
+  int64 wait_timeout = 2;
+}
+
+message StopReplicationMinimumResponse {
+  string position = 1;
+}
+
+message StartReplicationRequest {
+  bool semiSync = 1;
+}
+
+message StartReplicationResponse {
+}
+
+message StartReplicationUntilAfterRequest {
+  string position = 1;
+  int64 wait_timeout = 2;
+}
+
+message StartReplicationUntilAfterResponse {
+}
+
+message GetReplicasRequest {
+}
+
+message GetReplicasResponse {
+  repeated string addrs = 1;
+}
+
+message ResetReplicationRequest {
+}
+
+message ResetReplicationResponse {
+}
+
+message VReplicationExecRequest {
+  string query = 1;
+}
+
+message VReplicationExecResponse {
+  vitess.query.v18.QueryResult result = 1;
+}
+
+message VReplicationWaitForPosRequest {
+  int32 id = 1;
+  string position = 2;
+}
+
+message VReplicationWaitForPosResponse {
+}
+
+message InitPrimaryRequest {
+  bool semiSync = 1;
+}
+
+message InitPrimaryResponse {
+  string position = 1;
+}
+
+message PopulateReparentJournalRequest {
+  int64 time_created_ns = 1;
+  string action_name = 2;
+  vitess.topodata.v18.TabletAlias primary_alias = 3;
+  string replication_position = 4;
+}
+
+message PopulateReparentJournalResponse {
+}
+
+message InitReplicaRequest {
+  vitess.topodata.v18.TabletAlias parent = 1;
+  string replication_position = 2;
+  int64 time_created_ns = 3;
+  bool semiSync = 4;
+}
+
+message InitReplicaResponse {
+}
+
+message DemotePrimaryRequest {
+}
+
+message DemotePrimaryResponse {
+  // Position is deprecated, and is a string representation of a demoted primaries executed position.
+  //string deprecated_position = 1 [deprecated = true];
+  reserved 1;
+
+  // PrimaryStatus represents the response from calling `SHOW MASTER STATUS` on a primary that has been demoted.
+  vitess.replicationdata.v18.PrimaryStatus primary_status = 2;
+}
+
+message UndoDemotePrimaryRequest {
+  bool semiSync = 1;
+}
+
+message UndoDemotePrimaryResponse {
+}
+
+message ReplicaWasPromotedRequest {
+}
+
+message ReplicaWasPromotedResponse {
+}
+
+message ResetReplicationParametersRequest {
+}
+
+message ResetReplicationParametersResponse {
+}
+
+message FullStatusRequest {
+}
+
+message FullStatusResponse {
+  vitess.replicationdata.v18.FullStatus status = 1;
+}
+
+message SetReplicationSourceRequest {
+  vitess.topodata.v18.TabletAlias parent = 1;
+  int64 time_created_ns = 2;
+  bool force_start_replication = 3;
+  string wait_position = 4;
+  bool semiSync = 5;
+}
+
+message SetReplicationSourceResponse {
+}
+
+message ReplicaWasRestartedRequest {
+  // the parent alias the tablet should have
+  vitess.topodata.v18.TabletAlias parent = 1;
+}
+
+message ReplicaWasRestartedResponse {
+}
+
+message StopReplicationAndGetStatusRequest {
+  vitess.replicationdata.v18.StopReplicationMode stop_replication_mode = 1;
+}
+
+message StopReplicationAndGetStatusResponse {
+  // HybridStatus is deprecated. It currently represents a hybrid struct where all data represents the before state,
+  // except for all position related data which comes from the after state. Please use status instead, which holds
+  // discrete replication status calls before and after stopping the replica, or stopping the replica's io_thread.
+  //replicationdata.Status hybrid_status = 1 [deprecated = true];
+  reserved 1;
+
+  // Status represents the replication status call right before, and right after telling the replica to stop.
+  vitess.replicationdata.v18.StopReplicationStatus status = 2;
+}
+
+message PromoteReplicaRequest {
+  bool semiSync = 1;
+}
+
+message PromoteReplicaResponse {
+  string position = 1;
+}
+
+// Backup / Restore related messages
+
+message BackupRequest {
+  int64 concurrency = 1;
+  bool allow_primary = 2;
+  // IncrementalFromPos indicates a position of a previous backup. When this value is non-empty
+  // then the backup becomes incremental and applies as of given position.
+  string incremental_from_pos = 3;
+  // UpgradeSafe indicates if the backup should be taken with innodb_fast_shutdown=0
+  // so that it's a backup that can be used for an upgrade.
+  bool upgrade_safe = 4;
+}
+
+message BackupResponse {
+  vitess.logutil.v18.Event event = 1;
+}
+
+message RestoreFromBackupRequest {
+  vitess.vttime.v18.Time backup_time = 1;
+  // RestoreToPos indicates a position for a point-in-time recovery. The recovery
+  // is expected to utilize one full backup, followed by zero or more incremental backups,
+  // that reach the precise desired position
+  string restore_to_pos = 2;
+  // Dry run does not actually performs the restore, but validates the steps and availability of backups
+  bool dry_run = 3;
+  // RestoreToTimestamp, if given, requested an inremental restore up to (and excluding) the given timestamp.
+  // RestoreToTimestamp and RestoreToPos are mutually exclusive.
+  vitess.vttime.v18.Time restore_to_timestamp = 4;
+}
+
+message RestoreFromBackupResponse {
+  vitess.logutil.v18.Event event = 1;
+}
+
+//
+// VReplication related messages
+//
+
+message CreateVReplicationWorkflowRequest {
+  string workflow = 1;
+  repeated vitess.binlogdata.v18.BinlogSource binlog_source = 2;
+  // Optional parameters.
+  repeated string cells = 3;
+  // TabletTypes is the list of tablet types to use when selecting source tablets.
+  repeated vitess.topodata.v18.TabletType tablet_types = 4;
+  TabletSelectionPreference tablet_selection_preference = 5;
+  vitess.binlogdata.v18.VReplicationWorkflowType workflow_type = 6;
+  vitess.binlogdata.v18.VReplicationWorkflowSubType workflow_sub_type = 7;
+  // DeferSecondaryKeys specifies if secondary keys should be created in one shot after table
+  // copy finishes.
+  bool defer_secondary_keys = 8;
+  // AutoStart specifies if the workflow should be started when created.
+  bool auto_start = 9;
+  // Should the workflow stop after the copy phase.
+  bool stop_after_copy = 10;
+}
+
+message CreateVReplicationWorkflowResponse {
+  vitess.query.v18.QueryResult result = 1;
+}
+
+message DeleteVReplicationWorkflowRequest {
+  string workflow = 1;
+}
+
+message DeleteVReplicationWorkflowResponse {
+  vitess.query.v18.QueryResult result = 1;
+}
+
+message ReadVReplicationWorkflowRequest {
+  string workflow = 1;
+}
+
+message ReadVReplicationWorkflowResponse {
+  string workflow = 2;
+  string cells = 3;
+  repeated vitess.topodata.v18.TabletType tablet_types = 4;
+  TabletSelectionPreference tablet_selection_preference = 5;
+  string db_name = 6;
+  string tags = 7;
+  vitess.binlogdata.v18.VReplicationWorkflowType workflow_type = 8;
+  vitess.binlogdata.v18.VReplicationWorkflowSubType workflow_sub_type = 9;
+  bool defer_secondary_keys = 10;
+  message Stream {
+    int32 id = 1;
+    vitess.binlogdata.v18.BinlogSource bls = 2;
+    string pos = 3;
+    string stop_pos = 4;
+    int64 max_tps = 5;
+    int64 max_replication_lag = 6;
+    vitess.vttime.v18.Time time_updated = 7;
+    vitess.vttime.v18.Time transaction_timestamp = 8;
+    vitess.binlogdata.v18.VReplicationWorkflowState state = 9;
+    string message = 10;
+    int64 rows_copied = 11;
+    vitess.vttime.v18.Time time_heartbeat = 12;
+    vitess.vttime.v18.Time time_throttled = 13;
+    string component_throttled = 14;
+  }
+  repeated Stream streams = 11;
+}
+
+message VDiffRequest {
+  string keyspace = 1;
+  string workflow = 2;
+  string action = 3;
+  string action_arg = 4;
+  string vdiff_uuid = 5;
+  VDiffOptions options = 6;
+}
+
+message VDiffResponse {
+  int64 id = 1;
+  vitess.query.v18.QueryResult output = 2;
+  string vdiff_uuid = 3;
+}
+
+// options that influence the tablet selected by the picker for streaming data from
+message VDiffPickerOptions {
+  string tablet_types = 1;
+  string source_cell = 2;
+  string target_cell = 3;
+}
+
+// options that only influence how vdiff differences are reported
+message VDiffReportOptions {
+  bool only_pks = 1;
+  bool debug_query = 2;
+  string format = 3;
+}
+
+message VDiffCoreOptions {
+  string tables = 1;
+  bool auto_retry = 2;
+  int64  max_rows = 3;
+  bool checksum = 4;
+  int64 sample_pct = 5;
+  int64 timeout_seconds = 6;
+  int64 max_extra_rows_to_compare = 7;
+  bool update_table_stats = 8;
+}
+
+message VDiffOptions {
+  VDiffPickerOptions picker_options = 1;
+  VDiffCoreOptions core_options = 2;
+  VDiffReportOptions report_options = 3;
+}
+
+message UpdateVReplicationWorkflowRequest {
+  string workflow = 1;
+  repeated string cells = 2;
+  repeated vitess.topodata.v18.TabletType tablet_types = 3;
+  TabletSelectionPreference tablet_selection_preference = 4;
+  vitess.binlogdata.v18.OnDDLAction on_ddl = 5;
+  vitess.binlogdata.v18.VReplicationWorkflowState state = 6;
+}
+
+message UpdateVReplicationWorkflowResponse {
+  vitess.query.v18.QueryResult result = 1;
+}
+
+message ResetSequencesRequest {
+  repeated string tables = 1;
+}
+
+message ResetSequencesResponse {
+}
+
+message CheckThrottlerRequest {
+  string app_name = 1;
+}
+
+message CheckThrottlerResponse {
+  // StatusCode is HTTP compliant response code (e.g. 200 for OK)
+  int32 status_code = 1;
+  // Value is the metric value collected by the tablet
+  double value = 2;
+  // Threshold is the throttling threshold the table was comparing the value with
+  double threshold = 3;
+  // Error indicates an error retrieving the value
+  string error = 4;
+  // Message 
+  string message = 5;
+  // RecentlyChecked indicates that the tablet has been hit with a user-facing check, which can then imply
+  // that heartbeats lease should be renwed.
+  bool recently_checked = 6;
+}

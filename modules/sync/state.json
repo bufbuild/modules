@@ -18,7 +18,7 @@
     },
     {
       "module_name": "envoyproxy/envoy",
-      "latest_reference": "8fc7f550edb6d42c70143cdb1f1be78f47af6388"
+      "latest_reference": "afdc6606979bfd6cd486465d771ff2bb78468bf5"
     },
     {
       "module_name": "envoyproxy/protoc-gen-validate",
@@ -57,8 +57,12 @@
       "latest_reference": "ea449ae0e9b282f96ec12a09e796dbb3d390ed4f"
     },
     {
+      "module_name": "planetscale/vitess",
+      "latest_reference": "770e14433716a816905f267650191319f7d0515b"
+    },
+    {
       "module_name": "prometheus/client-model",
-      "latest_reference": "c26a8eea9e44c46cd9ea22a91f5856e685fa907d"
+      "latest_reference": "9b7b6759313a7b41ffba1a65ea31cfbc9ed0b944"
     },
     {
       "module_name": "protocolbuffers/wellknowntypes",
