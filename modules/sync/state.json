@@ -22,7 +22,7 @@
     },
     {
       "module_name": "envoyproxy/envoy",
-      "latest_reference": "2f8e1a36ed808d760d6f791cdfc8f8cd568a1ad7"
+      "latest_reference": "9108a1457513cdad1881fc6177a008aa511ef242"
     },
     {
       "module_name": "envoyproxy/protoc-gen-validate",
