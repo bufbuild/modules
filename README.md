@@ -28,7 +28,6 @@ We currently sync automatically the following modules:
 | grpc-ecosystem/grpc-gateway | https://github.com/grpc-ecosystem/grpc-gateway |  |
 | opencensus/opencensus | https://github.com/census-instrumentation/opencensus-proto |  |
 | opentelemetry/opentelemetry | https://github.com/open-telemetry/opentelemetry-proto |  |
-| planetscale/vitess | https://github.com/planetscale/vitess-types |  |
 | prometheus/client-model | https://github.com/prometheus/client_model |  |
 | protocolbuffers/wellknowntypes | https://github.com/protocolbuffers/protobuf |  |
 

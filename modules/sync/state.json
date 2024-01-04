@@ -61,10 +61,6 @@
       "latest_reference": "ea449ae0e9b282f96ec12a09e796dbb3d390ed4f"
     },
     {
-      "module_name": "planetscale/vitess",
-      "latest_reference": "770e14433716a816905f267650191319f7d0515b"
-    },
-    {
       "module_name": "prometheus/client-model",
       "latest_reference": "93dfe21d3e8ab9bb19fc740e9f9b25b6536fdf73"
     },
