@@ -95,6 +95,10 @@
     {
       "name": "37330a01c4e1ac4d379bb81cc349df34aaf306cf",
       "digest": "017b648de2e77762a7fde54374fedaf52423cd1fdbb54adf3082628ea38a7e08ea7873ddb4dbf03d71bcda8f0ac0dfbe6a843d56ed0c0493f084fd8eb212dfd0"
+    },
+    {
+      "name": "5ba669a3292d2b2808be40f08e15185567e223d8",
+      "digest": "d2aff749c6d1d4b0acc769b52fa2b2171cd3e9890dc1e5b316ac3353a8e0edd0f188b4abcea78d3bf532db2c12a6deee52502853c5fb826acccb5e18bc9fb966"
     }
   ]
 }
