@@ -5,7 +5,9 @@ on:
     # At 7:00 EST (12:00 UTC) on every day-of-week from Monday through Friday. https://crontab.guru/#0_12_*_*_1-5
     - cron: "0 12 * * 1-5"
   workflow_dispatch:
-
+permissions:
+  contents: read
+  issues: write
 jobs:
   fetch-references:
     runs-on: ubuntu-latest
@@ -48,3 +50,15 @@ jobs:
           body: "New managed modules references found. Please review."
           team-reviewers: bufbuild/bsr-team
           token: ${{ steps.generate_token.outputs.token }}
+      - uses: dblock/create-a-github-issue@866beb009af3db457e82ca98efe474969a5ebce8
+        if: failure()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_SERVER_URL: ${ github.server_url }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          GITHUB_RUN_ATTEMPT: ${{ github.run_attempt }}
+        with:
+          filename: .github/automatic-workflow-issue-template.md
+          update_existing: true
+          search_existing: open

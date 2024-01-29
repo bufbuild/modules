@@ -10,6 +10,7 @@ on:
 permissions:
   contents: write
   id-token: write
+  issues: write
   packages: read
 
 jobs:
@@ -32,6 +33,18 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: go run ./cmd/release .
+      - uses: dblock/create-a-github-issue@866beb009af3db457e82ca98efe474969a5ebce8
+        if: failure()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_SERVER_URL: ${ github.server_url }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          GITHUB_RUN_ATTEMPT: ${{ github.run_attempt }}
+        with:
+          filename: .github/automatic-workflow-issue-template.md
+          update_existing: true
+          search_existing: open
   # sync job is currently syncing the whole sync directory, it runs
   # every time, regardless if there was a release or not, or even if the
   # release job failed. TODO: We can improve efficiency here by doing
@@ -61,3 +74,15 @@ jobs:
         uses: google-github-actions/setup-gcloud@98ddc00a17442e89a24bbf282954a3b65ce6d200
       - name: Upload To Release Bucket
         run: gsutil -m rsync -c -r modules/sync gs://buf-modules
+      - uses: dblock/create-a-github-issue@866beb009af3db457e82ca98efe474969a5ebce8
+        if: failure()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_SERVER_URL: ${ github.server_url }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          GITHUB_RUN_ATTEMPT: ${{ github.run_attempt }}
+        with:
+          filename: .github/automatic-workflow-issue-template.md
+          update_existing: true
+          search_existing: open
