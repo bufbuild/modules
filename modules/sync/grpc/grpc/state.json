@@ -99,6 +99,10 @@
     {
       "name": "5ba669a3292d2b2808be40f08e15185567e223d8",
       "digest": "d2aff749c6d1d4b0acc769b52fa2b2171cd3e9890dc1e5b316ac3353a8e0edd0f188b4abcea78d3bf532db2c12a6deee52502853c5fb826acccb5e18bc9fb966"
+    },
+    {
+      "name": "0307d8309a08deb3cd9adea3a7a3721587cb4528",
+      "digest": "fb6b954d0ba0da7c7fec4ed97d5dc625ea24167d8b377bc5e1703e605327facfe788ea289c8e36a539cd8be2f15123ec7212b8db0b6772d7b8f4d98d1f6c593e"
     }
   ]
 }
