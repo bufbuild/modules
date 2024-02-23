@@ -48,7 +48,7 @@ We update the tags on this module for every release of
 
 The `protocolbuffers/protobuf` repository's release & tagging history does not follow a typical
 [SemVer](https://semver.org/) convention. This is briefly mentioned in the [documentation for
-version support](https://protobuf.dev/support/version-support/). 
+version support](https://protobuf.dev/support/version-support/).
 
 Ultimately, the releases of `protocolbuffers/protobuf` are managed in the following pattern, starting from `v3.0.0`:
 
