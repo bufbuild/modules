@@ -22,7 +22,7 @@
     },
     {
       "module_name": "envoyproxy/envoy",
-      "latest_reference": "1b768b49f9a85a865c35735a4944a001975055e9"
+      "latest_reference": "9cf5ec2e9d9eb64e866442965357307e823eb38a"
     },
     {
       "module_name": "envoyproxy/protoc-gen-validate",
@@ -38,7 +38,7 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "4fd0bc43dcdcffe128f3de105f3eeedadd1a921c"
+      "latest_reference": "ba8609ab4c78e41679c560b3b1ca55340ef3f0d7"
     },
     {
       "module_name": "googlechrome/lighthouse",
@@ -62,7 +62,7 @@
     },
     {
       "module_name": "prometheus/client-model",
-      "latest_reference": "5c259930e4b9d04a82d81a876cad8475270190a0"
+      "latest_reference": "64c33c99062b19a40e0a251eb341ffae7609bd80"
     },
     {
       "module_name": "protocolbuffers/wellknowntypes",
