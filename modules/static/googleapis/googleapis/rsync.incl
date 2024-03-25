@@ -10,6 +10,7 @@
 + api/http.proto
 + api/httpbody.proto
 + api/field_behavior.proto
++ api/field_info.proto
 + api/resource.proto
 # Required for grpc-gateway
 + api/visibility.proto
