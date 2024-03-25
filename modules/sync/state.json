@@ -18,15 +18,15 @@
     },
     {
       "module_name": "cncf/xds",
-      "latest_reference": "6b7cb9e61ad79c99765a1dea2bede517d1b7db3e"
+      "latest_reference": "033564927e4a1bef1f79b6d6bfddf4f42b50ecde"
     },
     {
       "module_name": "envoyproxy/envoy",
-      "latest_reference": "7a370796392cad1e22437fb20114dd5a94f69288"
+      "latest_reference": "22e6a78621ca66d3109cfa2a0f075e7efb721801"
     },
     {
       "module_name": "envoyproxy/protoc-gen-validate",
-      "latest_reference": "7d833c1f32da0f46ebecc1f3f88cf093cd73a6e6"
+      "latest_reference": "abd77e9fdc455974552fe60330fe5e3445b996bb"
     },
     {
       "module_name": "gogo/protobuf",
@@ -38,7 +38,7 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "d81d0b9e6993d6ab425dff4d7c3d05fb2e59fa57"
+      "latest_reference": "41d708195a5d97e1e85000c5ff4ca5522589afe2"
     },
     {
       "module_name": "googlechrome/lighthouse",
