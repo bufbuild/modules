@@ -22,7 +22,7 @@
     },
     {
       "module_name": "envoyproxy/envoy",
-      "latest_reference": "9f5627d381ba78427e85c3798664de9593e269c1"
+      "latest_reference": "f1dd333e44dbb7b1126047d32103233df3c4465b"
     },
     {
       "module_name": "envoyproxy/protoc-gen-validate",
@@ -34,19 +34,19 @@
     },
     {
       "module_name": "google/cel-spec",
-      "latest_reference": "v0.14.0"
+      "latest_reference": "v0.15.0"
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "e7b48a71aac74fad861a9737cb11aad978fe247e"
+      "latest_reference": "34990e59dab8eeb47e52f2f54f16d7122ea20a0f"
     },
     {
       "module_name": "googlechrome/lighthouse",
-      "latest_reference": "157ff8b21c094b81009c1d182e6aec60e239a992"
+      "latest_reference": "0475357b52757b7e881168026c6ea70d28dd18ae"
     },
     {
       "module_name": "grpc-ecosystem/grpc-gateway",
-      "latest_reference": "d3cf5fcfabfd1997e278fd424fc26b474ab145a4"
+      "latest_reference": "d97fdab937cf9bb946fd7a3a0bca59bc7389d127"
     },
     {
       "module_name": "grpc/grpc",
@@ -66,7 +66,7 @@
     },
     {
       "module_name": "protocolbuffers/wellknowntypes",
-      "latest_reference": "v26.0"
+      "latest_reference": "v26.1"
     }
   ]
 }
