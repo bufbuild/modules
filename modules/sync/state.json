@@ -6,11 +6,11 @@
     },
     {
       "module_name": "bufbuild/protovalidate",
-      "latest_reference": "v0.6.1"
+      "latest_reference": "v0.6.2"
     },
     {
       "module_name": "bufbuild/protovalidate-testing",
-      "latest_reference": "v0.6.1"
+      "latest_reference": "v0.6.2"
     },
     {
       "module_name": "bufbuild/reflect",
@@ -22,7 +22,7 @@
     },
     {
       "module_name": "envoyproxy/envoy",
-      "latest_reference": "d4697a86717d8f2adc8bc825e20644c66437a7be"
+      "latest_reference": "be4aa03571ea687ef2f17b81e817203eaa07aaad"
     },
     {
       "module_name": "envoyproxy/protoc-gen-validate",
