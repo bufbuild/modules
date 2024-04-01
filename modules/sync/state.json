@@ -6,11 +6,11 @@
     },
     {
       "module_name": "bufbuild/protovalidate",
-      "latest_reference": "v0.6.2"
+      "latest_reference": "v0.6.3"
     },
     {
       "module_name": "bufbuild/protovalidate-testing",
-      "latest_reference": "v0.6.2"
+      "latest_reference": "v0.6.3"
     },
     {
       "module_name": "bufbuild/reflect",
