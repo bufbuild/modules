@@ -18,11 +18,11 @@
     },
     {
       "module_name": "cncf/xds",
-      "latest_reference": "033564927e4a1bef1f79b6d6bfddf4f42b50ecde"
+      "latest_reference": "0c46c01016dc5c9aeddf6c745a230c32bf62841d"
     },
     {
       "module_name": "envoyproxy/envoy",
-      "latest_reference": "f1dd333e44dbb7b1126047d32103233df3c4465b"
+      "latest_reference": "d4697a86717d8f2adc8bc825e20644c66437a7be"
     },
     {
       "module_name": "envoyproxy/protoc-gen-validate",
@@ -38,7 +38,7 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "34990e59dab8eeb47e52f2f54f16d7122ea20a0f"
+      "latest_reference": "25a31d86e66de5ff552a5a507382f582a7af4bc4"
     },
     {
       "module_name": "googlechrome/lighthouse",
@@ -46,11 +46,11 @@
     },
     {
       "module_name": "grpc-ecosystem/grpc-gateway",
-      "latest_reference": "d97fdab937cf9bb946fd7a3a0bca59bc7389d127"
+      "latest_reference": "f0a66a0663a5b0cae1445bcb35ce64fc34304435"
     },
     {
       "module_name": "grpc/grpc",
-      "latest_reference": "4f245d272a28a680606c0739753506880cf33b5f"
+      "latest_reference": "acfb637a36c5a9818552f89588ce8886e729e4b1"
     },
     {
       "module_name": "opencensus/opencensus",
