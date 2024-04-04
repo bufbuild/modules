@@ -24,6 +24,7 @@ We currently sync automatically the following modules:
 | google/cel-spec | https://github.com/google/cel-spec | - googleapis/googleapis |
 | googleapis/googleapis | https://github.com/googleapis/googleapis |  |
 | googlechrome/lighthouse | https://github.com/GoogleChrome/lighthouse |  |
+| googlecloudplatform/bq-schema-api | https://github.com/GoogleCloudPlatform/protoc-gen-bq-schema | |
 | grpc/grpc | https://github.com/grpc/grpc-proto | - googleapis/googleapis |
 | grpc-ecosystem/grpc-gateway | https://github.com/grpc-ecosystem/grpc-gateway |  |
 | opencensus/opencensus | https://github.com/census-instrumentation/opencensus-proto |  |
