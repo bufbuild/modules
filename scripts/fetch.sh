@@ -217,6 +217,7 @@ sync_references commits googleapis googleapis https://github.com/googleapis/goog
 # TODO: replace to sync releases once they release the latest proto change:
 # https://github.com/GoogleChrome/lighthouse/pull/15116#issuecomment-1569261877
 sync_references commits googlechrome lighthouse https://github.com/GoogleChrome/lighthouse proto
+sync_references commits googlecloudplatform bq-schema-api https://github.com/GoogleCloudPlatform/protoc-gen-bq-schema
 sync_references commits grpc grpc https://github.com/grpc/grpc-proto
 sync_references commits grpc-ecosystem grpc-gateway https://github.com/grpc-ecosystem/grpc-gateway
 sync_references commits opencensus opencensus https://github.com/census-instrumentation/opencensus-proto src
