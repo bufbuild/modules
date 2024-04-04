@@ -1,0 +1,66 @@
+// Copyright 2014 Google Inc. All rights reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+package gen_bq_schema;
+
+option go_package = "github.com/GoogleCloudPlatform/protoc-gen-bq-schema/protos";
+
+import "google/protobuf/descriptor.proto";
+
+extend google.protobuf.MessageOptions {
+  // NB: There used to be a custom option named "table_name". But only one tag
+  // is registered for this project: 1021. So when adding other options, the
+  // only solution was to change tag 1021 to be a message, with all the various
+  // options as fields therein.
+  //
+  // If you are upgrading this library and find that protoc begins to reject
+  // your proto files, you'll need to change all lines that look like so:
+  //    option (gen_bq_schema.table_name) = "foo";
+  // to instead look like this:
+  //    option (gen_bq_schema.bigquery_opts).table_name = "foo";
+  // There was no backwards compatible way to make this change. Sorry for
+  // the inconvenience.
+
+
+  // BigQuery message schema generation options.
+  //
+  // The field number is a globally unique id for this option, assigned by
+  // protobuf-global-extension-registry@google.com
+  BigQueryMessageOptions bigquery_opts = 1021;
+}
+
+message BigQueryMessageOptions {
+  // Specifies a name of table in BigQuery for the message.
+  //
+  // If not blank, indicates the message is a type of record to be stored into BigQuery.
+  string table_name = 1;
+
+  // If true, BigQuery field names will default to a field's JSON name,
+  // not its original/proto field name.
+  bool use_json_names = 2;
+
+  // If set, adds defined extra fields to a JSON representation of the message.
+  // Value format: "<field name>:<BigQuery field type>" for basic types
+  // or "<field name>:RECORD:<protobuf type>" for message types.
+  // "NULLABLE" by default, different mode may be set via optional suffix ":<mode>"
+  repeated string extra_fields = 3;
+
+  // If set will output the schema file order based on the provided value.
+  enum FieldOrder {
+    FIELD_ORDER_UNSPECIFIED = 0;
+    FIELD_ORDER_BY_NUMBER = 1;
+  }
+  FieldOrder output_field_order = 4;
+}
