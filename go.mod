@@ -3,7 +3,7 @@ module github.com/bufbuild/modules
 go 1.22.0
 
 require (
-	github.com/bufbuild/buf v1.30.0
+	github.com/bufbuild/buf v1.30.1
 	github.com/google/go-github/v58 v58.0.0
 	github.com/hashicorp/go-retryablehttp v0.7.5
 	github.com/stretchr/testify v1.9.0
