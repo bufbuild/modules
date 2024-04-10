@@ -10,4 +10,4 @@ deps:
   - buf.build/google/cel-spec:<SEMVER_RELEASE_VERSION>
 ```
 
-For more information, see the [documentation](https://docs.buf.build/bsr/overview).
+For more information, see the [documentation](https://buf.build/docs/bsr/overview).

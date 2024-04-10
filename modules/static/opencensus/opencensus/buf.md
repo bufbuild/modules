@@ -11,4 +11,4 @@ deps:
   - buf.build/opencensus/opencensus:<GIT_COMMIT_TAG>
 ```
 
-For more information, see the [documentation](https://docs.buf.build/bsr/overview).
+For more information, see the [documentation](https://buf.build/docs/bsr/overview).
