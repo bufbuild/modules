@@ -119,6 +119,10 @@
     {
       "name": "ecfed443aebbfa2390cd8b743db432408e9f604e",
       "digest": "425fc57558baea51d928e9b474b636563168827cca74c15741c86cb99fc9ebd54a0dcbccf100ba0fe1eaf3c523b4c08f19202d453f6d6abee35cf8239b516bcc"
+    },
+    {
+      "name": "e5a607cf01477d671a7fb225b9b59ede2fb08d6d",
+      "digest": "0a0e0f76aef55a3115a0e2ac0652e078a2050d9334f748f4b9dc830b18e6d3972e30fadcbbcf246d1c0d167b483a5e9b1e5fdda6c201e7daa317097b88822534"
     }
   ]
 }
