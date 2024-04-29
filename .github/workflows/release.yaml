@@ -33,7 +33,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: go run ./cmd/release .
-      - uses: dblock/create-a-github-issue@866beb009af3db457e82ca98efe474969a5ebce8
+      - uses: dblock/create-a-github-issue@c5e54b8762a0c4c2cd9330750e30b81bcc369c38
         if: failure()
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -74,7 +74,7 @@ jobs:
         uses: google-github-actions/setup-gcloud@98ddc00a17442e89a24bbf282954a3b65ce6d200
       - name: Upload To Release Bucket
         run: gsutil -m rsync -c -r modules/sync gs://buf-modules
-      - uses: dblock/create-a-github-issue@866beb009af3db457e82ca98efe474969a5ebce8
+      - uses: dblock/create-a-github-issue@c5e54b8762a0c4c2cd9330750e30b81bcc369c38
         if: failure()
         env:
           GITHUB_TOKEN: ${{ github.token }}
