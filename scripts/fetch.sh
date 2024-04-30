@@ -33,6 +33,10 @@ process_ref() {
     cp "${module_root}/${git_owner}/${git_repo}/LICENSE" .
   fi
 
+  if [ -e "${module_static_path}/pre-sync.sh" ]; then
+    . "${module_static_path}/pre-sync.sh"
+  fi
+
   # rsync flags: https://linux.die.net/man/1/rsync
   rsync_args=(
     # Archive mode is a shortcut to preserve files modification times, permissions, recursive
