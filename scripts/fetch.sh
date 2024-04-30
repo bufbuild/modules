@@ -2,8 +2,8 @@
 
 set -eo pipefail
 
-if [[ -n "${BUF_TOKEN}" ]]; then
-  echo "${BUF_TOKEN}" | buf registry login --debug --token-stdin --username "${BUF_USER}"
+if [[ -n "${BUF_TOKEN}" && -n "${BUF_USER}" ]]; then
+  echo "${BUF_TOKEN}" | buf registry login --token-stdin --username "${BUF_USER}"
 fi
 
 repo_root="$(cd "$(dirname "${0}")/.." && pwd)"
