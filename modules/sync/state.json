@@ -69,10 +69,6 @@
       "latest_reference": "5f5f1b1fbb510ce158f311f4eec21086e7e61dac"
     },
     {
-      "module_name": "protocolbuffers/gofeatures",
-      "latest_reference": "v1.34.0"
-    },
-    {
       "module_name": "protocolbuffers/wellknowntypes",
       "latest_reference": "v26.1"
     }
