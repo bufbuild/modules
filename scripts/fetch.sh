@@ -230,5 +230,6 @@ sync_references commits opencensus opencensus https://github.com/census-instrume
 sync_references commits opentelemetry opentelemetry https://github.com/open-telemetry/opentelemetry-proto
 sync_references commits prometheus client-model https://github.com/prometheus/client_model
 sync_references releases protocolbuffers wellknowntypes https://github.com/protocolbuffers/protobuf src
+sync_references releases protocolbuffers gofeatures https://github.com/protocolbuffers/protobuf-go src
 
 popd > /dev/null
