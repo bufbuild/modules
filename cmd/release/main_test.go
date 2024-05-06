@@ -399,7 +399,7 @@ func TestWriteReferencesTable(t *testing.T) {
 
 	populateReferences := func(refsCount int) []*statev1alpha1.ModuleReference {
 		refs := make([]*statev1alpha1.ModuleReference, refsCount)
-		for i := 0; i < refsCount; i++ {
+		for i := range refsCount {
 			refs[i] = &statev1alpha1.ModuleReference{
 				Name:   fmt.Sprintf("commit%03d", i),
 				Digest: fmt.Sprintf("digest%03d", i),

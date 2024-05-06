@@ -86,7 +86,7 @@ func AppendModuleReference(
 	}
 	moduleName := filepath.Join(ownerName, repoName)
 	var found bool
-	for i := 0; i < len(globalState.GetModules()); i++ {
+	for i := range len(globalState.GetModules()) {
 		if globalState.GetModules()[i].GetModuleName() == moduleName {
 			found = true
 			globalState.GetModules()[i].LatestReference = reference
