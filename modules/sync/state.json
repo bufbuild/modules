@@ -2,7 +2,7 @@
   "modules": [
     {
       "module_name": "bufbuild/confluent",
-      "latest_reference": "7e8668934e927a8bbc920b0e7aea85a3baa1d36d"
+      "latest_reference": "a89d1b14894eb4bc1b508cbb1090d269dc24ab6b"
     },
     {
       "module_name": "bufbuild/protovalidate",
@@ -22,11 +22,11 @@
     },
     {
       "module_name": "envoyproxy/envoy",
-      "latest_reference": "c3dd81da68af54844c85da0942bddb4787bd5624"
+      "latest_reference": "e7f9a8a33727fb3c91361b4efda9c1ca6b28640f"
     },
     {
       "module_name": "envoyproxy/protoc-gen-validate",
-      "latest_reference": "50b609b4568a3325adf55bfb0a66342498803d52"
+      "latest_reference": "f458eb9f4076a26047d73117b71f88cb8c295c7e"
     },
     {
       "module_name": "gogo/protobuf",
@@ -38,11 +38,11 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "155f256ebe0bc6586d7df23d10472444340da320"
+      "latest_reference": "e3a34df5b36e38a1ee0b1544ed4ae3b99cdf0f91"
     },
     {
       "module_name": "googlechrome/lighthouse",
-      "latest_reference": "369979f498bd6560127e10476edffb264d4fa3b9"
+      "latest_reference": "e5038e49e0edd914fc06d9613aaff2fff4e97192"
     },
     {
       "module_name": "googlecloudplatform/bq-schema-api",
@@ -50,7 +50,7 @@
     },
     {
       "module_name": "grpc-ecosystem/grpc-gateway",
-      "latest_reference": "84d4cd8795db3d36113a6398c013cedf92316817"
+      "latest_reference": "33ca56eeaf85003043d90915d01d79a95dae870c"
     },
     {
       "module_name": "grpc/grpc",
@@ -62,7 +62,7 @@
     },
     {
       "module_name": "opentelemetry/opentelemetry",
-      "latest_reference": "f16a3fdf35e3ad4c9b8aaef705e234ef8a2abfdf"
+      "latest_reference": "a05597bff803d3d9405fcdd1e1fb1f42bed4eb7a"
     },
     {
       "module_name": "prometheus/client-model",
