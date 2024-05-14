@@ -1,0 +1,56 @@
+{
+  "references": [
+    {
+      "name": "v0.4.1",
+      "digest": "debc0cf1306138dd570c8db81f1dc3a7face5d66920508cbbbe12638e753c7fb8966d2f120ff94d15fde8885975856f1c592e69c26e219cf3be8bdfabc6b2207"
+    },
+    {
+      "name": "v0.4.2",
+      "digest": "70350c39e6072b70c5130363c16da35fee8e76f064915f6a032d633ff2caeb5dad19b4f55c7a07619a78badb2154574d7d96b55a2b429fe8ee7df9498697921f"
+    },
+    {
+      "name": "v0.5.0",
+      "digest": "e553b0110554063b89cbd7ca8293ca716f15ec64705d7868500206fa9a49bbe301b5f69e802da8beea8ec406d0b4e3b6fdc157c9f6a96d778b5585847758bc57"
+    },
+    {
+      "name": "v0.5.1",
+      "digest": "7b67c2de7d46aa8a297e4419598a135eda90c9381026288deaa2d010c317a204635efcf13c4e40f6d37b31461df5fb9c9c3f76ce0a7311404d5af6d16a21eff2"
+    },
+    {
+      "name": "v0.5.2",
+      "digest": "6cb5a614ca66ebc2eaef3ec2e1cc4d832f09b9f61f1596e8c1592438d7c7b93f2db354e14dfd1aea3281c14a29e8a0519bef4e235b13c176e5b48dc2330e2777"
+    },
+    {
+      "name": "v0.5.3",
+      "digest": "6cb5a614ca66ebc2eaef3ec2e1cc4d832f09b9f61f1596e8c1592438d7c7b93f2db354e14dfd1aea3281c14a29e8a0519bef4e235b13c176e5b48dc2330e2777"
+    },
+    {
+      "name": "v0.5.5",
+      "digest": "053eed1ee1cf60726adbd055ca499c5fa2d9d41fbda0c59ed6feca6b46dc033021ce3a9014e6eb54e6dc0ad7e95f50c853db76f62ffa8ddd9a2117bb6b4ef91f"
+    },
+    {
+      "name": "v0.6.0",
+      "digest": "99c5e36b5af51f337c2f8ec3e08165eb01c1edf527eda0c78e8d5345f88c3ef441992c4279473b8000864ec1eb43d4cf263779782a112f746f2b935d7e6317da"
+    },
+    {
+      "name": "v0.6.1",
+      "digest": "99c5e36b5af51f337c2f8ec3e08165eb01c1edf527eda0c78e8d5345f88c3ef441992c4279473b8000864ec1eb43d4cf263779782a112f746f2b935d7e6317da"
+    },
+    {
+      "name": "v0.6.2",
+      "digest": "99c5e36b5af51f337c2f8ec3e08165eb01c1edf527eda0c78e8d5345f88c3ef441992c4279473b8000864ec1eb43d4cf263779782a112f746f2b935d7e6317da"
+    },
+    {
+      "name": "v0.6.6",
+      "digest": "99c5e36b5af51f337c2f8ec3e08165eb01c1edf527eda0c78e8d5345f88c3ef441992c4279473b8000864ec1eb43d4cf263779782a112f746f2b935d7e6317da"
+    },
+    {
+      "name": "v0.6.8",
+      "digest": "52def4bc4c407c7cfbd6c3c3959468dc74bb63bbc0ef696ed1ff1bb3c52714eca6f64a762b3f3e4c86483648d6e219b5aa4c1b50c2588495acf41e1158340d26"
+    },
+    {
+      "name": "v0.7.0",
+      "digest": "6091317da58bcf493938d2af84eb96dd6eaa26add87e09b53eab305e5774cbaaa1d99f8f7f6e85f2bc10ee193653e911ab8a88564133501210083f81d5c82023"
+    }
+  ]
+}

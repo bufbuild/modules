@@ -37,6 +37,10 @@
       "latest_reference": "v0.15.0"
     },
     {
+      "module_name": "google/gnostic",
+      "latest_reference": "v0.7.0"
+    },
+    {
       "module_name": "googleapis/googleapis",
       "latest_reference": "e3a34df5b36e38a1ee0b1544ed4ae3b99cdf0f91"
     },
