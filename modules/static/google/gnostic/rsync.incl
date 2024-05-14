@@ -1,11 +1,21 @@
 + /LICENSE
 
-# Open API v2
-+ /openapiv2/OpenAPIv2.proto
-
-# Open API v3
-+ /openapiv3/annotations.proto
-+ /openapiv3/OpenAPIv3.proto
++ /discovery
++ /discovery/**.proto
++ /extensions
++ /extensions/**.proto
++ /metrics
++ /metrics/**.proto
++ /metrics/lint
++ /metrics/lint/**.proto
++ /openapiv2
++ /openapiv2/**.proto
++ /openapiv3
++ /openapiv3/**.proto
++ /plugins
++ /plugins/**.proto
++ /surface
++ /surface/**.proto
 
 + */
 - *
