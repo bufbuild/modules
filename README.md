@@ -22,6 +22,7 @@ We currently sync automatically the following modules:
 | envoyproxy/protoc-gen-validate | https://github.com/envoyproxy/protoc-gen-validate |  |
 | gogo/protobuf | https://github.com/gogo/protobuf |  |
 | google/cel-spec | https://github.com/google/cel-spec | - googleapis/googleapis |
+| google/gnostic | https://github.com/google/gnostic |  |
 | googleapis/googleapis | https://github.com/googleapis/googleapis |  |
 | googlechrome/lighthouse | https://github.com/GoogleChrome/lighthouse |  |
 | googlecloudplatform/bq-schema-api | https://github.com/GoogleCloudPlatform/protoc-gen-bq-schema | |
