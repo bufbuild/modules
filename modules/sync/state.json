@@ -2,15 +2,15 @@
   "modules": [
     {
       "module_name": "bufbuild/confluent",
-      "latest_reference": "b42d38c9ab9a409a12cbc79f50b5697fcb5b5961"
+      "latest_reference": "a89d1b14894eb4bc1b508cbb1090d269dc24ab6b"
     },
     {
       "module_name": "bufbuild/protovalidate",
-      "latest_reference": "v0.6.3"
+      "latest_reference": "v0.6.4"
     },
     {
       "module_name": "bufbuild/protovalidate-testing",
-      "latest_reference": "v0.6.3"
+      "latest_reference": "v0.6.4"
     },
     {
       "module_name": "bufbuild/reflect",
@@ -22,11 +22,11 @@
     },
     {
       "module_name": "envoyproxy/envoy",
-      "latest_reference": "f62977780d34e697d36a2dcb863b5f79fb07ecc2"
+      "latest_reference": "180af67c20a6938c0021054b472c4d1618dfc1ab"
     },
     {
       "module_name": "envoyproxy/protoc-gen-validate",
-      "latest_reference": "50b609b4568a3325adf55bfb0a66342498803d52"
+      "latest_reference": "ca115cfd131364a094044faab592858151fd291c"
     },
     {
       "module_name": "gogo/protobuf",
@@ -38,11 +38,11 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "82d8fc20da7c47121cd2bcfd99c5a1bc11c5c2a1"
+      "latest_reference": "1e4137870560340a14700618a05e2d7162326af7"
     },
     {
       "module_name": "googlechrome/lighthouse",
-      "latest_reference": "369979f498bd6560127e10476edffb264d4fa3b9"
+      "latest_reference": "c977fe8f25b2fc6a7384b30a9351ea061f52c3bb"
     },
     {
       "module_name": "googlecloudplatform/bq-schema-api",
@@ -50,7 +50,7 @@
     },
     {
       "module_name": "grpc-ecosystem/grpc-gateway",
-      "latest_reference": "25594bf2b587b87907b9123efeafd899af0ab2c6"
+      "latest_reference": "884c848de7f098fc1421d7d79429d166c00956ac"
     },
     {
       "module_name": "grpc/grpc",
@@ -62,7 +62,7 @@
     },
     {
       "module_name": "opentelemetry/opentelemetry",
-      "latest_reference": "b3060d2104df364136d75a35779e6bd48bac449a"
+      "latest_reference": "a05597bff803d3d9405fcdd1e1fb1f42bed4eb7a"
     },
     {
       "module_name": "prometheus/client-model",
@@ -70,7 +70,7 @@
     },
     {
       "module_name": "protocolbuffers/wellknowntypes",
-      "latest_reference": "v26.1"
+      "latest_reference": "v27.0"
     }
   ]
 }
