@@ -22,7 +22,7 @@
     },
     {
       "module_name": "envoyproxy/envoy",
-      "latest_reference": "84653b185c5c819a87f04bf4078630c2632a7671"
+      "latest_reference": "505a8603f7997ef7a8ddd81fcba382caa2be5867"
     },
     {
       "module_name": "envoyproxy/protoc-gen-validate",
@@ -50,7 +50,7 @@
     },
     {
       "module_name": "grpc-ecosystem/grpc-gateway",
-      "latest_reference": "b59cefb5b808f27c38099c7699bdabb387258694"
+      "latest_reference": "e2bc840fbbfd5ed3e63df49b9276f4f51ecd3518"
     },
     {
       "module_name": "grpc/grpc",
@@ -67,6 +67,10 @@
     {
       "module_name": "prometheus/client-model",
       "latest_reference": "19e4b65d1955c1092f4330f0f7d722bdf3782596"
+    },
+    {
+      "module_name": "protocolbuffers/gofeatures",
+      "latest_reference": "v1.34.1"
     },
     {
       "module_name": "protocolbuffers/wellknowntypes",
