@@ -1,4 +1,4 @@
 + LICENSE
-+ go_features.proto
++ google/protobuf/go_features.proto
 + */
 - *
