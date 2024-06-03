@@ -1,4 +1,4 @@
 + LICENSE
-+ *.proto
++ go_features.proto
 + */
 - *
