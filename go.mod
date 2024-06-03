@@ -5,7 +5,7 @@ go 1.22.0
 require (
 	github.com/bufbuild/buf v1.32.2
 	github.com/google/go-github/v58 v58.0.0
-	github.com/hashicorp/go-retryablehttp v0.7.6
+	github.com/hashicorp/go-retryablehttp v0.7.7
 	github.com/stretchr/testify v1.9.0
 	go.uber.org/multierr v1.11.0
 	golang.org/x/mod v0.17.0
