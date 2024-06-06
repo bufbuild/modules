@@ -1,6 +1,14 @@
 + LICENSE
 + README.md
-+ buf.yaml
+
+# Even though this is a module we maintain ourselves, the source repo already moved to buf.yaml v2:
+# https://github.com/bufbuild/confluent-proto/commit/372a2fa2ec2bb64cdfb195c8ac34d55b5214d7ac which
+# is not supported yet by the BSR module syncer.
+#
+# TODO: re-sync this file and remove the static one when the BSR supports v2.
+#
+# + buf.yaml
+
 + **/
 + *.proto
 - *
