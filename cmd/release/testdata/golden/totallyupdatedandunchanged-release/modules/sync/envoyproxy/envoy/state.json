@@ -1,0 +1,11 @@
+{
+  "references": [
+    {
+      "name": "v0.1.0",
+      "digest": "dummyManifestDigestEnvoy"
+    },{
+      "name": "v0.2.0",
+      "digest": "updatedDummyManifestDigestEnvoy"
+    }
+  ]
+}

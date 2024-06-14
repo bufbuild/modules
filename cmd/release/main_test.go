@@ -119,6 +119,38 @@ func TestCalculateNewReleaseModules(t *testing.T) {
 		assert.True(t, shouldRelease(got))
 	})
 
+	t.Run("TotallyUpdatedAndUnchanged-FromPreviousRelease", func(t *testing.T) {
+		t.Parallel()
+		prevRelease := map[string]string{
+			"envoyproxy/envoy":               "bb554f53ad8d3a2a2ae4cbd7102a3e20ae00b558",
+			"envoyproxy/protoc-gen-validate": "38260ee45796b420276ac925d826ecec8fc3e9a8",
+		}
+		currentRelease := map[string]string{
+			"envoyproxy/envoy":               "v0.2.0",                                   // totally updated (old reference gone)
+			"envoyproxy/protoc-gen-validate": "38260ee45796b420276ac925d826ecec8fc3e9a8", // unchanged
+		}
+		got, err := calculateModulesStates(filepath.Join("testdata/golden/totallyupdatedandunchanged-release", bufstate.SyncRoot), prevRelease, currentRelease)
+		require.NoError(t, err)
+		assert.Equal(t, map[string]releaseModuleState{
+			"envoyproxy/protoc-gen-validate": {
+				status: modules.Unchanged,
+			},
+			"envoyproxy/envoy": {
+				status: modules.Updated,
+				references: []*statev1alpha1.ModuleReference{
+					{
+						Name:   "v0.1.0",
+						Digest: "dummyManifestDigestEnvoy",
+					},
+					{
+						Name:   "v0.2.0",
+						Digest: "updatedDummyManifestDigestEnvoy",
+					},
+				},
+			}}, got)
+		assert.True(t, shouldRelease(got))
+	})
+
 	t.Run("NewAndRemoved-FromPreviousRelease", func(t *testing.T) {
 		t.Parallel()
 		prevRelease := map[string]string{

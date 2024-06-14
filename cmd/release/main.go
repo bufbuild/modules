@@ -244,6 +244,14 @@ func calculateModulesStates(
 				break
 			}
 		}
+		if _, ok := moduleReferences[updatedModule.Name]; !ok {
+			// if no match was found, it means the previous latest reference was gone, so take all refs
+			// as updated
+			moduleReferences[updatedModule.Name] = releaseModuleState{
+				status:     modules.Updated,
+				references: moduleManifest.GetReferences(),
+			}
+		}
 	}
 	return moduleReferences, nil
 }
