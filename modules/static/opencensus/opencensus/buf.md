@@ -2,13 +2,13 @@
 
 Updates to the [source repository](https://github.com/census-instrumentation/opencensus-proto) are
 automatically synced on a periodic basis, and each BSR commit is tagged with corresponding Git
-commits.
+semver releases.
 
-To depend on a specific Git commit, you can use it as your reference in your dependencies:
+To depend on a specific version, you can use it as your reference in your dependencies:
 
 ```
 deps:
-  - buf.build/opencensus/opencensus:<GIT_COMMIT_TAG>
+  - buf.build/opencensus/opencensus:<SEMVER_RELEASE_VERSION>
 ```
 
 For more information, see the [documentation](https://buf.build/docs/bsr/overview).
