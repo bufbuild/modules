@@ -2,7 +2,7 @@
   "modules": [
     {
       "module_name": "bufbuild/confluent",
-      "latest_reference": "bd2b70874fbf6e4654b9127fec37b0ef3be8d45a"
+      "latest_reference": "v0.1.0"
     },
     {
       "module_name": "bufbuild/protovalidate",
@@ -26,11 +26,11 @@
     },
     {
       "module_name": "envoyproxy/protoc-gen-validate",
-      "latest_reference": "451a7c2f421c7ab516405162279bc47e04ef253d"
+      "latest_reference": "v1.0.4"
     },
     {
       "module_name": "gogo/protobuf",
-      "latest_reference": "f67b8970b736e53dbd7d0a27146c8f1ac52f74e5"
+      "latest_reference": "v1.3.2"
     },
     {
       "module_name": "google/cel-spec",
@@ -42,7 +42,7 @@
     },
     {
       "module_name": "googlechrome/lighthouse",
-      "latest_reference": "6859c5f6a183c65b15021ed6e342f6f83af21a87"
+      "latest_reference": "v12.0.0"
     },
     {
       "module_name": "googlecloudplatform/bq-schema-api",
@@ -50,7 +50,7 @@
     },
     {
       "module_name": "grpc-ecosystem/grpc-gateway",
-      "latest_reference": "1249143a7e027ed57772fd4c636b00f5b93a931b"
+      "latest_reference": "v2.20.0"
     },
     {
       "module_name": "grpc/grpc",
@@ -58,15 +58,15 @@
     },
     {
       "module_name": "opencensus/opencensus",
-      "latest_reference": "1664cc961550be8f3058ddd29390350242f44f1f"
+      "latest_reference": "v0.4.1"
     },
     {
       "module_name": "opentelemetry/opentelemetry",
-      "latest_reference": "bd7cf55b6d45f3c587d2131b68a7e5a501bdb10c"
+      "latest_reference": "v1.3.1"
     },
     {
       "module_name": "prometheus/client-model",
-      "latest_reference": "a534ba6f2551174b8a7792843b58beebeda5fbd4"
+      "latest_reference": "v0.6.1"
     },
     {
       "module_name": "protocolbuffers/gofeatures",
