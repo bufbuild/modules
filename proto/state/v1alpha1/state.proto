@@ -25,7 +25,7 @@ option go_package = "buf.build/gen/go/bufbuild/modules-proto/protocolbuffers/go/
 // global state file at the root sync directory.
 message GlobalState {
   option (buf.validate.message).cel = {
-    id: "module_state.unique_module_names",
+    id: "module_state.unique_module_names"
     expression: "size(this.modules.filter(reference, !this.modules.map(i, i.module_name).exists_one(x, x == reference.module_name))) == 0 ? '' : (this.modules.map(reference, reference.module_name).filter(module_name, !this.modules.map(reference, reference.module_name).exists_one(x, x == module_name)))[0] + ' has appeared multiple times'"
   };
   repeated GlobalStateReference modules = 1;
@@ -35,7 +35,7 @@ message GlobalState {
 // reference from its local array of references.
 message GlobalStateReference {
   string module_name = 1 [(buf.validate.field).required = true];
-  string latest_reference = 2  [(buf.validate.field).required = true];
+  string latest_reference = 2 [(buf.validate.field).required = true];
 }
 
 // ModuleState is an array of references that will be synced to a BSR cluster for a
@@ -43,7 +43,7 @@ message GlobalStateReference {
 // directory.
 message ModuleState {
   option (buf.validate.message).cel = {
-    id: "module_state.unique_references",
+    id: "module_state.unique_references"
     expression: "size(this.references.filter(reference, !this.references.map(i, i.name).exists_one(x, x == reference.name))) == 0 ? '' : (this.references.map(reference, reference.name).filter(name, !this.references.map(reference, reference.name).exists_one(x, x == name)))[0] + ' has appeared multiple times'"
   };
   repeated ModuleReference references = 1;
