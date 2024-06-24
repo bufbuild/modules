@@ -129,7 +129,7 @@ func validate(msg proto.Message) error {
 		return fmt.Errorf("initialize validator: %w", err)
 	}
 	if err := v.Validate(msg); err != nil {
-		return fmt.Errorf("validate: %w", err)
+		return err
 	}
 	return nil
 }

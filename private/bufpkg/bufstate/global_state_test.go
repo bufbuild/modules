@@ -51,32 +51,35 @@ func TestInvalidGlobalStates(t *testing.T) {
 	t.Parallel()
 	t.Run("repeatedModules", func(t *testing.T) {
 		t.Parallel()
-		require.Error(t, validate(&statev1alpha1.GlobalState{
+		err := validate(&statev1alpha1.GlobalState{
 			Modules: []*statev1alpha1.GlobalStateReference{
 				{ModuleName: "aaa/bbb", LatestReference: "foo"},
 				{ModuleName: "aaa/bbb", LatestReference: "bar"},
 				{ModuleName: "aaa/ccc", LatestReference: "baz"},
 			},
-		}))
+		})
+		require.Contains(t, err.Error(), "aaa/bbb has appeared multiple times")
 	})
 	t.Run("emptyReferences", func(t *testing.T) {
 		t.Parallel()
-		require.Error(t, validate(&statev1alpha1.GlobalState{
+		err := validate(&statev1alpha1.GlobalState{
 			Modules: []*statev1alpha1.GlobalStateReference{
 				{ModuleName: "aaa/bbb", LatestReference: "foo"},
 				{ModuleName: "aaa/ccc", LatestReference: ""},
 				{ModuleName: "aaa/ddd", LatestReference: "bar"},
 			},
-		}))
+		})
+		require.Contains(t, err.Error(), "modules[1].latest_reference: value is required")
 	})
 	t.Run("emptyModuleNames", func(t *testing.T) {
 		t.Parallel()
-		require.Error(t, validate(&statev1alpha1.GlobalState{
+		err := validate(&statev1alpha1.GlobalState{
 			Modules: []*statev1alpha1.GlobalStateReference{
 				{ModuleName: "aaa/bbb", LatestReference: "foo"},
 				{ModuleName: "", LatestReference: "foo"},
 				{ModuleName: "aaa/ddd", LatestReference: "bar"},
 			},
-		}))
+		})
+		require.Contains(t, err.Error(), "modules[1].module_name: value is required")
 	})
 }
