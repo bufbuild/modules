@@ -1,3 +1,5 @@
+buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.34.2-20240508200655-46a4cf4ba109.2 h1:cFrEG/pJch6t62+jqndcPXeTNkYcztS4tBRgNkR+drw=
+buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.34.2-20240508200655-46a4cf4ba109.2/go.mod h1:ylS4c28ACSI59oJrOdW4pHS4n0Hw4TgSPHn8rpHl4Yw=
 github.com/bufbuild/buf v1.34.0 h1:rZSVfYS5SakOe6ds9PDjbHVwOc+vBGVWNW9Ei+Rg/+c=
 github.com/bufbuild/buf v1.34.0/go.mod h1:Fj+KBmY2ODYD2Ld02w4LH9Y3WiRH2203IjGJbKYK5Hc=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=

@@ -1,0 +1,14 @@
+version: v2
+managed:
+  enabled: true
+  override:
+    - file_option: go_package_prefix
+      value: github.com/bufbuild/modules/private/gen
+  disable:
+    - module: buf.build/bufbuild/protovalidate
+      file_option: go_package_prefix
+plugins:
+  - remote: buf.build/protocolbuffers/go:v1.34.2
+    out: private/gen/modules
+    opt:
+      - paths=source_relative
