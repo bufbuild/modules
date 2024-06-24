@@ -18,6 +18,8 @@ package state.v1alpha1;
 
 import "buf/validate/validate.proto";
 
+option go_package = "buf.build/gen/go/bufbuild/modules-proto/protocolbuffers/go/state/v1alpha1";
+
 // GlobalState is a sorted array managed modules, each one with the latest
 // reference from its local array of references. This is kept updated in a
 // global state file at the root sync directory.
