@@ -539,6 +539,7 @@ func TestWriteReferencesTable(t *testing.T) {
 }
 
 func assertModuleStates(t *testing.T, expected, actual map[string]releaseModuleState) {
+	t.Helper()
 	assert.ElementsMatch(
 		t,
 		slicesext.MapKeysToSlice(expected),
