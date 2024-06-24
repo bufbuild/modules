@@ -117,12 +117,6 @@ func AppendModuleReference(
 	return nil
 }
 
-// ProtoPtr is a type constraint for a proto message, guaranteeing that it's a pointer of T.
-type ProtoPtr[T any] interface {
-	proto.Message
-	*T
-}
-
 func validate(msg proto.Message) error {
 	v, err := protovalidate.New()
 	if err != nil {
