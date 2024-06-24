@@ -1,0 +1,20 @@
+name: Buf CI
+on:
+  push:
+    paths:
+      - 'proto/**'
+permissions:
+  contents: read
+jobs:
+  buf:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: bufbuild/buf-action@v0.1
+        with:
+          username: ${{ secrets.BUF_USERNAME }}
+          token: ${{ secrets.BUF_TOKEN }}
+          version: 1.32.2
+          input: proto
+          breaking_against: |
+            ${{ github.event.repository.clone_url }}#format=git,commit=${{ github.event.pull_request.base.sha }},subdir=proto
