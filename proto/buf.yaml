@@ -1,5 +1,5 @@
 version: v1
-name: buf.build/bufbuild/modules
+name: buf.build/bufbuild/modules-proto
 breaking:
   use:
     - FILE
