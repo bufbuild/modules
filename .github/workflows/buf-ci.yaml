@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: bufbuild/buf-action@v0.1
         with:
-          username: ${{ secrets.BUF_USERNAME }}
+          username: ${{ secrets.BUF_USER }}
           token: ${{ secrets.BUF_TOKEN }}
           version: 1.32.2
           input: proto
