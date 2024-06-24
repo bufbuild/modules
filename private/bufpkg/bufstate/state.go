@@ -20,6 +20,8 @@ import (
 	"path/filepath"
 
 	statev1alpha1 "github.com/bufbuild/modules/private/gen/modules/state/v1alpha1"
+	"github.com/bufbuild/protovalidate-go"
+	"google.golang.org/protobuf/proto"
 )
 
 const (
@@ -111,6 +113,23 @@ func AppendModuleReference(
 	}
 	if err := WriteGlobalState(globalStateFile, globalState); err != nil {
 		return fmt.Errorf("write global state file: %w", err)
+	}
+	return nil
+}
+
+// ProtoPtr is a type constraint for a proto message, guaranteeing that it's a pointer of T.
+type ProtoPtr[T any] interface {
+	proto.Message
+	*T
+}
+
+func validate(msg proto.Message) error {
+	v, err := protovalidate.New()
+	if err != nil {
+		return fmt.Errorf("initialize validator: %w", err)
+	}
+	if err := v.Validate(msg); err != nil {
+		return fmt.Errorf("validate: %w", err)
 	}
 	return nil
 }

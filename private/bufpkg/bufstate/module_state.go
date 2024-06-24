@@ -36,7 +36,7 @@ func ReadModStateFile(readCloser io.ReadCloser) (_ *statev1alpha1.ModuleState, r
 	if err := json.NewDecoder(readCloser).Decode(&moduleState); err != nil {
 		return nil, fmt.Errorf("read file: %w", err)
 	}
-	if err := validateModuleState(&moduleState); err != nil {
+	if err := validate(&moduleState); err != nil {
 		return nil, fmt.Errorf("invalid module state: %w", err)
 	}
 	return &moduleState, nil
@@ -49,7 +49,7 @@ func WriteModStateFile(writeCloser io.WriteCloser, moduleState *statev1alpha1.Mo
 			retErr = multierr.Append(retErr, fmt.Errorf("close file: %w", err))
 		}
 	}()
-	if err := validateModuleState(moduleState); err != nil {
+	if err := validate(moduleState); err != nil {
 		return fmt.Errorf("invalid module state: %w", err)
 	}
 	data, err := json.MarshalIndent(moduleState, "", "  ")
@@ -59,25 +59,6 @@ func WriteModStateFile(writeCloser io.WriteCloser, moduleState *statev1alpha1.Mo
 
 	if _, err := writeCloser.Write(data); err != nil {
 		return fmt.Errorf("write to file: %w", err)
-	}
-	return nil
-}
-
-// validateModuleState checks there are no repeated reference names or empty values in references or
-// digests.
-func validateModuleState(s *statev1alpha1.ModuleState) error {
-	refs := make(map[string]struct{}, len(s.GetReferences()))
-	for _, ref := range s.GetReferences() {
-		if len(ref.GetName()) == 0 {
-			return fmt.Errorf("empty reference name with digest %q", ref.GetDigest())
-		}
-		if len(ref.GetDigest()) == 0 {
-			return fmt.Errorf("reference %q has an empty digest", ref.GetName())
-		}
-		if _, alreadyExists := refs[ref.GetName()]; alreadyExists {
-			return fmt.Errorf("reference %q appears multiple times", ref.GetName())
-		}
-		refs[ref.GetName()] = struct{}{}
 	}
 	return nil
 }
