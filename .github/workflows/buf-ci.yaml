@@ -5,6 +5,7 @@ on:
       - 'proto/**'
 permissions:
   contents: read
+  pull-requests: write
 jobs:
   buf:
     runs-on: ubuntu-latest
@@ -14,7 +15,12 @@ jobs:
         with:
           username: ${{ secrets.BUF_USER }}
           token: ${{ secrets.BUF_TOKEN }}
-          version: 1.32.2
+          push_create_visibility: public
+          version: 1.34.0
           input: proto
           breaking_against: |
             ${{ github.event.repository.clone_url }}#format=git,commit=${{ github.event.pull_request.base.sha }},subdir=proto
+      - name: Run buf generate
+        run: |
+          buf generate --error-format github-actions
+          git diff --exit-code private/gen/modules
