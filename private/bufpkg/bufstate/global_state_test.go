@@ -58,7 +58,7 @@ func TestInvalidGlobalStates(t *testing.T) {
 				{ModuleName: "aaa/ccc", LatestReference: "baz"},
 			},
 		})
-		require.Contains(t, err.Error(), "aaa/bbb has appeared multiple times")
+		require.Contains(t, err.Error(), "module name aaa/bbb has appeared multiple times")
 	})
 	t.Run("emptyReferences", func(t *testing.T) {
 		t.Parallel()

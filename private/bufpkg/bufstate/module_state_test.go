@@ -63,7 +63,7 @@ func TestInvalidModuleStates(t *testing.T) {
 				{Name: "commit2", Digest: "baz"},
 			},
 		})
-		require.Contains(t, err.Error(), "commit1 has appeared multiple times")
+		require.Contains(t, err.Error(), "reference commit1 has appeared multiple times")
 	})
 	t.Run("emptyDigests", func(t *testing.T) {
 		// even if the reference has no files or empty content, an empty manifest

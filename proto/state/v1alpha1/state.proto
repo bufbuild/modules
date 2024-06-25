@@ -24,9 +24,10 @@ option go_package = "buf.build/gen/go/bufbuild/managed-modules/protocolbuffers/g
 // reference from its local array of references. This is kept updated in a
 // global state file at the root sync directory.
 message GlobalState {
+  // Make sure all module names in the global state are unique.
   option (buf.validate.message).cel = {
     id: "module_state.unique_module_names"
-    expression: "size(this.modules.filter(reference, !this.modules.map(i, i.module_name).exists_one(x, x == reference.module_name))) == 0 ? '' : (this.modules.map(reference, reference.module_name).filter(module_name, !this.modules.map(reference, reference.module_name).exists_one(x, x == module_name)))[0] + ' has appeared multiple times'"
+    expression: "this.modules.map(i, i.module_name).unique() ? '' : 'module name ' + (this.modules.map(reference, reference.module_name).filter(module_name, !this.modules.map(reference, reference.module_name).exists_one(x, x == module_name)))[0] + ' has appeared multiple times'"
   };
   repeated GlobalStateReference modules = 1;
 }
@@ -42,9 +43,10 @@ message GlobalStateReference {
 // managed module. This is kept updated in a state file at the managed module
 // directory.
 message ModuleState {
+  // Make sure all reference names in the module state are unique.
   option (buf.validate.message).cel = {
     id: "module_state.unique_references"
-    expression: "size(this.references.filter(reference, !this.references.map(i, i.name).exists_one(x, x == reference.name))) == 0 ? '' : (this.references.map(reference, reference.name).filter(name, !this.references.map(reference, reference.name).exists_one(x, x == name)))[0] + ' has appeared multiple times'"
+    expression: "this.references.map(i, i.name).unique() ? '' : 'reference ' + (this.references.map(reference, reference.name).filter(name, !this.references.map(reference, reference.name).exists_one(x, x == name)))[0] + ' has appeared multiple times'"
   };
   repeated ModuleReference references = 1;
 }
