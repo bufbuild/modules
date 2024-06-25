@@ -26,6 +26,5 @@ jobs:
           token: ${{ secrets.BUF_TOKEN }}
           push_create_visibility: public
           version: 1.34.0
-          # TODO: move breaking against to root of git repo
           breaking_against: |
-            ${{ github.event.repository.clone_url }}#format=git,commit=${{ github.event.pull_request.base.sha }},subdir=proto
+            ${{ github.event.repository.clone_url }}#format=git,commit=${{ github.event.pull_request.base.sha }}
