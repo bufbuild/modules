@@ -23,15 +23,15 @@ import (
 
 func TestValidModuleStates(t *testing.T) {
 	t.Parallel()
-	rw, err := NewReadWriter()
+	readWriter, err := NewReadWriter()
 	require.NoError(t, err)
 	t.Run("empty", func(t *testing.T) {
 		t.Parallel()
-		require.NoError(t, rw.validator.Validate(&statev1alpha1.ModuleState{}))
+		require.NoError(t, readWriter.validator.Validate(&statev1alpha1.ModuleState{}))
 	})
 	t.Run("valid", func(t *testing.T) {
 		t.Parallel()
-		require.NoError(t, rw.validator.Validate(&statev1alpha1.ModuleState{
+		require.NoError(t, readWriter.validator.Validate(&statev1alpha1.ModuleState{
 			References: []*statev1alpha1.ModuleReference{
 				{Name: "commit1", Digest: "foo"},
 				{Name: "commit2", Digest: "bar"},
@@ -44,7 +44,7 @@ func TestValidModuleStates(t *testing.T) {
 		// between those commits there were no changes in the relevant files that we
 		// sync.
 		t.Parallel()
-		require.NoError(t, rw.validator.Validate(&statev1alpha1.ModuleState{
+		require.NoError(t, readWriter.validator.Validate(&statev1alpha1.ModuleState{
 			References: []*statev1alpha1.ModuleReference{
 				{Name: "commit1", Digest: "foo"},
 				{Name: "commit2", Digest: "foo"},
@@ -56,11 +56,11 @@ func TestValidModuleStates(t *testing.T) {
 
 func TestInvalidModuleStates(t *testing.T) {
 	t.Parallel()
-	rw, err := NewReadWriter()
+	readWriter, err := NewReadWriter()
 	require.NoError(t, err)
 	t.Run("repeatedReferences", func(t *testing.T) {
 		t.Parallel()
-		err := rw.validator.Validate(&statev1alpha1.ModuleState{
+		err := readWriter.validator.Validate(&statev1alpha1.ModuleState{
 			References: []*statev1alpha1.ModuleReference{
 				{Name: "commit1", Digest: "foo"},
 				{Name: "commit1", Digest: "bar"},
@@ -73,7 +73,7 @@ func TestInvalidModuleStates(t *testing.T) {
 		// even if the reference has no files or empty content, an empty manifest
 		// still has a digest.
 		t.Parallel()
-		err := rw.validator.Validate(&statev1alpha1.ModuleState{
+		err := readWriter.validator.Validate(&statev1alpha1.ModuleState{
 			References: []*statev1alpha1.ModuleReference{
 				{Name: "commit1", Digest: "foo"},
 				{Name: "commit2", Digest: ""},
@@ -85,7 +85,7 @@ func TestInvalidModuleStates(t *testing.T) {
 	t.Run("emptyReferenceNames", func(t *testing.T) {
 		// all commits should have a valid, unique reference
 		t.Parallel()
-		err := rw.validator.Validate(&statev1alpha1.ModuleState{
+		err := readWriter.validator.Validate(&statev1alpha1.ModuleState{
 			References: []*statev1alpha1.ModuleReference{
 				{Name: "commit1", Digest: "foo"},
 				{Name: "", Digest: "foo"},
