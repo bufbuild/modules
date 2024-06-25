@@ -1,0 +1,6 @@
+version: v2
+modules:
+  - path: proto
+    name: buf.build/bufbuild/managed-modules
+deps:
+  - buf.build/bufbuild/protovalidate

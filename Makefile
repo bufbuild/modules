@@ -53,9 +53,9 @@ lintfix: $(BIN)/golangci-lint $(BIN)/buf ## Automatically fix some lint errors
 	$(BIN)/buf format -w
 
 .PHONY: generate
-generate: $(BIN)/buf $(BIN)/protoc-gen-go $(BIN)/license-header ## Regenerate code and licenses
+generate: $(BIN)/buf $(BIN)/license-header ## Regenerate code and licenses
 	rm -rf private/gen
-	PATH=$(abspath $(BIN)) $(BIN)/buf generate proto --template proto/buf.gen.yaml
+	$(BIN)/buf generate
 	$(BIN)/license-header \
 		--license-type apache \
 		--copyright-holder "Buf Technologies, Inc." \
@@ -82,8 +82,3 @@ $(BIN)/license-header: Makefile
 $(BIN)/golangci-lint: Makefile
 	@mkdir -p $(@D)
 	GOBIN=$(abspath $(@D)) $(GO) install github.com/golangci/golangci-lint/cmd/golangci-lint@$(GOLANGCI_LINT_VERSION)
-
-$(BIN)/protoc-gen-go: Makefile go.mod
-	@mkdir -p $(@D)
-	@# The version of protoc-gen-go is determined by the version in go.mod
-	GOBIN=$(abspath $(@D)) $(GO) install google.golang.org/protobuf/cmd/protoc-gen-go

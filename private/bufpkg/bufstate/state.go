@@ -22,16 +22,14 @@ import (
 	statev1alpha1 "github.com/bufbuild/modules/private/gen/modules/state/v1alpha1"
 )
 
-const (
-	SyncRoot = "modules/sync"
-)
+const SyncRoot = "modules/sync"
 
 // AppendModuleReference appends a reference-digest pair at the end of the module
 // state, and updates the module's latest reference in the global state. It
 // assumes the structure of the sync dir is
 // `root-sync-dir/owner-name/repo-name/state.json` for module state file, and
 // `root-sync-dir/state.json` for global state file.
-func AppendModuleReference(
+func (rw *ReadWriter) AppendModuleReference(
 	rootSyncDir string,
 	ownerName string,
 	repoName string,
@@ -50,7 +48,7 @@ func AppendModuleReference(
 		if err != nil {
 			return fmt.Errorf("open file: %w", err)
 		}
-		modState, err = ReadModStateFile(modStateFile)
+		modState, err = rw.ReadModStateFile(modStateFile)
 		if err != nil {
 			return fmt.Errorf("read module state file: %w", err)
 		}
@@ -63,7 +61,7 @@ func AppendModuleReference(
 	if err != nil {
 		return fmt.Errorf("create file: %w", err)
 	}
-	if err := WriteModStateFile(modStateFile, modState); err != nil {
+	if err := rw.WriteModStateFile(modStateFile, modState); err != nil {
 		return fmt.Errorf("write module state file: %w", err)
 	}
 
@@ -79,7 +77,7 @@ func AppendModuleReference(
 		if err != nil {
 			return fmt.Errorf("open file: %w", err)
 		}
-		globalState, err = ReadGlobalState(globalStateFile)
+		globalState, err = rw.ReadGlobalState(globalStateFile)
 		if err != nil {
 			return fmt.Errorf("read module state file: %w", err)
 		}
@@ -109,7 +107,7 @@ func AppendModuleReference(
 	if err != nil {
 		return fmt.Errorf("create file: %w", err)
 	}
-	if err := WriteGlobalState(globalStateFile, globalState); err != nil {
+	if err := rw.WriteGlobalState(globalStateFile, globalState); err != nil {
 		return fmt.Errorf("write global state file: %w", err)
 	}
 	return nil
