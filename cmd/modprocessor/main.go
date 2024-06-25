@@ -115,8 +115,12 @@ func (c *command) run() error {
 	if err != nil {
 		return fmt.Errorf("convert module to CAS: %w", err)
 	}
+	stateRW, err := bufstate.NewReadWriter()
+	if err != nil {
+		return fmt.Errorf("new state read writer: %w", err)
+	}
 	manifestHexDigest := hex.EncodeToString(manifestDigest.Value())
-	if err := bufstate.AppendModuleReference(c.rootSyncDir, c.owner, c.repo, c.ref, manifestHexDigest); err != nil {
+	if err := stateRW.AppendModuleReference(c.rootSyncDir, c.owner, c.repo, c.ref, manifestHexDigest); err != nil {
 		return fmt.Errorf("update mod reference: %w", err)
 	}
 	return nil

@@ -16,30 +16,44 @@ syntax = "proto3";
 
 package state.v1alpha1;
 
+import "buf/validate/validate.proto";
+
+option go_package = "buf.build/gen/go/bufbuild/managed-modules/protocolbuffers/go/state/v1alpha1";
+
 // GlobalState is a sorted array managed modules, each one with the latest
 // reference from its local array of references. This is kept updated in a
 // global state file at the root sync directory.
 message GlobalState {
+  // Make sure all module names in the global state are unique.
+  option (buf.validate.message).cel = {
+    id: "module_state.unique_module_names"
+    expression: "this.modules.map(i, i.module_name).unique() ? '' : 'module name ' + (this.modules.map(reference, reference.module_name).filter(module_name, !this.modules.map(reference, reference.module_name).exists_one(x, x == module_name)))[0] + ' has appeared multiple times'"
+  };
   repeated GlobalStateReference modules = 1;
 }
 
 // GlobalReference is a single managed module reference with the latest
 // reference from its local array of references.
 message GlobalStateReference {
-  string module_name = 1;
-  string latest_reference = 2;
+  string module_name = 1 [(buf.validate.field).required = true];
+  string latest_reference = 2 [(buf.validate.field).required = true];
 }
 
 // ModuleState is an array of references that will be synced to a BSR cluster for a
 // managed module. This is kept updated in a state file at the managed module
 // directory.
 message ModuleState {
+  // Make sure all reference names in the module state are unique.
+  option (buf.validate.message).cel = {
+    id: "module_state.unique_references"
+    expression: "this.references.map(i, i.name).unique() ? '' : 'reference ' + (this.references.map(reference, reference.name).filter(name, !this.references.map(reference, reference.name).exists_one(x, x == name)))[0] + ' has appeared multiple times'"
+  };
   repeated ModuleReference references = 1;
 }
 
 // ModuleReference is a single git reference of a managed module that will be
 // synced to a BSR cluster.
 message ModuleReference {
-  string name = 1;
-  string digest = 2;
+  string name = 1 [(buf.validate.field).required = true];
+  string digest = 2 [(buf.validate.field).required = true];
 }

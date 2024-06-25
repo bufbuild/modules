@@ -27,7 +27,7 @@ import (
 const GlobalStateFileName = "state.json"
 
 // ReadGlobalState reads a JSON encoded GlobalState from the given reader before closing it.
-func ReadGlobalState(reader io.ReadCloser) (_ *statev1alpha1.GlobalState, retErr error) {
+func (rw *ReadWriter) ReadGlobalState(reader io.ReadCloser) (_ *statev1alpha1.GlobalState, retErr error) {
 	defer func() {
 		if err := reader.Close(); err != nil {
 			retErr = multierr.Append(retErr, fmt.Errorf("close file: %w", err))
@@ -37,21 +37,21 @@ func ReadGlobalState(reader io.ReadCloser) (_ *statev1alpha1.GlobalState, retErr
 	if err := json.NewDecoder(reader).Decode(&globalState); err != nil {
 		return nil, fmt.Errorf("read file: %w", err)
 	}
-	if err := validateGlobalState(&globalState); err != nil {
-		return nil, fmt.Errorf("invalid global state: %w", err)
+	if err := rw.validator.Validate(&globalState); err != nil {
+		return nil, fmt.Errorf("validate: %w", err)
 	}
 	return &globalState, nil
 }
 
 // WriteGlobalState takes a global state and writes it to the given writer before closing it.
-func WriteGlobalState(writer io.WriteCloser, globalState *statev1alpha1.GlobalState) (retErr error) {
+func (rw *ReadWriter) WriteGlobalState(writer io.WriteCloser, globalState *statev1alpha1.GlobalState) (retErr error) {
 	defer func() {
 		if err := writer.Close(); err != nil {
 			retErr = multierr.Append(retErr, fmt.Errorf("close file: %w", err))
 		}
 	}()
-	if err := validateGlobalState(globalState); err != nil {
-		return fmt.Errorf("invalid global state: %w", err)
+	if err := rw.validator.Validate(globalState); err != nil {
+		return fmt.Errorf("validate global state: %w", err)
 	}
 	mods := globalState.GetModules()
 	sort.Slice(mods, func(i, j int) bool {
@@ -64,24 +64,6 @@ func WriteGlobalState(writer io.WriteCloser, globalState *statev1alpha1.GlobalSt
 	}
 	if _, err := writer.Write(data); err != nil {
 		return fmt.Errorf("write to file: %w", err)
-	}
-	return nil
-}
-
-// validateGlobalState checks there are no repeated modules or empty values in names or references.
-func validateGlobalState(s *statev1alpha1.GlobalState) error {
-	mods := make(map[string]struct{}, len(s.GetModules()))
-	for _, mod := range s.GetModules() {
-		if len(mod.GetModuleName()) == 0 {
-			return fmt.Errorf("empty module name with digest %q", mod.GetLatestReference())
-		}
-		if len(mod.GetLatestReference()) == 0 {
-			return fmt.Errorf("module %q has an empty latest reference", mod.GetModuleName())
-		}
-		if _, alreadyExists := mods[mod.GetModuleName()]; alreadyExists {
-			return fmt.Errorf("module %q appears multiple times", mod.GetModuleName())
-		}
-		mods[mod.GetModuleName()] = struct{}{}
 	}
 	return nil
 }
