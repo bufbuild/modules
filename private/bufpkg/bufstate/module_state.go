@@ -26,7 +26,7 @@ import (
 const ModStateFileName = "state.json"
 
 // ReadModStateFile reads a JSON encoded ModuleState from the given reader before closing it.
-func ReadModStateFile(readCloser io.ReadCloser) (_ *statev1alpha1.ModuleState, retErr error) {
+func (rw *ReadWriter) ReadModStateFile(readCloser io.ReadCloser) (_ *statev1alpha1.ModuleState, retErr error) {
 	defer func() {
 		if err := readCloser.Close(); err != nil {
 			retErr = multierr.Append(retErr, fmt.Errorf("close file: %w", err))
@@ -36,21 +36,21 @@ func ReadModStateFile(readCloser io.ReadCloser) (_ *statev1alpha1.ModuleState, r
 	if err := json.NewDecoder(readCloser).Decode(&moduleState); err != nil {
 		return nil, fmt.Errorf("read file: %w", err)
 	}
-	if err := validate(&moduleState); err != nil {
-		return nil, fmt.Errorf("invalid module state: %w", err)
+	if err := rw.validator.Validate(&moduleState); err != nil {
+		return nil, fmt.Errorf("validate: %w", err)
 	}
 	return &moduleState, nil
 }
 
 // WriteModStateFile takes a module state and writes it to the given writer before closing it.
-func WriteModStateFile(writeCloser io.WriteCloser, moduleState *statev1alpha1.ModuleState) (retErr error) {
+func (rw *ReadWriter) WriteModStateFile(writeCloser io.WriteCloser, moduleState *statev1alpha1.ModuleState) (retErr error) {
 	defer func() {
 		if err := writeCloser.Close(); err != nil {
 			retErr = multierr.Append(retErr, fmt.Errorf("close file: %w", err))
 		}
 	}()
-	if err := validate(moduleState); err != nil {
-		return fmt.Errorf("invalid module state: %w", err)
+	if err := rw.validator.Validate(moduleState); err != nil {
+		return fmt.Errorf("validate: %w", err)
 	}
 	data, err := json.MarshalIndent(moduleState, "", "  ")
 	if err != nil {

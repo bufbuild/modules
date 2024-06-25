@@ -88,6 +88,10 @@ func (c *command) run() (retErr error) {
 			return err
 		}
 	}
+	stateRW, err := bufstate.NewReadWriter()
+	if err != nil {
+		return fmt.Errorf("new state read writer: %w", err)
+	}
 	globalStateFilePath := filepath.Join(bufstate.SyncRoot, bufstate.GlobalStateFileName)
 	var currentReleaseState *statev1alpha1.GlobalState
 	if _, err := os.Stat(globalStateFilePath); err != nil {
@@ -100,14 +104,14 @@ func (c *command) run() (retErr error) {
 		if err != nil {
 			return fmt.Errorf("open file: %w", err)
 		}
-		currentReleaseState, err = bufstate.ReadGlobalState(globalStateFile)
+		currentReleaseState, err = stateRW.ReadGlobalState(globalStateFile)
 		if err != nil {
 			return fmt.Errorf("read local state file: %w", err)
 		}
 	}
 	prevMap := mapGlobalStateReferences(prevReleaseState)
 	currentMap := mapGlobalStateReferences(currentReleaseState)
-	modulesStates, err := calculateModulesStates(bufstate.SyncRoot, prevMap, currentMap)
+	modulesStates, err := calculateModulesStates(stateRW, bufstate.SyncRoot, prevMap, currentMap)
 	if err != nil {
 		return fmt.Errorf("produce new module list: %w", err)
 	}
@@ -160,6 +164,7 @@ func mapGlobalStateReferences(globalState *statev1alpha1.GlobalState) map[string
 // tells us which modules and which of their references have not been released, and the state of
 // each of the modules, whether they're new, updated, or unchanged.
 func calculateModulesStates(
+	stateRW *bufstate.ReadWriter,
 	dir string,
 	prev map[string]string,
 	current map[string]string,
@@ -220,7 +225,7 @@ func calculateModulesStates(
 			if err != nil {
 				return nil, fmt.Errorf("open file: %w", err)
 			}
-			moduleManifest, err = bufstate.ReadModStateFile(modStateFile)
+			moduleManifest, err = stateRW.ReadModStateFile(modStateFile)
 			if err != nil {
 				return nil, fmt.Errorf("retrieve module state: %w", err)
 			}

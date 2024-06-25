@@ -32,12 +32,14 @@ import (
 
 func TestCalculateNewReleaseModules(t *testing.T) {
 	t.Parallel()
+	stateRW, err := bufstate.NewReadWriter()
+	require.NoError(t, err)
 	t.Run("NewReleases-FromNoPreviousRelease", func(t *testing.T) {
 		t.Parallel()
 		currentRelease := map[string]string{
 			"envoyproxy/envoy": "bb554f53ad8d3a2a2ae4cbd7102a3e20ae00b558",
 		}
-		got, err := calculateModulesStates(filepath.Join("testdata/golden/new-release", bufstate.SyncRoot), nil, currentRelease)
+		got, err := calculateModulesStates(stateRW, filepath.Join("testdata/golden/new-release", bufstate.SyncRoot), nil, currentRelease)
 		require.NoError(t, err)
 		assertModuleStates(t, map[string]releaseModuleState{
 			"envoyproxy/envoy": {
@@ -58,7 +60,7 @@ func TestCalculateNewReleaseModules(t *testing.T) {
 			"envoyproxy/envoy": "7850b6bb6494e3bfc093b1aff20282ab30b67940", // updated
 
 		}
-		got, err := calculateModulesStates(filepath.Join("testdata/golden/updated-release", bufstate.SyncRoot), prevRelease, currentRelease)
+		got, err := calculateModulesStates(stateRW, filepath.Join("testdata/golden/updated-release", bufstate.SyncRoot), prevRelease, currentRelease)
 		require.NoError(t, err)
 		assertModuleStates(t, map[string]releaseModuleState{
 			"envoyproxy/envoy": {
@@ -79,7 +81,7 @@ func TestCalculateNewReleaseModules(t *testing.T) {
 		currentRelease := map[string]string{
 			"envoyproxy/envoy": "7850b6bb6494e3bfc093b1aff20282ab30b67940",
 		}
-		got, err := calculateModulesStates(filepath.Join("not-relevant", bufstate.SyncRoot), prevRelease, currentRelease)
+		got, err := calculateModulesStates(stateRW, filepath.Join("not-relevant", bufstate.SyncRoot), prevRelease, currentRelease)
 		require.NoError(t, err)
 		assertModuleStates(t, map[string]releaseModuleState{
 			"envoyproxy/envoy": {
@@ -99,7 +101,7 @@ func TestCalculateNewReleaseModules(t *testing.T) {
 			"envoyproxy/protoc-gen-validate": "38260ee45796b420276ac925d826ecec8fc3e9a8", // unchanged
 			"gogo/protobuf":                  "8892e00f944642b7dc8d81b419879fd4be12f056", // new
 		}
-		got, err := calculateModulesStates(filepath.Join("testdata/golden/newupdatedandunchanged-release", bufstate.SyncRoot), prevRelease, currentRelease)
+		got, err := calculateModulesStates(stateRW, filepath.Join("testdata/golden/newupdatedandunchanged-release", bufstate.SyncRoot), prevRelease, currentRelease)
 		require.NoError(t, err)
 		assertModuleStates(t, map[string]releaseModuleState{
 			"envoyproxy/protoc-gen-validate": {
@@ -132,7 +134,7 @@ func TestCalculateNewReleaseModules(t *testing.T) {
 			"envoyproxy/envoy":               "v0.2.0",                                   // totally updated (old reference gone)
 			"envoyproxy/protoc-gen-validate": "38260ee45796b420276ac925d826ecec8fc3e9a8", // unchanged
 		}
-		got, err := calculateModulesStates(filepath.Join("testdata/golden/totallyupdatedandunchanged-release", bufstate.SyncRoot), prevRelease, currentRelease)
+		got, err := calculateModulesStates(stateRW, filepath.Join("testdata/golden/totallyupdatedandunchanged-release", bufstate.SyncRoot), prevRelease, currentRelease)
 		require.NoError(t, err)
 		assertModuleStates(t, map[string]releaseModuleState{
 			"envoyproxy/protoc-gen-validate": {
@@ -164,7 +166,7 @@ func TestCalculateNewReleaseModules(t *testing.T) {
 			"new/foo": "ref3",
 			"new/bar": "ref4",
 		}
-		got, err := calculateModulesStates(filepath.Join("testdata/golden/newandremoved-release", bufstate.SyncRoot), prevRelease, currentRelease)
+		got, err := calculateModulesStates(stateRW, filepath.Join("testdata/golden/newandremoved-release", bufstate.SyncRoot), prevRelease, currentRelease)
 		require.NoError(t, err)
 		assertModuleStates(t, map[string]releaseModuleState{
 			"old/foo": {

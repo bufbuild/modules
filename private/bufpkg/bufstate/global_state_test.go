@@ -23,13 +23,15 @@ import (
 
 func TestValidGlobalStates(t *testing.T) {
 	t.Parallel()
+	rw, err := NewReadWriter()
+	require.NoError(t, err)
 	t.Run("empty", func(t *testing.T) {
 		t.Parallel()
-		require.NoError(t, validate(&statev1alpha1.GlobalState{}))
+		require.NoError(t, rw.validator.Validate(&statev1alpha1.GlobalState{}))
 	})
 	t.Run("valid", func(t *testing.T) {
 		t.Parallel()
-		require.NoError(t, validate(&statev1alpha1.GlobalState{
+		require.NoError(t, rw.validator.Validate(&statev1alpha1.GlobalState{
 			Modules: []*statev1alpha1.GlobalStateReference{
 				{ModuleName: "aaa/bbb", LatestReference: "foo"},
 				{ModuleName: "ccc/ddd", LatestReference: "bar"},
@@ -38,7 +40,7 @@ func TestValidGlobalStates(t *testing.T) {
 	})
 	t.Run("repeatedReferencesForDifferentModules", func(t *testing.T) {
 		t.Parallel()
-		require.NoError(t, validate(&statev1alpha1.GlobalState{
+		require.NoError(t, rw.validator.Validate(&statev1alpha1.GlobalState{
 			Modules: []*statev1alpha1.GlobalStateReference{
 				{ModuleName: "aaa/bbb", LatestReference: "foo"},
 				{ModuleName: "ccc/ddd", LatestReference: "foo"},
@@ -49,9 +51,11 @@ func TestValidGlobalStates(t *testing.T) {
 
 func TestInvalidGlobalStates(t *testing.T) {
 	t.Parallel()
+	rw, err := NewReadWriter()
+	require.NoError(t, err)
 	t.Run("repeatedModules", func(t *testing.T) {
 		t.Parallel()
-		err := validate(&statev1alpha1.GlobalState{
+		err := rw.validator.Validate(&statev1alpha1.GlobalState{
 			Modules: []*statev1alpha1.GlobalStateReference{
 				{ModuleName: "aaa/bbb", LatestReference: "foo"},
 				{ModuleName: "aaa/bbb", LatestReference: "bar"},
@@ -62,7 +66,7 @@ func TestInvalidGlobalStates(t *testing.T) {
 	})
 	t.Run("emptyReferences", func(t *testing.T) {
 		t.Parallel()
-		err := validate(&statev1alpha1.GlobalState{
+		err := rw.validator.Validate(&statev1alpha1.GlobalState{
 			Modules: []*statev1alpha1.GlobalStateReference{
 				{ModuleName: "aaa/bbb", LatestReference: "foo"},
 				{ModuleName: "aaa/ccc", LatestReference: ""},
@@ -73,7 +77,7 @@ func TestInvalidGlobalStates(t *testing.T) {
 	})
 	t.Run("emptyModuleNames", func(t *testing.T) {
 		t.Parallel()
-		err := validate(&statev1alpha1.GlobalState{
+		err := rw.validator.Validate(&statev1alpha1.GlobalState{
 			Modules: []*statev1alpha1.GlobalStateReference{
 				{ModuleName: "aaa/bbb", LatestReference: "foo"},
 				{ModuleName: "", LatestReference: "foo"},
