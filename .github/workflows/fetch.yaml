@@ -44,6 +44,7 @@ jobs:
         with:
           add-paths: ./modules/sync/**
           commit-message: "Detected new managed modules references"
+          # This branch is ignored for the 'buc-fi.yaml' action. Keep this branch name synced there.
           branch: fetch-modules
           delete-branch: true
           title: "Found new managed modules references"
