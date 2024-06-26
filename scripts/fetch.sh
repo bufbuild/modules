@@ -210,26 +210,27 @@ trap cleanup EXIT
 
 # Keep this module list synced with README.md
 # sync_references ${sync_strategy} ${owner} ${repo} ${git_remote} ${opt_proto_subdir}
-sync_references releases bufbuild confluent https://github.com/bufbuild/confluent-proto
-sync_references releases bufbuild protovalidate https://github.com/bufbuild/protovalidate proto/protovalidate
-sync_references releases bufbuild protovalidate-testing https://github.com/bufbuild/protovalidate proto/protovalidate-testing
-sync_references commits bufbuild reflect https://github.com/bufbuild/reflect
-sync_references commits cncf xds https://github.com/cncf/xds
-# TODO: move envoyproxy/envoy to releases as soon as v1.31.0 is released
-sync_references commits envoyproxy envoy https://github.com/envoyproxy/envoy api
-sync_references releases envoyproxy protoc-gen-validate https://github.com/envoyproxy/protoc-gen-validate
-sync_references releases gogo protobuf https://github.com/gogo/protobuf
-sync_references releases google cel-spec https://github.com/google/cel-spec proto
-sync_references commits googleapis googleapis https://github.com/googleapis/googleapis
-sync_references releases googlechrome lighthouse https://github.com/GoogleChrome/lighthouse proto
-# TODO: move googlecloudplatform/bq-schema-api to releases in their next semver release
-sync_references commits googlecloudplatform bq-schema-api https://github.com/GoogleCloudPlatform/protoc-gen-bq-schema
-sync_references commits grpc grpc https://github.com/grpc/grpc-proto
-sync_references releases grpc-ecosystem grpc-gateway https://github.com/grpc-ecosystem/grpc-gateway
-sync_references releases opencensus opencensus https://github.com/census-instrumentation/opencensus-proto src
-sync_references releases opentelemetry opentelemetry https://github.com/open-telemetry/opentelemetry-proto
-sync_references releases prometheus client-model https://github.com/prometheus/client_model
-sync_references releases protocolbuffers gofeatures https://github.com/protocolbuffers/protobuf-go src
-sync_references releases protocolbuffers wellknowntypes https://github.com/protocolbuffers/protobuf src
+# sync_references releases bufbuild confluent https://github.com/bufbuild/confluent-proto
+# sync_references releases bufbuild protovalidate https://github.com/bufbuild/protovalidate proto/protovalidate
+# sync_references releases bufbuild protovalidate-testing https://github.com/bufbuild/protovalidate proto/protovalidate-testing
+# sync_references commits bufbuild reflect https://github.com/bufbuild/reflect
+# sync_references commits cncf xds https://github.com/cncf/xds
+# # TODO: move envoyproxy/envoy to releases as soon as v1.31.0 is released
+# sync_references commits envoyproxy envoy https://github.com/envoyproxy/envoy api
+# sync_references releases envoyproxy protoc-gen-validate https://github.com/envoyproxy/protoc-gen-validate
+sync_references commits envoyproxy ratelimit https://github.com/envoyproxy/ratelimit api
+# sync_references releases gogo protobuf https://github.com/gogo/protobuf
+# sync_references releases google cel-spec https://github.com/google/cel-spec proto
+# sync_references commits googleapis googleapis https://github.com/googleapis/googleapis
+# sync_references releases googlechrome lighthouse https://github.com/GoogleChrome/lighthouse proto
+# # TODO: move googlecloudplatform/bq-schema-api to releases in their next semver release
+# sync_references commits googlecloudplatform bq-schema-api https://github.com/GoogleCloudPlatform/protoc-gen-bq-schema
+# sync_references commits grpc grpc https://github.com/grpc/grpc-proto
+# sync_references releases grpc-ecosystem grpc-gateway https://github.com/grpc-ecosystem/grpc-gateway
+# sync_references releases opencensus opencensus https://github.com/census-instrumentation/opencensus-proto src
+# sync_references releases opentelemetry opentelemetry https://github.com/open-telemetry/opentelemetry-proto
+# sync_references releases prometheus client-model https://github.com/prometheus/client_model
+# sync_references releases protocolbuffers gofeatures https://github.com/protocolbuffers/protobuf-go src
+# sync_references releases protocolbuffers wellknowntypes https://github.com/protocolbuffers/protobuf src
 
 popd > /dev/null
