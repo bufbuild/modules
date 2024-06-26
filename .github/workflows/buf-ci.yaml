@@ -11,6 +11,8 @@ on:
   pull_request:
     types: [opened, synchronize, reopened, labeled, unlabeled]
     branches-ignore:
+      # Ignore PRs triggered by the 'fetch.yaml' github action, keep synced with the branch name in
+      # that file.
       - 'fetch-modules'
   delete:
 permissions:
