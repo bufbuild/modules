@@ -5,8 +5,8 @@ on:
       - 'buf.yaml'
       - 'buf.lock'
       - 'proto/**.proto'
-      - 'proto/**/README.md'
       - 'proto/**/LICENSE'
+      - 'proto/**/buf.md'
       - '.github/workflows/buf-ci.yaml'
   pull_request:
     types: [opened, synchronize, reopened, labeled, unlabeled]
