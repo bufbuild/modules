@@ -29,6 +29,10 @@
       "latest_reference": "v1.0.4"
     },
     {
+      "module_name": "envoyproxy/ratelimit",
+      "latest_reference": "91484c5983f85f62e97d18475bc3d5a12b43b9ca"
+    },
+    {
       "module_name": "gogo/protobuf",
       "latest_reference": "v1.3.2"
     },
