@@ -2,10 +2,9 @@ name: Buf CI
 on:
   push:
     paths:
+      - 'buf.yaml'
+      - 'buf.lock'
       - 'proto/**.proto'
-      - 'proto/**/buf.yaml'
-      - 'proto/**/buf.lock'
-      - 'proto/**/buf.md'
       - 'proto/**/README.md'
       - 'proto/**/LICENSE'
       - '.github/workflows/buf-ci.yaml'
