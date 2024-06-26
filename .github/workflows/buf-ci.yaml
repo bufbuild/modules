@@ -2,15 +2,17 @@ name: Buf CI
 on:
   push:
     paths:
-      - '**.proto'
-      - '**/buf.yaml'
-      - '**/buf.lock'
-      - '**/buf.md'
-      - '**/README.md'
-      - '**/LICENSE'
-      - .github/workflows/buf-ci.yaml
+      - 'proto/**.proto'
+      - 'proto/**/buf.yaml'
+      - 'proto/**/buf.lock'
+      - 'proto/**/buf.md'
+      - 'proto/**/README.md'
+      - 'proto/**/LICENSE'
+      - '.github/workflows/buf-ci.yaml'
   pull_request:
     types: [opened, synchronize, reopened, labeled, unlabeled]
+    branches-ignore:
+      - 'fetch-references'
   delete:
 permissions:
   contents: read
