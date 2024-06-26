@@ -11,7 +11,7 @@ on:
   pull_request:
     types: [opened, synchronize, reopened, labeled, unlabeled]
     branches-ignore:
-      - 'fetch-references'
+      - 'fetch-modules'
   delete:
 permissions:
   contents: read
