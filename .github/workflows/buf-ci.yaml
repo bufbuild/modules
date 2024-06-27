@@ -10,16 +10,14 @@ on:
       - '.github/workflows/buf-ci.yaml'
   pull_request:
     types: [opened, synchronize, reopened, labeled, unlabeled]
-    branches-ignore:
-      # Ignore PRs triggered by the 'fetch.yaml' github action, keep synced with the branch name in
-      # that file.
-      - 'fetch-modules'
   delete:
 permissions:
   contents: read
   pull-requests: write
 jobs:
   buf:
+    # Ignore PRs from the 'fetch.yaml' action. Keep this branch name synced there.
+    if: github.ref != 'fetch-modules'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
