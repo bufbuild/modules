@@ -1,0 +1,4 @@
+version: v1
+name: buf.build/envoyproxy/ratelimit
+deps:
+  - buf.build/envoyproxy/envoy
