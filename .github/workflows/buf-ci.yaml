@@ -17,7 +17,7 @@ permissions:
 jobs:
   buf:
     # Ignore PRs from the 'fetch.yaml' action. Keep this branch name synced there.
-    if: github.ref != 'fetch-modules'
+    if: ${{ github.event_name != 'pull_request' || github.head_ref != 'fetch-modules' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
