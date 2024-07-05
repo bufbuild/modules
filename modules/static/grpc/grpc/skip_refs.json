@@ -1,5 +1,8 @@
 {
   "1dc480dbfddd915872b43f953de34a5dcb9064c4": {
     "context": "https://github.com/grpc/grpc-proto/issues/150"
+  },
+  "62cf1cdcbe54b1fe3e6346172d77f58e00794bf1": {
+    "context": "https://github.com/grpc/grpc-proto/issues/155"
   }
 }
