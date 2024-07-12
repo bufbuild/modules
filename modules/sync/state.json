@@ -22,7 +22,7 @@
     },
     {
       "module_name": "envoyproxy/envoy",
-      "latest_reference": "6cb0b30d6be9302025e09248a4327bac7a7e8cf1"
+      "latest_reference": "ec75601ea9b542661abf389d9ae52e53f0bc85e8"
     },
     {
       "module_name": "envoyproxy/protoc-gen-validate",
@@ -42,7 +42,7 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "19577edb4d439db98d2fb1f6f48f2e1b29fba099"
+      "latest_reference": "ebed04a64ceec8ae2ec4632c2f5411ba3e463c69"
     },
     {
       "module_name": "googlechrome/lighthouse",
