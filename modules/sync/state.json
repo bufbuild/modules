@@ -6,11 +6,11 @@
     },
     {
       "module_name": "bufbuild/protovalidate",
-      "latest_reference": "v0.7.0"
+      "latest_reference": "v0.7.1"
     },
     {
       "module_name": "bufbuild/protovalidate-testing",
-      "latest_reference": "v0.7.0"
+      "latest_reference": "v0.7.1"
     },
     {
       "module_name": "bufbuild/reflect",
@@ -22,7 +22,7 @@
     },
     {
       "module_name": "envoyproxy/envoy",
-      "latest_reference": "6cd154b8e6ec6febbafb06ecd8a98beba94162dd"
+      "latest_reference": "189dd4700f823f2cbbef482c61d50a34e16ff4f2"
     },
     {
       "module_name": "envoyproxy/protoc-gen-validate",
@@ -42,7 +42,7 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "db2ac7a5afc0d859b102f2334abda6761a0ab62d"
+      "latest_reference": "7613f7dbea263507d08dfbe8d44115a978617be3"
     },
     {
       "module_name": "googlechrome/lighthouse",
