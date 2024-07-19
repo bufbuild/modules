@@ -215,8 +215,7 @@ sync_references releases bufbuild protovalidate https://github.com/bufbuild/prot
 sync_references releases bufbuild protovalidate-testing https://github.com/bufbuild/protovalidate proto/protovalidate-testing
 sync_references commits bufbuild reflect https://github.com/bufbuild/reflect
 sync_references commits cncf xds https://github.com/cncf/xds
-# TODO: move envoyproxy/envoy to releases as soon as v1.31.0 is released
-sync_references commits envoyproxy envoy https://github.com/envoyproxy/envoy api
+sync_references releases envoyproxy envoy https://github.com/envoyproxy/envoy api
 sync_references releases envoyproxy protoc-gen-validate https://github.com/envoyproxy/protoc-gen-validate
 sync_references commits envoyproxy ratelimit https://github.com/envoyproxy/ratelimit api
 sync_references releases gogo protobuf https://github.com/gogo/protobuf
