@@ -51,7 +51,6 @@ jobs:
           body: |
             New managed modules references found. Please review.
             
-            - [ ] `envoyproxy/envoy` has updates, I have checked https://github.com/bufbuild/modules/issues/591
             - [ ] `googlecloudplatform/bq-schema-api` has updates, I have checked https://github.com/bufbuild/modules/issues/592
           team-reviewers: bufbuild/bsr-team
           token: ${{ steps.generate_token.outputs.token }}
