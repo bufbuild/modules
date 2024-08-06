@@ -26,7 +26,7 @@
     },
     {
       "module_name": "envoyproxy/protoc-gen-validate",
-      "latest_reference": "v1.0.4"
+      "latest_reference": "v1.1.0"
     },
     {
       "module_name": "envoyproxy/ratelimit",
@@ -42,7 +42,7 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "bc05924644a4bb93c0ac5973a07b83387a93b71f"
+      "latest_reference": "d4acb64370d333024a167551e7da854506109ba2"
     },
     {
       "module_name": "googlechrome/lighthouse",
