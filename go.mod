@@ -4,7 +4,7 @@ go 1.22.0
 
 require (
 	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.34.2-20240717164558-a6c49f84cc0f.2
-	github.com/bufbuild/buf v1.35.1
+	github.com/bufbuild/buf v1.36.0
 	github.com/bufbuild/protovalidate-go v0.6.3
 	github.com/google/go-cmp v0.6.0
 	github.com/google/go-github/v58 v58.0.0
