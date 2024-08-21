@@ -8,7 +8,7 @@ To depend on a specific Git commit, you can use it as your reference in your dep
 
 ```yaml
 deps:
-  - buf.build/googlecloudplatform/bq-schema-api:<SEMVER_RELEASE_VERSION>
+  - <BSR_HOSTNAME>/googlecloudplatform/bq-schema-api:<SEMVER_RELEASE_VERSION>
 ```
 
 For more information, see the [documentation](https://buf.build/docs/bsr/overview).

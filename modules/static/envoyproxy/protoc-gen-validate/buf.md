@@ -8,7 +8,7 @@ To depend on a specific version, you can use it as your reference in your depend
 
 ```
 deps:
-  - buf.build/envoyproxy/protoc-gen-validate:<SEMVER_RELEASE_VERSION>
+  - <BSR_HOSTNAME>/envoyproxy/protoc-gen-validate:<SEMVER_RELEASE_VERSION>
 ```
 
 For more information, see the [documentation](https://buf.build/docs/bsr/overview).
