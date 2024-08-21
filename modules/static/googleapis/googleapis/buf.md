@@ -17,7 +17,7 @@ relating to Google's core APIs. However, the ~30 files above are the only files 
 developers, and these files are the most common dependency in the Protobuf ecosystem. This hosted
 module only includes these specific files, as including all the files causes hundreds of megabytes
 of unused generated code for the vast majority of developers. To use Google's core APIs, create your
-own module that has a `dep` on `buf.build/googleapis/googleapis` with the specific packages you want
+own module that has a `dep` on `<BSR_HOSTNAME>/googleapis/googleapis` with the specific packages you want
 to use.
 
 Updates to the [source repository](https://github.com/googleapis/googleapis) are automatically
@@ -27,7 +27,7 @@ To depend on a specific Git commit, you can use it as your reference in your dep
 
 ```
 deps:
-  - buf.build/googleapis/googleapis:<GIT_COMMIT_TAG>
+  - <BSR_HOSTNAME>/googleapis/googleapis:<GIT_COMMIT_TAG>
 ```
 
 For more information, see the [documentation](https://buf.build/docs/bsr/overview).

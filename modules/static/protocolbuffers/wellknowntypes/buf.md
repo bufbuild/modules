@@ -38,7 +38,7 @@ Well-Known Types to a specific version, you can do so by depending on this modul
 # buf.yaml
 version: v1
 deps:
-  - buf.build/protocolbuffers/wellknowntypes:v21.12
+  - <BSR_HOSTNAME>/protocolbuffers/wellknowntypes:v21.12
 ```
 
 We update the tags on this module for every release of
@@ -55,7 +55,7 @@ Ultimately, the releases of `protocolbuffers/protobuf` are managed in the follow
 Semantic versioning with `v{major}.{minor}.{patch}` was adhered to:
 
 ```
-v3.0.0, v3.0.2, v3.1.0, v3.2.0, v3.3.0, ...  
+v3.0.0, v3.0.2, v3.1.0, v3.2.0, v3.3.0, ...
 →
 ..., v3.19.6, v3.20.0, v3.20.1, v3.20.2, v3.20.3
 ```
