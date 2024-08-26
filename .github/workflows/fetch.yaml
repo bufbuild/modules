@@ -36,7 +36,6 @@ jobs:
         run: |
           bash ./scripts/fetch.sh
         env:
-          BUF_USER: ${{ secrets.BUF_USER }}
           BUF_TOKEN: ${{ secrets.BUF_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Create PR
