@@ -30,7 +30,7 @@ import (
 	"github.com/bufbuild/modules/internal/modules"
 	"github.com/bufbuild/modules/private/bufpkg/bufstate"
 	statev1alpha1 "github.com/bufbuild/modules/private/gen/modules/state/v1alpha1"
-	"github.com/google/go-github/v58/github"
+	"github.com/google/go-github/v64/github"
 	"go.uber.org/multierr"
 )
 

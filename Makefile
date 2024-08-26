@@ -7,12 +7,12 @@ MAKEFLAGS += --warn-undefined-variables
 MAKEFLAGS += --no-builtin-rules
 MAKEFLAGS += --no-print-directory
 BIN := .tmp/bin
-BUF_VERSION ?= v1.38.0
 COPYRIGHT_YEARS := 2021-2023
-GOLANGCI_LINT_VERSION ?= v1.58.0
+GOLANGCI_LINT_VERSION ?= v1.60.3
 LICENSE_IGNORE := --ignore /testdata/
 # Set to use a different compiler. For example, `GO=go1.18rc1 make test`.
 GO ?= go
+BUF_VERSION ?= $(shell $(GO) list -m -json github.com/bufbuild/buf | jq -r .Version)
 
 .PHONY: help
 help: ## Describe useful make targets
