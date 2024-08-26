@@ -65,9 +65,9 @@ process_ref() {
   # file since it's no longer relevant: each BSR cluster will sync itself from the base files and
   # regenerate its own `buf.lock`.
   pushd "${mod_tmp_path}" > /dev/null
-  buf mod update
+  buf dep update
   buf build
-  rm buf.lock
+  rm -f buf.lock
   popd > /dev/null
 
   # process the prepared module: convert it to CAS from the tmp mod directory and put blob files in
