@@ -42,11 +42,11 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "eb4c1ec02412e65c453ef0bfc4347731e64dcc82"
+      "latest_reference": "cb39bdd75da491466f6c92bc73cd46b0fbd6ba9a"
     },
     {
       "module_name": "googlechrome/lighthouse",
-      "latest_reference": "v12.2.0"
+      "latest_reference": "v12.2.1"
     },
     {
       "module_name": "googlecloudplatform/bq-schema-api",
