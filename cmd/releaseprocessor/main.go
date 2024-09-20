@@ -39,6 +39,9 @@ var (
 		"protocolbuffers/protobuf": {
 			"v3.4.1": {}, // v3.4.1 did not have protoc attached to it
 		},
+		"bufbuild/protovalidate-testing": {
+			"v0.8.0": {}, // v0.8.0 is (intentionally) broken
+		},
 	}
 )
 
