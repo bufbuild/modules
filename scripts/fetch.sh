@@ -212,7 +212,8 @@ trap cleanup EXIT
 # sync_references ${sync_strategy} ${owner} ${repo} ${git_remote} ${opt_proto_subdir}
 sync_references releases bufbuild confluent https://github.com/bufbuild/confluent-proto
 sync_references releases bufbuild protovalidate https://github.com/bufbuild/protovalidate proto/protovalidate
-sync_references releases bufbuild protovalidate-testing https://github.com/bufbuild/protovalidate proto/protovalidate-testing
+# TODO: temporarily disabled to handle breaking changes to protovalidate
+# sync_references releases bufbuild protovalidate-testing https://github.com/bufbuild/protovalidate proto/protovalidate-testing
 sync_references commits bufbuild reflect https://github.com/bufbuild/reflect
 sync_references commits cncf xds https://github.com/cncf/xds
 sync_references releases envoyproxy envoy https://github.com/envoyproxy/envoy api
