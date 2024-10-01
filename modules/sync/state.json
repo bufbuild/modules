@@ -42,7 +42,7 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "a6a6956a02c517aab22a01c4b324475bdf97c412"
+      "latest_reference": "8f00dabdad226b94d27ed3af57f1b9bce752633b"
     },
     {
       "module_name": "googlechrome/lighthouse",
@@ -58,7 +58,7 @@
     },
     {
       "module_name": "grpc/grpc",
-      "latest_reference": "a9c639a9a4bddf74bcbd819acc871fa8ad2b8a81"
+      "latest_reference": "7dc7255954f1b482de12812e5cb3bf7838684039"
     },
     {
       "module_name": "opencensus/opencensus",
