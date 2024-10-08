@@ -42,7 +42,7 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "1f8352cf46df74d7db6fd544181655c590689b8c"
+      "latest_reference": "bb00fdde3f6feb7cea424a605bfe5bc5934527d0"
     },
     {
       "module_name": "googlechrome/lighthouse",
@@ -58,7 +58,7 @@
     },
     {
       "module_name": "grpc/grpc",
-      "latest_reference": "7dc7255954f1b482de12812e5cb3bf7838684039"
+      "latest_reference": "0b30c8c05277ab78ec72e77c9cbf66a26684673d"
     },
     {
       "module_name": "opencensus/opencensus",
@@ -74,7 +74,7 @@
     },
     {
       "module_name": "protocolbuffers/gofeatures",
-      "latest_reference": "v1.34.2"
+      "latest_reference": "v1.35.1"
     },
     {
       "module_name": "protocolbuffers/wellknowntypes",
