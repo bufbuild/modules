@@ -1,7 +1,13 @@
 + LICENSE
 + README.md
-+ buf.yaml
-+ buf.lock
+
+# Even though this is a module we maintain ourselves, the source repo's buf.yaml is v2, which is not
+# supported yet by the BSR module syncer.
+#
+# TODO: re-sync this file and remove the static one when the BSR supports v2.
+#
+# + buf.yaml
+
 + **/
 + *.proto
 - *
