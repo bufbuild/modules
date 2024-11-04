@@ -71,7 +71,7 @@ jobs:
           workload_identity_provider: projects/252484117105/locations/global/workloadIdentityPools/modules-workload-pool/providers/modules-workload-provider
           service_account: buf-modules-1-bufbuild-modules@buf-modules-1.iam.gserviceaccount.com	
       - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@f0990588f1e5b5af6827153b93673613abdc6ec7
+        uses: google-github-actions/setup-gcloud@6189d56e4096ee891640bb02ac264be376592d6a
       - name: Upload To Release Bucket
         run: gsutil -m rsync -c -r modules/sync gs://buf-modules
       - uses: dblock/create-a-github-issue@c5e54b8762a0c4c2cd9330750e30b81bcc369c38
