@@ -42,7 +42,7 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "abc17a0a28e8680c356576a3f5e498d6c630e62c"
+      "latest_reference": "bb6b53e326ce2db403d18be7158c265e07948920"
     },
     {
       "module_name": "googlechrome/lighthouse",
@@ -54,7 +54,7 @@
     },
     {
       "module_name": "grpc-ecosystem/grpc-gateway",
-      "latest_reference": "v2.22.0"
+      "latest_reference": "v2.23.0"
     },
     {
       "module_name": "grpc/grpc",
