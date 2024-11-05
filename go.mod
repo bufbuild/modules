@@ -4,8 +4,8 @@ go 1.23.0
 
 require (
 	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.35.1-20240920164238-5a7b106cbb87.1
-	github.com/bufbuild/buf v1.45.0
-	github.com/bufbuild/protovalidate-go v0.7.2
+	github.com/bufbuild/buf v1.46.0
+	github.com/bufbuild/protovalidate-go v0.7.3-0.20241015162221-1446f1e1d576
 	github.com/google/go-cmp v0.6.0
 	github.com/google/go-github/v64 v64.0.0
 	github.com/hashicorp/go-retryablehttp v0.7.7
@@ -26,7 +26,7 @@ require (
 	github.com/stoewer/go-strcase v1.3.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	golang.org/x/crypto v0.28.0 // indirect
-	golang.org/x/exp v0.0.0-20241004190924-225e2abe05e6 // indirect
+	golang.org/x/exp v0.0.0-20241009180824-f66d83c29e7c // indirect
 	golang.org/x/sys v0.26.0 // indirect
 	golang.org/x/text v0.19.0 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20240930140551-af27646dc61f // indirect
