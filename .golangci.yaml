@@ -22,14 +22,12 @@ linters:
   disable:
     - cyclop            # covered by gocyclo
     - depguard          # requires configuration for all non-stdlib deps
-    - execinquery       # deprecated by author
     - exhaustruct       # irrelevant for modules
     - exportloopref     # deprecated by author
     - funlen            # rely on code review to limit function length
     - gocognit          # dubious "cognitive overhead" quantification
     - gofumpt           # prefer standard gofmt
     - goimports         # rely on gci instead
-    - gomnd             # replaced by mnd
     - ireturn           # "accept interfaces, return structs" isn't ironclad
     - lll               # don't want hard limits for line length
     - maintidx          # covered by gocyclo
