@@ -50,7 +50,7 @@
     },
     {
       "module_name": "googlecloudplatform/bq-schema-api",
-      "latest_reference": "78b6998919e338fec9f4a251bc334d69e030e118"
+      "latest_reference": "v2.0"
     },
     {
       "module_name": "grpc-ecosystem/grpc-gateway",

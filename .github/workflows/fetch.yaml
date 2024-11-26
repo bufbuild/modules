@@ -49,8 +49,6 @@ jobs:
           title: "Found new managed modules references"
           body: |
             New managed modules references found. Please review.
-            
-            - [ ] `googlecloudplatform/bq-schema-api` has updates, I have checked https://github.com/bufbuild/modules/issues/592
           team-reviewers: bufbuild/bsr-team
           token: ${{ steps.generate_token.outputs.token }}
       - uses: dblock/create-a-github-issue@c5e54b8762a0c4c2cd9330750e30b81bcc369c38
