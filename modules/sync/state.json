@@ -42,7 +42,7 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "4fefaf151c721c138588efeba0e99591d51cbc16"
+      "latest_reference": "74069978395d7a452931a690a22c0e3a26f11229"
     },
     {
       "module_name": "googlechrome/lighthouse",
@@ -50,7 +50,7 @@
     },
     {
       "module_name": "googlecloudplatform/bq-schema-api",
-      "latest_reference": "78b6998919e338fec9f4a251bc334d69e030e118"
+      "latest_reference": "0e3ad193aa0e0a799b81f6fdee314d0a3a263644"
     },
     {
       "module_name": "grpc-ecosystem/grpc-gateway",
