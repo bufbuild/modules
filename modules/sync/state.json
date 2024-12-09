@@ -22,7 +22,7 @@
     },
     {
       "module_name": "envoyproxy/envoy",
-      "latest_reference": "v1.32.1"
+      "latest_reference": "v1.32.2"
     },
     {
       "module_name": "envoyproxy/protoc-gen-validate",
@@ -30,7 +30,7 @@
     },
     {
       "module_name": "envoyproxy/ratelimit",
-      "latest_reference": "1818d41e0b6475942c01419e0f41a79f33f86b99"
+      "latest_reference": "44de8d982b6e2492952a5b94c1684a2229402aec"
     },
     {
       "module_name": "gogo/protobuf",
@@ -38,11 +38,11 @@
     },
     {
       "module_name": "google/cel-spec",
-      "latest_reference": "v0.19.0"
+      "latest_reference": "v0.19.1"
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "3be31fed1e19de78da8ae8a7f074ecaae5d1db60"
+      "latest_reference": "0f3a20ebd29fb1deb2bd1f75c7ba55500d35457d"
     },
     {
       "module_name": "googlechrome/lighthouse",
