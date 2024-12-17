@@ -42,7 +42,7 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "f4eff5440fd07389f820d22d2a55690c6390dc6d"
+      "latest_reference": "3db0452ba6b45012794e61640ea6eadd7153af74"
     },
     {
       "module_name": "googlechrome/lighthouse",
@@ -66,7 +66,7 @@
     },
     {
       "module_name": "opentelemetry/opentelemetry",
-      "latest_reference": "v1.4.0"
+      "latest_reference": "v1.5.0"
     },
     {
       "module_name": "prometheus/client-model",
@@ -74,7 +74,7 @@
     },
     {
       "module_name": "protocolbuffers/gofeatures",
-      "latest_reference": "v1.35.2"
+      "latest_reference": "v1.36.0"
     },
     {
       "module_name": "protocolbuffers/wellknowntypes",
