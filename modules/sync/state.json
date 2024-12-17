@@ -78,7 +78,7 @@
     },
     {
       "module_name": "protocolbuffers/wellknowntypes",
-      "latest_reference": "v29.0"
+      "latest_reference": "v29.1"
     }
   ]
 }
