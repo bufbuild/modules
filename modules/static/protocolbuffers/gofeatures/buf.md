@@ -1,5 +1,8 @@
 **This is a third-party repository managed by Buf.**
 
+> This module has been **deprecated**. Use instead the `protocolbuffers/wellknowntypes` module v29.2
+> or higher.
+
 This module contains Protobuf sources that are defined in the
 https://github.com/protocolbuffers/protobuf-go repo. This is currently
 limited to custom features used with [Editions](https://protobuf.dev/editions/overview/)
