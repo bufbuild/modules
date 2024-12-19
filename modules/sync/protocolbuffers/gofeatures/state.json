@@ -15,10 +15,6 @@
     {
       "name": "v1.35.2",
       "digest": "b531d16c21ee581add1187321e526e770b5516a5d84d71d6db6adf35b18f8ebc302c59c39c20575014ff2dec93ccefbccadf95436be60ae3296dd0ad136dd64c"
-    },
-    {
-      "name": "v1.36.0",
-      "digest": "f90421eb391ca0e2317da685a04534d207883b938324aed42e5863b65e165fd2d14811afb5d084e87a5d33df9cb690e89fa313be46bbafe9e446c5b31ec93401"
     }
   ]
 }
