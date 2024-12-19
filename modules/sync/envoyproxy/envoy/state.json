@@ -23,6 +23,10 @@
     {
       "name": "v1.32.2",
       "digest": "a85ebaf16e7fbb65c6c15e0b6f2ca8790e82d27d8952114ebb8c531ca3d8ca48ccef60fc6c13dd6788a3eaa47e03fd1d1aa23e0f7211380db969f1b5b48975cb"
+    },
+    {
+      "name": "v1.32.3",
+      "digest": "a85ebaf16e7fbb65c6c15e0b6f2ca8790e82d27d8952114ebb8c531ca3d8ca48ccef60fc6c13dd6788a3eaa47e03fd1d1aa23e0f7211380db969f1b5b48975cb"
     }
   ]
 }
