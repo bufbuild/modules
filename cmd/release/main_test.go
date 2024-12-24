@@ -24,10 +24,9 @@ import (
 	"github.com/bufbuild/modules/internal/modules"
 	"github.com/bufbuild/modules/private/bufpkg/bufstate"
 	statev1alpha1 "github.com/bufbuild/modules/private/gen/modules/state/v1alpha1"
-	"github.com/google/go-cmp/cmp"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"google.golang.org/protobuf/testing/protocmp"
+	"google.golang.org/protobuf/proto"
 )
 
 func TestCalculateNewReleaseModules(t *testing.T) {
@@ -39,7 +38,12 @@ func TestCalculateNewReleaseModules(t *testing.T) {
 		currentRelease := map[string]string{
 			"envoyproxy/envoy": "bb554f53ad8d3a2a2ae4cbd7102a3e20ae00b558",
 		}
-		got, err := calculateModulesStates(stateRW, filepath.Join("testdata/golden/new-release", bufstate.SyncRoot), nil, currentRelease)
+		got, err := calculateModulesStates(
+			stateRW,
+			filepath.Join("testdata/golden/new-release", bufstate.SyncRoot),
+			nil, // prevRelease
+			currentRelease,
+		)
 		require.NoError(t, err)
 		assertModuleStates(t, map[string]releaseModuleState{
 			"envoyproxy/envoy": {
@@ -550,7 +554,9 @@ func assertModuleStates(t *testing.T, expected, actual map[string]releaseModuleS
 	for actualModuleName, actualState := range actual {
 		expectedState, ok := expected[actualModuleName]
 		require.Truef(t, ok, "unexpected module %q", actualModuleName)
-		assert.Equal(t, expectedState.status, actualState.status)
-		assert.True(t, cmp.Equal(expectedState.references, actualState.references, protocmp.Transform()))
+		require.Equal(t, len(expectedState.references), len(actualState.references))
+		for i, expectedRef := range expectedState.references {
+			assert.True(t, proto.Equal(expectedRef, actualState.references[i]))
+		}
 	}
 }

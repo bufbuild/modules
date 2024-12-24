@@ -15,13 +15,13 @@
 package bufstate
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 	"sort"
 
 	statev1alpha1 "github.com/bufbuild/modules/private/gen/modules/state/v1alpha1"
 	"go.uber.org/multierr"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 const GlobalStateFileName = "state.json"
@@ -33,12 +33,16 @@ func (rw *ReadWriter) ReadGlobalState(reader io.ReadCloser) (_ *statev1alpha1.Gl
 			retErr = multierr.Append(retErr, fmt.Errorf("close file: %w", err))
 		}
 	}()
+	bytes, err := io.ReadAll(reader)
+	if err != nil {
+		return nil, fmt.Errorf("read global state file: %w", err)
+	}
 	var globalState statev1alpha1.GlobalState
-	if err := json.NewDecoder(reader).Decode(&globalState); err != nil {
-		return nil, fmt.Errorf("read file: %w", err)
+	if err := protojson.Unmarshal(bytes, &globalState); err != nil {
+		return nil, fmt.Errorf("unmarshal global state: %w", err)
 	}
 	if err := rw.validator.Validate(&globalState); err != nil {
-		return nil, fmt.Errorf("validate: %w", err)
+		return nil, fmt.Errorf("validate global state: %w", err)
 	}
 	return &globalState, nil
 }
@@ -58,9 +62,13 @@ func (rw *ReadWriter) WriteGlobalState(writer io.WriteCloser, globalState *state
 		return mods[i].GetModuleName() < mods[j].GetModuleName()
 	})
 	globalState.SetModules(mods)
-	data, err := json.MarshalIndent(globalState, "", "  ")
+	data, err := protojson.MarshalOptions{
+		Multiline:     true,
+		Indent:        "  ",
+		UseProtoNames: true,
+	}.Marshal(globalState)
 	if err != nil {
-		return fmt.Errorf("json marshal state: %w", err)
+		return fmt.Errorf("marshal global state: %w", err)
 	}
 	if _, err := writer.Write(data); err != nil {
 		return fmt.Errorf("write to file: %w", err)
