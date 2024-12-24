@@ -38,12 +38,7 @@ func TestCalculateNewReleaseModules(t *testing.T) {
 		currentRelease := map[string]string{
 			"envoyproxy/envoy": "bb554f53ad8d3a2a2ae4cbd7102a3e20ae00b558",
 		}
-		got, err := calculateModulesStates(
-			stateRW,
-			filepath.Join("testdata/golden/new-release", bufstate.SyncRoot),
-			nil, // prevRelease
-			currentRelease,
-		)
+		got, err := calculateModulesStates(stateRW, filepath.Join("testdata/golden/new-release", bufstate.SyncRoot), nil, currentRelease)
 		require.NoError(t, err)
 		assertModuleStates(t, map[string]releaseModuleState{
 			"envoyproxy/envoy": {
