@@ -24,9 +24,10 @@ import (
 	"github.com/bufbuild/modules/internal/modules"
 	"github.com/bufbuild/modules/private/bufpkg/bufstate"
 	statev1alpha1 "github.com/bufbuild/modules/private/gen/modules/state/v1alpha1"
+	"github.com/google/go-cmp/cmp"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/testing/protocmp"
 )
 
 func TestCalculateNewReleaseModules(t *testing.T) {
@@ -549,9 +550,7 @@ func assertModuleStates(t *testing.T, expected, actual map[string]releaseModuleS
 	for actualModuleName, actualState := range actual {
 		expectedState, ok := expected[actualModuleName]
 		require.Truef(t, ok, "unexpected module %q", actualModuleName)
-		require.Equal(t, len(expectedState.references), len(actualState.references))
-		for i, expectedRef := range expectedState.references {
-			assert.True(t, proto.Equal(expectedRef, actualState.references[i]))
-		}
+		assert.Equal(t, expectedState.status, actualState.status)
+		assert.True(t, cmp.Equal(expectedState.references, actualState.references, protocmp.Transform()))
 	}
 }
