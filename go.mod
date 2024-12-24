@@ -3,7 +3,7 @@ module github.com/bufbuild/modules
 go 1.23.0
 
 require (
-	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.0-20241127180247-a33202765966.1
+	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.1-20241127180247-a33202765966.1
 	github.com/bufbuild/buf v1.48.0
 	github.com/bufbuild/protovalidate-go v0.8.0
 	github.com/google/go-cmp v0.6.0
@@ -13,7 +13,7 @@ require (
 	go.uber.org/multierr v1.11.0
 	golang.org/x/mod v0.22.0
 	golang.org/x/oauth2 v0.24.0
-	google.golang.org/protobuf v1.36.0
+	google.golang.org/protobuf v1.36.1
 )
 
 require (

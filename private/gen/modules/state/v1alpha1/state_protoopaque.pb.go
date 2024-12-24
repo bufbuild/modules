@@ -18,7 +18,7 @@
 // 	protoc        (unknown)
 // source: state/v1alpha1/state.proto
 
-//go:build !protoopaque
+//go:build protoopaque
 
 package v1alpha1
 
@@ -40,10 +40,10 @@ const (
 // reference from its local array of references. This is kept updated in a
 // global state file at the root sync directory.
 type GlobalState struct {
-	state         protoimpl.MessageState  `protogen:"hybrid.v1"`
-	Modules       []*GlobalStateReference `protobuf:"bytes,1,rep,name=modules,proto3" json:"modules,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state              protoimpl.MessageState   `protogen:"opaque.v1"`
+	xxx_hidden_Modules *[]*GlobalStateReference `protobuf:"bytes,1,rep,name=modules,proto3" json:"modules,omitempty"`
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
 }
 
 func (x *GlobalState) Reset() {
@@ -73,13 +73,15 @@ func (x *GlobalState) ProtoReflect() protoreflect.Message {
 
 func (x *GlobalState) GetModules() []*GlobalStateReference {
 	if x != nil {
-		return x.Modules
+		if x.xxx_hidden_Modules != nil {
+			return *x.xxx_hidden_Modules
+		}
 	}
 	return nil
 }
 
 func (x *GlobalState) SetModules(v []*GlobalStateReference) {
-	x.Modules = v
+	x.xxx_hidden_Modules = &v
 }
 
 type GlobalState_builder struct {
@@ -92,18 +94,18 @@ func (b0 GlobalState_builder) Build() *GlobalState {
 	m0 := &GlobalState{}
 	b, x := &b0, m0
 	_, _ = b, x
-	x.Modules = b.Modules
+	x.xxx_hidden_Modules = &b.Modules
 	return m0
 }
 
 // GlobalReference is a single managed module reference with the latest
 // reference from its local array of references.
 type GlobalStateReference struct {
-	state           protoimpl.MessageState `protogen:"hybrid.v1"`
-	ModuleName      string                 `protobuf:"bytes,1,opt,name=module_name,json=moduleName,proto3" json:"module_name,omitempty"`
-	LatestReference string                 `protobuf:"bytes,2,opt,name=latest_reference,json=latestReference,proto3" json:"latest_reference,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+	state                      protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_ModuleName      string                 `protobuf:"bytes,1,opt,name=module_name,json=moduleName,proto3" json:"module_name,omitempty"`
+	xxx_hidden_LatestReference string                 `protobuf:"bytes,2,opt,name=latest_reference,json=latestReference,proto3" json:"latest_reference,omitempty"`
+	unknownFields              protoimpl.UnknownFields
+	sizeCache                  protoimpl.SizeCache
 }
 
 func (x *GlobalStateReference) Reset() {
@@ -133,24 +135,24 @@ func (x *GlobalStateReference) ProtoReflect() protoreflect.Message {
 
 func (x *GlobalStateReference) GetModuleName() string {
 	if x != nil {
-		return x.ModuleName
+		return x.xxx_hidden_ModuleName
 	}
 	return ""
 }
 
 func (x *GlobalStateReference) GetLatestReference() string {
 	if x != nil {
-		return x.LatestReference
+		return x.xxx_hidden_LatestReference
 	}
 	return ""
 }
 
 func (x *GlobalStateReference) SetModuleName(v string) {
-	x.ModuleName = v
+	x.xxx_hidden_ModuleName = v
 }
 
 func (x *GlobalStateReference) SetLatestReference(v string) {
-	x.LatestReference = v
+	x.xxx_hidden_LatestReference = v
 }
 
 type GlobalStateReference_builder struct {
@@ -164,8 +166,8 @@ func (b0 GlobalStateReference_builder) Build() *GlobalStateReference {
 	m0 := &GlobalStateReference{}
 	b, x := &b0, m0
 	_, _ = b, x
-	x.ModuleName = b.ModuleName
-	x.LatestReference = b.LatestReference
+	x.xxx_hidden_ModuleName = b.ModuleName
+	x.xxx_hidden_LatestReference = b.LatestReference
 	return m0
 }
 
@@ -173,10 +175,10 @@ func (b0 GlobalStateReference_builder) Build() *GlobalStateReference {
 // managed module. This is kept updated in a state file at the managed module
 // directory.
 type ModuleState struct {
-	state         protoimpl.MessageState `protogen:"hybrid.v1"`
-	References    []*ModuleReference     `protobuf:"bytes,1,rep,name=references,proto3" json:"references,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state                 protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_References *[]*ModuleReference    `protobuf:"bytes,1,rep,name=references,proto3" json:"references,omitempty"`
+	unknownFields         protoimpl.UnknownFields
+	sizeCache             protoimpl.SizeCache
 }
 
 func (x *ModuleState) Reset() {
@@ -206,13 +208,15 @@ func (x *ModuleState) ProtoReflect() protoreflect.Message {
 
 func (x *ModuleState) GetReferences() []*ModuleReference {
 	if x != nil {
-		return x.References
+		if x.xxx_hidden_References != nil {
+			return *x.xxx_hidden_References
+		}
 	}
 	return nil
 }
 
 func (x *ModuleState) SetReferences(v []*ModuleReference) {
-	x.References = v
+	x.xxx_hidden_References = &v
 }
 
 type ModuleState_builder struct {
@@ -225,18 +229,18 @@ func (b0 ModuleState_builder) Build() *ModuleState {
 	m0 := &ModuleState{}
 	b, x := &b0, m0
 	_, _ = b, x
-	x.References = b.References
+	x.xxx_hidden_References = &b.References
 	return m0
 }
 
 // ModuleReference is a single git reference of a managed module that will be
 // synced to a BSR cluster.
 type ModuleReference struct {
-	state         protoimpl.MessageState `protogen:"hybrid.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Digest        string                 `protobuf:"bytes,2,opt,name=digest,proto3" json:"digest,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state             protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_Name   string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	xxx_hidden_Digest string                 `protobuf:"bytes,2,opt,name=digest,proto3" json:"digest,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
 }
 
 func (x *ModuleReference) Reset() {
@@ -266,24 +270,24 @@ func (x *ModuleReference) ProtoReflect() protoreflect.Message {
 
 func (x *ModuleReference) GetName() string {
 	if x != nil {
-		return x.Name
+		return x.xxx_hidden_Name
 	}
 	return ""
 }
 
 func (x *ModuleReference) GetDigest() string {
 	if x != nil {
-		return x.Digest
+		return x.xxx_hidden_Digest
 	}
 	return ""
 }
 
 func (x *ModuleReference) SetName(v string) {
-	x.Name = v
+	x.xxx_hidden_Name = v
 }
 
 func (x *ModuleReference) SetDigest(v string) {
-	x.Digest = v
+	x.xxx_hidden_Digest = v
 }
 
 type ModuleReference_builder struct {
@@ -297,8 +301,8 @@ func (b0 ModuleReference_builder) Build() *ModuleReference {
 	m0 := &ModuleReference{}
 	b, x := &b0, m0
 	_, _ = b, x
-	x.Name = b.Name
-	x.Digest = b.Digest
+	x.xxx_hidden_Name = b.Name
+	x.xxx_hidden_Digest = b.Digest
 	return m0
 }
 
