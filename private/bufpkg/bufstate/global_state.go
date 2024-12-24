@@ -57,7 +57,7 @@ func (rw *ReadWriter) WriteGlobalState(writer io.WriteCloser, globalState *state
 	sort.Slice(mods, func(i, j int) bool {
 		return mods[i].GetModuleName() < mods[j].GetModuleName()
 	})
-	globalState.Modules = mods
+	globalState.SetModules(mods)
 	data, err := json.MarshalIndent(globalState, "", "  ")
 	if err != nil {
 		return fmt.Errorf("json marshal state: %w", err)

@@ -44,10 +44,10 @@ func TestCalculateNewReleaseModules(t *testing.T) {
 		assertModuleStates(t, map[string]releaseModuleState{
 			"envoyproxy/envoy": {
 				status: modules.New,
-				references: []*statev1alpha1.ModuleReference{{
+				references: []*statev1alpha1.ModuleReference{statev1alpha1.ModuleReference_builder{
 					Name:   "bb554f53ad8d3a2a2ae4cbd7102a3e20ae00b558",
 					Digest: "dummyManifestDigestEnvoy",
-				}},
+				}.Build()},
 			}}, got)
 		assert.True(t, shouldRelease(got))
 	})
@@ -65,10 +65,10 @@ func TestCalculateNewReleaseModules(t *testing.T) {
 		assertModuleStates(t, map[string]releaseModuleState{
 			"envoyproxy/envoy": {
 				status: modules.Updated,
-				references: []*statev1alpha1.ModuleReference{{
+				references: []*statev1alpha1.ModuleReference{statev1alpha1.ModuleReference_builder{
 					Name:   "7850b6bb6494e3bfc093b1aff20282ab30b67940",
 					Digest: "updatedDummyManifestDigestEnvoy",
-				}},
+				}.Build()},
 			}}, got)
 		assert.True(t, shouldRelease(got))
 	})
@@ -109,17 +109,17 @@ func TestCalculateNewReleaseModules(t *testing.T) {
 			},
 			"envoyproxy/envoy": {
 				status: modules.Updated,
-				references: []*statev1alpha1.ModuleReference{{
+				references: []*statev1alpha1.ModuleReference{statev1alpha1.ModuleReference_builder{
 					Name:   "7850b6bb6494e3bfc093b1aff20282ab30b67940",
 					Digest: "updatedDummyManifestDigestEnvoy",
-				}},
+				}.Build()},
 			},
 			"gogo/protobuf": {
 				status: modules.New,
-				references: []*statev1alpha1.ModuleReference{{
+				references: []*statev1alpha1.ModuleReference{statev1alpha1.ModuleReference_builder{
 					Name:   "8892e00f944642b7dc8d81b419879fd4be12f056",
 					Digest: "newDummyManifestDigestGogoProtobuf",
-				}},
+				}.Build()},
 			}}, got)
 		assert.True(t, shouldRelease(got))
 	})
@@ -143,14 +143,14 @@ func TestCalculateNewReleaseModules(t *testing.T) {
 			"envoyproxy/envoy": {
 				status: modules.Updated,
 				references: []*statev1alpha1.ModuleReference{
-					{
+					statev1alpha1.ModuleReference_builder{
 						Name:   "v0.1.0",
 						Digest: "dummyManifestDigestEnvoy",
-					},
-					{
+					}.Build(),
+					statev1alpha1.ModuleReference_builder{
 						Name:   "v0.2.0",
 						Digest: "updatedDummyManifestDigestEnvoy",
-					},
+					}.Build(),
 				},
 			}}, got)
 		assert.True(t, shouldRelease(got))
@@ -177,17 +177,17 @@ func TestCalculateNewReleaseModules(t *testing.T) {
 			},
 			"new/foo": {
 				status: modules.New,
-				references: []*statev1alpha1.ModuleReference{{
+				references: []*statev1alpha1.ModuleReference{statev1alpha1.ModuleReference_builder{
 					Name:   "ref3",
 					Digest: "dummyManifestDigestNewFoo",
-				}},
+				}.Build()},
 			},
 			"new/bar": {
 				status: modules.New,
-				references: []*statev1alpha1.ModuleReference{{
+				references: []*statev1alpha1.ModuleReference{statev1alpha1.ModuleReference_builder{
 					Name:   "ref4",
 					Digest: "dummyManifestDigestNewBar",
-				}},
+				}.Build()},
 			}}, got)
 		assert.True(t, shouldRelease(got))
 	})
@@ -205,17 +205,17 @@ func TestMapGlobalStateReferences(t *testing.T) {
 	t.Run("not_nil_state", func(t *testing.T) {
 		t.Parallel()
 
-		globalState := &statev1alpha1.GlobalState{
+		globalState := statev1alpha1.GlobalState_builder{
 			Modules: []*statev1alpha1.GlobalStateReference{
-				{
+				statev1alpha1.GlobalStateReference_builder{
 					ModuleName:      "test-org/test-repo",
 					LatestReference: "v1.0.0",
-				}, {
+				}.Build(), statev1alpha1.GlobalStateReference_builder{
 					ModuleName:      "other-org/other-repo",
 					LatestReference: "v1.0.0",
-				},
+				}.Build(),
 			},
-		}
+		}.Build()
 		got := mapGlobalStateReferences(globalState)
 		require.Equal(t, map[string]string{
 			"test-org/test-repo":   "v1.0.0",
@@ -232,13 +232,13 @@ func TestCreateReleaseBody(t *testing.T) {
 			"test-org/test-repo": {
 				status: modules.New,
 				references: []*statev1alpha1.ModuleReference{
-					{
+					statev1alpha1.ModuleReference_builder{
 						Name:   "v1.0.0",
 						Digest: "fakedigest",
-					}, {
+					}.Build(), statev1alpha1.ModuleReference_builder{
 						Name:   "v1.1.0",
 						Digest: "fakedigest",
-					},
+					}.Build(),
 				},
 			},
 		}
@@ -267,25 +267,25 @@ func TestCreateReleaseBody(t *testing.T) {
 			"test-org/new-repo": {
 				status: modules.New,
 				references: []*statev1alpha1.ModuleReference{
-					{
+					statev1alpha1.ModuleReference_builder{
 						Name:   "v1.0.0",
 						Digest: "fakedigest",
-					}, {
+					}.Build(), statev1alpha1.ModuleReference_builder{
 						Name:   "v1.1.0",
 						Digest: "fakedigest",
-					},
+					}.Build(),
 				},
 			},
 			"test-org/updated-repo": {
 				status: modules.Updated,
 				references: []*statev1alpha1.ModuleReference{
-					{
+					statev1alpha1.ModuleReference_builder{
 						Name:   "v1.0.0",
 						Digest: "fakedigest",
-					}, {
+					}.Build(), statev1alpha1.ModuleReference_builder{
 						Name:   "v1.1.0",
 						Digest: "fakedigest",
-					},
+					}.Build(),
 				},
 			},
 		}
@@ -341,7 +341,7 @@ func TestCreateReleaseBody(t *testing.T) {
 			//nolint:exhaustive // other module states should not have any reference
 			switch state {
 			case modules.New, modules.Updated:
-				references = []*statev1alpha1.ModuleReference{{Name: "v1.0.0", Digest: "fakedigest"}}
+				references = []*statev1alpha1.ModuleReference{statev1alpha1.ModuleReference_builder{Name: "v1.0.0", Digest: "fakedigest"}.Build()}
 			}
 			// map order is not guaranteed
 			mods[modName] = releaseModuleState{
@@ -437,10 +437,10 @@ func TestWriteReferencesTable(t *testing.T) {
 	populateReferences := func(refsCount int) []*statev1alpha1.ModuleReference {
 		refs := make([]*statev1alpha1.ModuleReference, refsCount)
 		for i := range refsCount {
-			refs[i] = &statev1alpha1.ModuleReference{
+			refs[i] = statev1alpha1.ModuleReference_builder{
 				Name:   fmt.Sprintf("commit%03d", i),
 				Digest: fmt.Sprintf("digest%03d", i),
-			}
+			}.Build()
 		}
 		return refs
 	}
