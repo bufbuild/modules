@@ -18,7 +18,7 @@
     },
     {
       "module_name": "cncf/xds",
-      "latest_reference": "57cfbe6fad570a744044b9fefa9b758ba7f105ef"
+      "latest_reference": "cff3c89139a3e6a0d4fbddfd158ad895e9b30840"
     },
     {
       "module_name": "envoyproxy/envoy",
@@ -42,7 +42,7 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "a1b92fac8aa318ea01ee6f0c0d0cc937e35ed7b3"
+      "latest_reference": "9e966149c59f47f6305d66c98e2a9e7d9c26a2eb"
     },
     {
       "module_name": "googlechrome/lighthouse",
@@ -58,7 +58,7 @@
     },
     {
       "module_name": "grpc/grpc",
-      "latest_reference": "aeccc471550e437fcb5d9f2df7d2f242b994d934"
+      "latest_reference": "4489ffe132a2991bd17848c92b05f6502532f4a1"
     },
     {
       "module_name": "opencensus/opencensus",
@@ -74,7 +74,7 @@
     },
     {
       "module_name": "protocolbuffers/gofeatures",
-      "latest_reference": "v1.36.0"
+      "latest_reference": "v1.36.1"
     },
     {
       "module_name": "protocolbuffers/wellknowntypes",
