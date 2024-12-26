@@ -30,7 +30,7 @@
     },
     {
       "module_name": "envoyproxy/ratelimit",
-      "latest_reference": "6a2e8262874f012d08830cc34ba8058e66a33819"
+      "latest_reference": "7475d46c03e3f9e41d7c43dfbf7cf48068aacc96"
     },
     {
       "module_name": "gogo/protobuf",
