@@ -16,7 +16,6 @@ package githubutil
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -31,6 +30,7 @@ import (
 	"github.com/google/go-github/v64/github"
 	"github.com/hashicorp/go-retryablehttp"
 	"golang.org/x/oauth2"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 const (
@@ -196,7 +196,7 @@ func (c *Client) DownloadReleaseState(
 		return nil, err
 	}
 	var moduleReleases statev1alpha1.GlobalState
-	if err := json.Unmarshal(manifestBytes, &moduleReleases); err != nil {
+	if err := protojson.Unmarshal(manifestBytes, &moduleReleases); err != nil {
 		return nil, err
 	}
 	return &moduleReleases, nil

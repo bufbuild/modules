@@ -53,7 +53,7 @@ func (rw *ReadWriter) AppendModuleReference(
 			return fmt.Errorf("read module state file: %w", err)
 		}
 	}
-	modState.References = append(modState.GetReferences(), &statev1alpha1.ModuleReference{Name: reference, Digest: digest})
+	modState.SetReferences(append(modState.GetReferences(), statev1alpha1.ModuleReference_builder{Name: reference, Digest: digest}.Build()))
 	// As the state file read/write functions both close after their operations,
 	// we need to re-open another io.WriteCloser here, the easiest way is to
 	// truncate the file with Create if it exists.
@@ -87,18 +87,18 @@ func (rw *ReadWriter) AppendModuleReference(
 	for i := range len(globalState.GetModules()) {
 		if globalState.GetModules()[i].GetModuleName() == moduleName {
 			found = true
-			globalState.GetModules()[i].LatestReference = reference
+			globalState.GetModules()[i].SetLatestReference(reference)
 			break
 		}
 	}
 	if !found {
-		globalState.Modules = append(
+		globalState.SetModules(append(
 			globalState.GetModules(),
-			&statev1alpha1.GlobalStateReference{
+			statev1alpha1.GlobalStateReference_builder{
 				ModuleName:      moduleName,
 				LatestReference: reference,
-			},
-		)
+			}.Build(),
+		))
 	}
 	// As the state file read/write functions both close after their operations,
 	// we need to re-open another io.WriteCloser here, the easiest way is to
