@@ -46,6 +46,11 @@ First, we sync standalone modules. After they succeed, we then sync the modules 
 which use the latest pushed dependency commit. As long as the dependencies don’t have any breaking
 change in the source code, this should be sufficient and stable for upstream modules.
 
+For special cases, we can pin a dependency in the static `buf.yaml` that we control, to force a
+managed module depend on a specific synced reference from another managed module. To know if a
+managed module has pinned dependencies for a specific reference, take a look at the `buf.yaml` in
+that reference's manifest in the `sync` directory.
+
 ## Community
 
 For help and discussion regarding Protobuf managed modules, join us on
