@@ -25,12 +25,12 @@ import (
 	"strings"
 	"time"
 
+	"github.com/bufbuild/buf/private/pkg/protoencoding"
 	"github.com/bufbuild/modules/private/bufpkg/bufstate"
 	statev1alpha1 "github.com/bufbuild/modules/private/gen/modules/state/v1alpha1"
 	"github.com/google/go-github/v64/github"
 	"github.com/hashicorp/go-retryablehttp"
 	"golang.org/x/oauth2"
-	"google.golang.org/protobuf/encoding/protojson"
 )
 
 const (
@@ -191,15 +191,15 @@ func (c *Client) DownloadReleaseState(
 	ctx context.Context,
 	release *github.RepositoryRelease,
 ) (*statev1alpha1.GlobalState, error) {
-	manifestBytes, _, err := c.downloadAsset(ctx, release, bufstate.ModStateFileName)
+	data, _, err := c.downloadAsset(ctx, release, bufstate.ModStateFileName)
 	if err != nil {
 		return nil, err
 	}
-	var moduleReleases statev1alpha1.GlobalState
-	if err := protojson.Unmarshal(manifestBytes, &moduleReleases); err != nil {
+	var globalState statev1alpha1.GlobalState
+	if err := protoencoding.NewJSONUnmarshaler(protoencoding.EmptyResolver).Unmarshal(data, &globalState); err != nil {
 		return nil, err
 	}
-	return &moduleReleases, nil
+	return &globalState, nil
 }
 
 // downloadAsset uses the GitHub API to download the asset with the given name from the release.

@@ -18,9 +18,9 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/bufbuild/buf/private/pkg/protoencoding"
 	statev1alpha1 "github.com/bufbuild/modules/private/gen/modules/state/v1alpha1"
 	"go.uber.org/multierr"
-	"google.golang.org/protobuf/encoding/protojson"
 )
 
 const ModStateFileName = "state.json"
@@ -37,7 +37,7 @@ func (rw *ReadWriter) ReadModStateFile(readCloser io.ReadCloser) (_ *statev1alph
 		return nil, fmt.Errorf("read module state file: %w", err)
 	}
 	var moduleState statev1alpha1.ModuleState
-	if err := protojson.Unmarshal(bytes, &moduleState); err != nil {
+	if err := protoencoding.NewJSONUnmarshaler(protoencoding.EmptyResolver).Unmarshal(bytes, &moduleState); err != nil {
 		return nil, fmt.Errorf("unmarshal module state: %w", err)
 	}
 	if err := rw.validator.Validate(&moduleState); err != nil {
@@ -56,11 +56,11 @@ func (rw *ReadWriter) WriteModStateFile(writeCloser io.WriteCloser, moduleState 
 	if err := rw.validator.Validate(moduleState); err != nil {
 		return fmt.Errorf("validate: %w", err)
 	}
-	data, err := protojson.MarshalOptions{
-		Multiline:     true,
-		Indent:        "  ",
-		UseProtoNames: true,
-	}.Marshal(moduleState)
+	data, err := protoencoding.NewJSONMarshaler(
+		protoencoding.EmptyResolver,
+		protoencoding.JSONMarshalerWithUseProtoNames(),
+		protoencoding.JSONMarshalerWithIndent(),
+	).Marshal(moduleState)
 	if err != nil {
 		return fmt.Errorf("marshal module state: %w", err)
 	}
