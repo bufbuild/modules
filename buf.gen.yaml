@@ -4,4 +4,4 @@ plugins:
     out: private/gen/modules
     opt:
       - paths=source_relative
-      - default_api_level=API_HYBRID
+      - default_api_level=API_OPAQUE
