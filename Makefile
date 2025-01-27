@@ -8,11 +8,11 @@ MAKEFLAGS += --no-builtin-rules
 MAKEFLAGS += --no-print-directory
 BIN := .tmp/bin
 COPYRIGHT_YEARS := 2021-2025
-GOLANGCI_LINT_VERSION ?= v1.62.0
+GOLANGCI_LINT_VERSION ?= v1.63.4
 LICENSE_IGNORE := --ignore /testdata/
 # Set to use a different compiler. For example, `GO=go1.18rc1 make test`.
 GO ?= go
-BUF_VERSION ?= $(shell $(GO) list -m -json github.com/bufbuild/buf | jq -r .Version)
+BUF_VERSION ?= $(shell $(GO) list -m -f '{{.Version}}' github.com/bufbuild/buf)
 
 .PHONY: help
 help: ## Describe useful make targets
