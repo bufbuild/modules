@@ -128,7 +128,7 @@ func diffFromCASDirectory(
 	if err != nil {
 		return fmt.Errorf("read manifest to: %w", err)
 	}
-	diff := newDiff()
+	diff := newManifestDiff()
 	// removed and changed
 	for _, fromNode := range fromManifest.FileNodes() {
 		path := fromNode.Path()
@@ -171,41 +171,45 @@ func readManifest(ctx context.Context, bucket storage.ReadBucket, manifestPath s
 	return m, nil
 }
 
-type pathDiff struct {
-	from bufcas.FileNode
-	to   bufcas.FileNode
+type fileNodeDiff struct {
+	path string
+	from bufcas.Digest
+	to   bufcas.Digest
 	diff string
 }
 
-type diff struct {
+type manifestDiff struct {
 	addedPaths         map[string]bufcas.FileNode
 	removedPaths       map[string]bufcas.FileNode
-	changedDigestPaths map[string]pathDiff
+	changedDigestPaths map[string]fileNodeDiff
 }
 
-func newDiff() *diff {
-	return &diff{
+func newManifestDiff() *manifestDiff {
+	return &manifestDiff{
 		addedPaths:         make(map[string]bufcas.FileNode),
 		removedPaths:       make(map[string]bufcas.FileNode),
-		changedDigestPaths: make(map[string]pathDiff),
+		changedDigestPaths: make(map[string]fileNodeDiff),
 	}
 }
 
-func (d *diff) added(path string, node bufcas.FileNode) {
+func (d *manifestDiff) added(path string, node bufcas.FileNode) {
 	d.addedPaths[path] = node
 }
 
-func (d *diff) removed(path string, node bufcas.FileNode) {
+func (d *manifestDiff) removed(path string, node bufcas.FileNode) {
 	d.removedPaths[path] = node
 }
 
-func (d *diff) changedDigest(
+func (d *manifestDiff) changedDigest(
 	ctx context.Context,
 	bucket storage.ReadBucket,
 	path string,
 	fromNode bufcas.FileNode,
 	toNode bufcas.FileNode,
 ) error {
+	if fromNode.Path() != toNode.Path() {
+		return errors.New("from path and to path are different")
+	}
 	fromData, err := storage.ReadPath(ctx, bucket, fileNodePath(fromNode))
 	if err != nil {
 		return fmt.Errorf("read from changed path: %w", err)
@@ -225,15 +229,16 @@ func (d *diff) changedDigest(
 	if err != nil {
 		return fmt.Errorf("get unified diff: %w", err)
 	}
-	d.changedDigestPaths[path] = pathDiff{
-		from: fromNode,
-		to:   toNode,
+	d.changedDigestPaths[path] = fileNodeDiff{
+		path: fromNode.Path(),
+		from: fromNode.Digest(),
+		to:   toNode.Digest(),
 		diff: diff,
 	}
 	return nil
 }
 
-func (d *diff) String() string {
+func (d *manifestDiff) String() string {
 	var sb strings.Builder //nolint:varnamelen // sb is a common builder varname
 	if len(d.removedPaths) > 0 {
 		sb.WriteString("# Removed:\n\n")
@@ -259,11 +264,11 @@ func (d *diff) String() string {
 		sb.WriteString("# Changed content:\n\n")
 		sortedPaths := slicesext.MapKeysToSortedSlice(d.changedDigestPaths)
 		for _, path := range sortedPaths {
-			pd := d.changedDigestPaths[path]
-			sb.WriteString("## `" + pd.from.Path() + "`:\n")
+			fnDiff := d.changedDigestPaths[path]
+			sb.WriteString("## `" + fnDiff.path + "`:\n")
 			sb.WriteString(
 				"```diff\n" +
-					pd.diff + "\n" +
+					fnDiff.diff + "\n" +
 					"```\n",
 			)
 		}
