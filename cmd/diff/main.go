@@ -25,11 +25,11 @@ import (
 	"strings"
 
 	"github.com/bufbuild/buf/private/bufpkg/bufcas"
+	"github.com/bufbuild/buf/private/pkg/diff"
 	"github.com/bufbuild/buf/private/pkg/slicesext"
 	"github.com/bufbuild/buf/private/pkg/storage"
 	"github.com/bufbuild/buf/private/pkg/storage/storageos"
 	"github.com/bufbuild/modules/private/bufpkg/bufstate"
-	"github.com/pmezard/go-difflib/difflib"
 )
 
 type command struct {
@@ -218,22 +218,23 @@ func (d *manifestDiff) changedDigest(
 	if err != nil {
 		return fmt.Errorf("read to changed path: %w", err)
 	}
-	udiff := difflib.UnifiedDiff{
-		A:        difflib.SplitLines(string(fromData)),
-		B:        difflib.SplitLines(string(toData)),
-		FromFile: fromNode.Digest().String(),
-		ToFile:   toNode.Digest().String(),
-		Context:  2,
-	}
-	diff, err := difflib.GetUnifiedDiffString(udiff)
+	diffData, err := diff.Diff(
+		ctx,
+		fromData,
+		toData,
+		fromNode.Digest().String(),
+		toNode.Digest().String(),
+		diff.DiffWithSuppressCommands(),
+		diff.DiffWithSuppressTimestamps(),
+	)
 	if err != nil {
-		return fmt.Errorf("get unified diff: %w", err)
+		return fmt.Errorf("diff: %w", err)
 	}
 	d.changedDigestPaths[path] = fileNodeDiff{
 		path: fromNode.Path(),
 		from: fromNode.Digest(),
 		to:   toNode.Digest(),
-		diff: diff,
+		diff: string(diffData),
 	}
 	return nil
 }
