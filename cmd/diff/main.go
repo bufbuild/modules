@@ -155,7 +155,7 @@ func diffFromCASDirectory(
 			diff.added(toNode.Path(), toNode)
 		}
 	}
-	fmt.Println(diff.String())
+	_, _ = fmt.Fprint(os.Stdout, diff.String())
 	return nil
 }
 
@@ -203,22 +203,22 @@ func (d *diff) changedDigest(
 	ctx context.Context,
 	bucket storage.ReadBucket,
 	path string,
-	from bufcas.FileNode,
-	to bufcas.FileNode,
+	fromNode bufcas.FileNode,
+	toNode bufcas.FileNode,
 ) error {
-	fromData, err := storage.ReadPath(ctx, bucket, fileNodePath(from))
+	fromData, err := storage.ReadPath(ctx, bucket, fileNodePath(fromNode))
 	if err != nil {
 		return fmt.Errorf("read from changed path: %w", err)
 	}
-	toData, err := storage.ReadPath(ctx, bucket, fileNodePath(to))
+	toData, err := storage.ReadPath(ctx, bucket, fileNodePath(toNode))
 	if err != nil {
 		return fmt.Errorf("read to changed path: %w", err)
 	}
 	udiff := difflib.UnifiedDiff{
 		A:        difflib.SplitLines(string(fromData)),
 		B:        difflib.SplitLines(string(toData)),
-		FromFile: from.Digest().String(),
-		ToFile:   to.Digest().String(),
+		FromFile: fromNode.Digest().String(),
+		ToFile:   toNode.Digest().String(),
 		Context:  2,
 	}
 	diff, err := difflib.GetUnifiedDiffString(udiff)
@@ -226,15 +226,15 @@ func (d *diff) changedDigest(
 		return fmt.Errorf("get unified diff: %w", err)
 	}
 	d.changedDigestPaths[path] = pathDiff{
-		from: from,
-		to:   to,
+		from: fromNode,
+		to:   toNode,
 		diff: diff,
 	}
 	return nil
 }
 
 func (d *diff) String() string {
-	var sb strings.Builder
+	var sb strings.Builder //nolint:varnamelen // sb is a common builder varname
 	if len(d.removedPaths) > 0 {
 		sb.WriteString("# Removed:\n\n")
 		sb.WriteString("```diff\n")
