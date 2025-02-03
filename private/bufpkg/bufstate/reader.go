@@ -21,7 +21,7 @@ import (
 )
 
 type ReadWriter struct {
-	validator *protovalidate.Validator
+	validator protovalidate.Validator
 }
 
 func NewReadWriter() (*ReadWriter, error) {
