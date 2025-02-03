@@ -65,7 +65,7 @@ upgrade: ## Upgrade dependencies
 	go get -u -t ./... && go mod tidy -v
 
 .PHONY: checkgenerate
-checkgenerate:
+checkgenerate: generate
 	@# Used in CI to verify that `make generate` doesn't produce a diff.
 	test -z "$$(git status --porcelain | tee /dev/stderr)"
 
