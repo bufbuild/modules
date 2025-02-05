@@ -228,8 +228,6 @@ sync_references releases grpc-ecosystem grpc-gateway https://github.com/grpc-eco
 sync_references releases opencensus opencensus https://github.com/census-instrumentation/opencensus-proto src
 sync_references releases opentelemetry opentelemetry https://github.com/open-telemetry/opentelemetry-proto
 sync_references releases prometheus client-model https://github.com/prometheus/client_model
-# TODO: remove after it finishes syncing its README's deprecation notice in existing BSRs.
-# sync_references releases protocolbuffers gofeatures https://github.com/protocolbuffers/protobuf-go src
 sync_references releases protocolbuffers wellknowntypes https://github.com/protocolbuffers/protobuf src
 
 popd > /dev/null

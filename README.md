@@ -31,7 +31,6 @@ We currently sync automatically the following modules:
 | opencensus/opencensus | https://github.com/census-instrumentation/opencensus-proto |  |
 | opentelemetry/opentelemetry | https://github.com/open-telemetry/opentelemetry-proto |  |
 | prometheus/client-model | https://github.com/prometheus/client_model |  |
-| protocolbuffers/gofeatures | https://github.com/protocolbuffers/protobuf-go | - protocolbuffers/wellknowntypes |
 | protocolbuffers/wellknowntypes | https://github.com/protocolbuffers/protobuf |  |
 
 ### How we handle dependencies
