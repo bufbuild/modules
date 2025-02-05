@@ -7,10 +7,13 @@ this module contains the following files:
 - `google/protobuf/any.proto`
 - `google/protobuf/api.proto`
 - `google/protobuf/compiler/plugin.proto`
+- `google/protobuf/cpp_features.proto`
 - `google/protobuf/descriptor.proto`
 - `google/protobuf/duration.proto`
 - `google/protobuf/empty.proto`
 - `google/protobuf/field_mask.proto`
+- `google/protobuf/go_features.proto`
+- `google/protobuf/java_features.proto`
 - `google/protobuf/source_context.proto`
 - `google/protobuf/struct.proto`
 - `google/protobuf/timestamp.proto`
