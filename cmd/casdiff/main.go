@@ -32,6 +32,10 @@ import (
 	"github.com/bufbuild/modules/private/bufpkg/bufstate"
 )
 
+const (
+	emptyDiffSameFromAndTo = "empty diff, from and to are the same"
+)
+
 type command struct {
 	from string
 	to   string
@@ -45,9 +49,8 @@ func main() {
 		os.Exit(2)
 	}
 	if flag.Args()[0] == flag.Args()[1] {
-		_, _ = fmt.Fprintf(os.Stderr, "<from> and <to> cannot be the same")
-		flag.PrintDefaults()
-		os.Exit(2)
+		_, _ = fmt.Fprint(os.Stdout, newManifestDiff().String())
+		return
 	}
 	cmd := &command{
 		from: flag.Args()[0],
@@ -120,6 +123,10 @@ func diffFromCASDirectory(
 	fromManifestPath string,
 	toManifestPath string,
 ) error {
+	if fromManifestPath == toManifestPath {
+		_, _ = fmt.Fprint(os.Stdout, newManifestDiff().String())
+		return nil
+	}
 	fromManifest, err := readManifest(ctx, bucket, fromManifestPath)
 	if err != nil {
 		return fmt.Errorf("read manifest from: %w", err)
