@@ -65,7 +65,7 @@ func buildManifestDiff(
 		toNode := to.GetFileNode(path)
 		if toNode == nil {
 			diff.pathsRemoved[path] = fromNode
-			digestToRemovedPaths[fromNode.Digest().String()] = append(digestToRemovedPaths[path], path)
+			digestToRemovedPaths[fromNode.Digest().String()] = append(digestToRemovedPaths[fromNode.Digest().String()], path)
 			continue
 		}
 		if bufcas.DigestEqual(fromNode.Digest(), toNode.Digest()) {
@@ -86,7 +86,7 @@ func buildManifestDiff(
 		path := toNode.Path()
 		if from.GetFileNode(path) == nil {
 			diff.pathsAdded[path] = toNode
-			digestToAddedPaths[toNode.Digest().String()] = append(digestToAddedPaths[path], path)
+			digestToAddedPaths[toNode.Digest().String()] = append(digestToAddedPaths[toNode.Digest().String()], path)
 		}
 	}
 	// renamed: defined as digests present both in pathsRemoved and pathsAdded but under different
@@ -247,11 +247,11 @@ func calculateFileNodeDiff(
 	)
 	fromData, err := storage.ReadPath(ctx, bucket, fromFilePath)
 	if err != nil {
-		return "", fmt.Errorf("read from path: %w", err)
+		return "", fmt.Errorf("read path from: %w", err)
 	}
 	toData, err := storage.ReadPath(ctx, bucket, toFilePath)
 	if err != nil {
-		return "", fmt.Errorf("read to path: %w", err)
+		return "", fmt.Errorf("read path to: %w", err)
 	}
 	diffData, err := diff.Diff(
 		ctx,
