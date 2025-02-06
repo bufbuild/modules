@@ -111,7 +111,7 @@ func run(
 	if !ok {
 		return fmt.Errorf("unsupported format %s", flags.format)
 	}
-	from, to := container.Arg(0), container.Arg(1) //nolint:varnamelen // from/to used for symmetry
+	from, to := container.Arg(0), container.Arg(1) //nolint:varnamelen // from/to used symmetrically
 	if from == to {
 		return printDiff(newManifestDiff(), format)
 	}

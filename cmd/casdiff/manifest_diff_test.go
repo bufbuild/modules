@@ -28,6 +28,7 @@ import (
 )
 
 func TestManifestDiff(t *testing.T) {
+	t.Parallel()
 	ctx := context.Background()
 	casBucket, mFrom, mTo := prepareDiffCASBucket(ctx, t)
 	mdiff, err := buildManifestDiff(ctx, mFrom, mTo, casBucket)
@@ -112,6 +113,7 @@ func prepareDiffCASBucket(ctx context.Context, t *testing.T) (
 	bufcas.Manifest,
 	bufcas.Manifest,
 ) {
+	t.Helper()
 	casBucket := storagemem.NewReadWriteBucket()
 	casWrite := func(dirpath string) bufcas.Manifest {
 		testFiles, err := storageos.NewProvider().NewReadWriteBucket("testdata/manifest_diff/" + dirpath)

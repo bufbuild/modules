@@ -51,7 +51,7 @@ func newManifestDiff() *manifestDiff {
 func buildManifestDiff(
 	ctx context.Context,
 	from bufcas.Manifest,
-	to bufcas.Manifest,
+	to bufcas.Manifest, //nolint:varnamelen // from/to used symmetrically
 	bucket storage.ReadBucket,
 ) (*manifestDiff, error) {
 	var (
@@ -235,7 +235,7 @@ func (d *manifestDiff) printMarkdown() {
 func calculateFileNodeDiff(
 	ctx context.Context,
 	from bufcas.FileNode,
-	to bufcas.FileNode,
+	to bufcas.FileNode, //nolint:varnamelen // from/to used symmetrically
 	bucket storage.ReadBucket,
 ) (string, error) {
 	if from.Path() == to.Path() && bufcas.DigestEqual(from.Digest(), to.Digest()) {
