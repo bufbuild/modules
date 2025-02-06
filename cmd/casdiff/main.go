@@ -26,5 +26,4 @@ const (
 
 func main() {
 	appcmd.Main(context.Background(), newCommand(rootCmdName))
-	return
 }

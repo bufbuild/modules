@@ -38,8 +38,6 @@ type format int
 const (
 	formatFlagName      = "format"
 	formatFlagShortName = "f"
-
-	emptyDiffSameFromAndTo = "empty diff, from and to are the same"
 )
 
 const (
@@ -47,6 +45,7 @@ const (
 	formatMarkdown
 )
 
+//nolint:gochecknoglobals // treated as consts
 var (
 	formatsValuesToNames = map[format]string{
 		formatText:     "text",
@@ -108,13 +107,13 @@ func run(
 	container appext.Container,
 	flags *flags,
 ) error {
-	f, ok := formatsNamesToValues[flags.format]
+	format, ok := formatsNamesToValues[flags.format]
 	if !ok {
 		return fmt.Errorf("unsupported format %s", flags.format)
 	}
-	from, to := container.Arg(0), container.Arg(1)
+	from, to := container.Arg(0), container.Arg(1) //nolint:varnamelen // from/to used for symmetry
 	if from == to {
-		return printDiff(newManifestDiff(), f)
+		return printDiff(newManifestDiff(), format)
 	}
 	// first, attempt to match from/to as module references in a state file in the same directory
 	// where the command is run
@@ -133,7 +132,7 @@ func run(
 		if err != nil {
 			return fmt.Errorf("calculate cas diff: %w", err)
 		}
-		return printDiff(mdiff, f)
+		return printDiff(mdiff, format)
 	}
 	// state file was found, attempt to parse it and match from/to with its references
 	stateRW, err := bufstate.NewReadWriter()
@@ -168,7 +167,7 @@ func run(
 		return fmt.Errorf("to reference %s not found in the module state file", to)
 	}
 	if fromManifestPath == toManifestPath {
-		return printDiff(newManifestDiff(), f)
+		return printDiff(newManifestDiff(), format)
 	}
 	casBucket, err := storageos.NewProvider().NewReadWriteBucket("cas")
 	if err != nil {
@@ -178,7 +177,7 @@ func run(
 	if err != nil {
 		return fmt.Errorf("calculate cas diff from state references: %w", err)
 	}
-	return printDiff(mdiff, f)
+	return printDiff(mdiff, format)
 }
 
 // calculateDiffFromCASDirectory takes the cas bucket, and the from/to manifest paths to calculate a
@@ -215,14 +214,14 @@ func readManifest(ctx context.Context, bucket storage.ReadBucket, manifestPath s
 	return m, nil
 }
 
-func printDiff(mdiff *manifestDiff, f format) error {
-	switch f {
+func printDiff(mdiff *manifestDiff, format format) error {
+	switch format {
 	case formatText:
 		mdiff.printText()
 	case formatMarkdown:
 		mdiff.printMarkdown()
 	default:
-		return fmt.Errorf("format %s not supported", f.String())
+		return fmt.Errorf("format %s not supported", format.String())
 	}
 	return nil
 }
