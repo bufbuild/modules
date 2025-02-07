@@ -102,7 +102,7 @@ func TestManifestDiff(t *testing.T) {
 			actual, present := mdiff.pathsChangedContent[expectedChangedContentPath]
 			require.True(t, present)
 			assert.Equal(t, actual.from.Path(), actual.to.Path())
-			assert.NotEqual(t, actual.from.Digest(), actual.to.Digest())
+			assert.False(t, bufcas.DigestEqual(actual.from.Digest(), actual.to.Digest()))
 			assert.NotEmpty(t, actual.diff)
 		}
 	})
