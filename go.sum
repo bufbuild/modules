@@ -1,5 +1,5 @@
-buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.4-20250130201111-63bb56e20495.1 h1:4erM3WLgEG/HIBrpBDmRbs1puhd7p0z7kNXDuhHthwM=
-buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.4-20250130201111-63bb56e20495.1/go.mod h1:novQBstnxcGpfKf8qGRATqn1anQKwMJIbH5Q581jibU=
+buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.5-20250130201111-63bb56e20495.1 h1:cKwn1vgPveeXRDvrt2H+FI5AiBzbG5obrolK8eCAY6U=
+buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.5-20250130201111-63bb56e20495.1/go.mod h1:eOqrCVUfhh7SLo00urDe/XhJHljj0dWMZirS0aX7cmc=
 buf.build/go/protoyaml v0.3.1 h1:ucyzE7DRnjX+mQ6AH4JzN0Kg50ByHHu+yrSKbgQn2D4=
 buf.build/go/protoyaml v0.3.1/go.mod h1:0TzNpFQDXhwbkXb/ajLvxIijqbve+vMQvWY/b3/Dzxg=
 cel.dev/expr v0.19.2 h1:V354PbqIXr9IQdwy4SYA4xa0HXaWq1BUPAGzugBY5V4=
@@ -126,8 +126,8 @@ google.golang.org/genproto/googleapis/api v0.0.0-20250127172529-29210b9bc287 h1:
 google.golang.org/genproto/googleapis/api v0.0.0-20250127172529-29210b9bc287/go.mod h1:iYONQfRdizDB8JJBybql13nArx91jcUk7zCXEsOofM4=
 google.golang.org/genproto/googleapis/rpc v0.0.0-20250127172529-29210b9bc287 h1:J1H9f+LEdWAfHcez/4cvaVBox7cOYT+IU6rgqj5x++8=
 google.golang.org/genproto/googleapis/rpc v0.0.0-20250127172529-29210b9bc287/go.mod h1:8BS3B93F/U1juMFq9+EDk+qOT5CO1R9IzXxG3PTqiRk=
-google.golang.org/protobuf v1.36.4 h1:6A3ZDJHn/eNqc1i+IdefRzy/9PokBTPvcqMySR7NNIM=
-google.golang.org/protobuf v1.36.4/go.mod h1:9fA7Ob0pmnwhb644+1+CVWFRbNajQ6iRojtC/QF5bRE=
+google.golang.org/protobuf v1.36.5 h1:tPhr+woSbjfYvY6/GPufUoYizxw1cF/yFoxJ2fmpwlM=
+google.golang.org/protobuf v1.36.5/go.mod h1:9fA7Ob0pmnwhb644+1+CVWFRbNajQ6iRojtC/QF5bRE=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
 gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 h1:YR8cESwS4TdDjEe65xsg0ogRM/Nc3DYOhEAlW+xobZo=
 gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
