@@ -14,6 +14,18 @@ LICENSE_IGNORE := --ignore /testdata/
 GO ?= go
 BUF_VERSION ?= $(shell $(GO) list -m -f '{{.Version}}' github.com/bufbuild/buf)
 
+UNAME_OS := $(shell uname -s)
+UNAME_ARCH := $(shell uname -m)
+ifeq ($(UNAME_OS),Darwin)
+# Explicitly use the "BSD" sed shipped with Darwin. Otherwise if the user has a
+# different sed (such as gnu-sed) on their PATH this will fail in an opaque
+# manner. /usr/bin/sed can only be modified if SIP is disabled, so this should
+# be relatively safe.
+SED_I := /usr/bin/sed -i ''
+else
+SED_I := sed -i
+endif
+
 .PHONY: help
 help: ## Describe useful make targets
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "%-30s %s\n", $$1, $$2}'
@@ -62,7 +74,15 @@ generate: $(BIN)/buf $(BIN)/license-header ## Regenerate code and licenses
 
 .PHONY: upgrade
 upgrade: ## Upgrade dependencies
-	go get -u -t ./... && go mod tidy -v
+	@UPDATE_PKGS=$$($(GO) list -u -f '{{if and .Update (not (or .Main .Indirect .Replace))}}{{.Path}}@{{.Update.Version}}{{end}}' -m all); \
+	if [[ -n "$${UPDATE_PKGS}" ]]; then \
+		$(GO) get $${UPDATE_PKGS}; \
+		$(GO) mod tidy -v; \
+	fi
+	@PROTOBUF_VERSION=$$($(GO) list -m -f '{{.Version}}' google.golang.org/protobuf); \
+	if [[ "$${PROTOBUF_VERSION}" =~ ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+$$ ]]; then \
+		$(SED_I) -e "s|buf.build/protocolbuffers/go:.*|buf.build/protocolbuffers/go:$${PROTOBUF_VERSION}|" buf.gen.yaml; \
+	fi
 
 .PHONY: checkgenerate
 checkgenerate: generate
