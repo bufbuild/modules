@@ -14,7 +14,7 @@
     },
     {
       "module_name": "bufbuild/reflect",
-      "latest_reference": "66bfea7a86e10b3cb421c4b90201b74becda519f"
+      "latest_reference": "13f06e410efad5ff31334c3c12670f5d900ea4df"
     },
     {
       "module_name": "cncf/xds",
@@ -42,7 +42,7 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "da30f52583f070f676ed886ed9e33d84a646f74c"
+      "latest_reference": "a003cab30e2a263e16e9252256041f8934f40e2c"
     },
     {
       "module_name": "googlechrome/lighthouse",
