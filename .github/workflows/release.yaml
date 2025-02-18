@@ -33,10 +33,19 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: go run ./cmd/release .
+      - name: Generate Github Token
+        id: generate_issues_token
+        uses: tibdex/github-app-token@3beb63f4bd073e61482598c45c71c1019b59b73a
+        if: ${{ failure() }}
+        with:
+          app_id: ${{ secrets.BUFBUILD_ISSUE_CREATOR_APP_ID }}
+          private_key: ${{ secrets.BUFBUILD_ISSUE_CREATOR_APP_KEY }}
+          permissions: >-
+            {"issues": "write"}
       - uses: dblock/create-a-github-issue@c5e54b8762a0c4c2cd9330750e30b81bcc369c38
-        if: failure()
+        if: ${{ failure() }}
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ steps.generate_issues_token.outputs.token }}
           GITHUB_SERVER_URL: ${ github.server_url }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_RUN_ID: ${{ github.run_id }}
@@ -69,7 +78,7 @@ jobs:
         uses: google-github-actions/auth@71f986410dfbc7added4569d411d040a91dc6935
         with:
           workload_identity_provider: projects/252484117105/locations/global/workloadIdentityPools/modules-workload-pool/providers/modules-workload-provider
-          service_account: buf-modules-1-bufbuild-modules@buf-modules-1.iam.gserviceaccount.com	
+          service_account: buf-modules-1-bufbuild-modules@buf-modules-1.iam.gserviceaccount.com
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@77e7a554d41e2ee56fc945c52dfd3f33d12def9a
       - name: Upload To Release Bucket
