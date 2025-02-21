@@ -171,6 +171,10 @@
     {
       "name": "483f11e91a30de9c11d65d872c09bc529e94e2ee",
       "digest": "63aa996f96f415b0c9fc664fa0ff412ab2cae5438eeeb4bdef1781b33b0efb85367232eda5df58eb262a6e8232f3c573f995e736816f4ec91da2ed9dad226de9"
+    },
+    {
+      "name": "b7aeabd0ac81d4d86db1a6f40bf42b30b26e0e9c",
+      "digest": "42cf21c7d05c1e24c355ca8f21d95f56e02c3aa57d352fadd74b2d68f28ebf58c652e44006ff480e5e85440ea83556eaa21e2e1e53391352599130cc89b5799f"
     }
   ]
 }
