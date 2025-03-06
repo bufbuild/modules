@@ -38,11 +38,11 @@
     },
     {
       "module_name": "google/cel-spec",
-      "latest_reference": "v0.21.2"
+      "latest_reference": "v0.22.0"
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "ada88fe8801a840b197706a8068fee1ca45b0f6f"
+      "latest_reference": "c3640e234b86a4129234015461d22ef80b3e9ad0"
     },
     {
       "module_name": "googlechrome/lighthouse",
