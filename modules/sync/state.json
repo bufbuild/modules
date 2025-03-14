@@ -42,7 +42,7 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "e6136c12212ca0c8b4a8867a87cf51a3decf6e53"
+      "latest_reference": "c8280d7c3c36cb97aac54d661dcdfc4076ac4d32"
     },
     {
       "module_name": "googlechrome/lighthouse",
@@ -74,7 +74,7 @@
     },
     {
       "module_name": "protocolbuffers/wellknowntypes",
-      "latest_reference": "v30.0"
+      "latest_reference": "v30.1"
     }
   ]
 }
