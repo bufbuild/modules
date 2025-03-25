@@ -38,11 +38,11 @@
     },
     {
       "module_name": "google/cel-spec",
-      "latest_reference": "v0.22.0"
+      "latest_reference": "v0.22.1"
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "53ca65d540dd1a7cb4746687daa87208dc9ea437"
+      "latest_reference": "9f4c55d5e015de47e4d0b5c82eea72cf1407f20d"
     },
     {
       "module_name": "googlechrome/lighthouse",
@@ -50,7 +50,7 @@
     },
     {
       "module_name": "googlecloudplatform/bq-schema-api",
-      "latest_reference": "v3.0"
+      "latest_reference": "v3.1.0"
     },
     {
       "module_name": "grpc-ecosystem/grpc-gateway",
