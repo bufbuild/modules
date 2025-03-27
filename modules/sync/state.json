@@ -18,7 +18,7 @@
     },
     {
       "module_name": "cncf/xds",
-      "latest_reference": "2f005788dc42b92dee41c8ad934450dc4746f027"
+      "latest_reference": "ae57f3c0d45fc76d0b323b79e8299a83ccb37a49"
     },
     {
       "module_name": "envoyproxy/envoy",
@@ -30,7 +30,7 @@
     },
     {
       "module_name": "envoyproxy/ratelimit",
-      "latest_reference": "0141a24fddb513f6ba46f2aa7c4c2f46dbaea998"
+      "latest_reference": "69f7db10af6fe4413cf970c76296325816e02a1b"
     },
     {
       "module_name": "gogo/protobuf",
@@ -42,11 +42,11 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "b64f36a8c04a977e6d6ad3924ee37a3a94b36212"
+      "latest_reference": "ec79b93303529d04a2ae4514a88b051b24710d07"
     },
     {
       "module_name": "googlechrome/lighthouse",
-      "latest_reference": "v12.5.0"
+      "latest_reference": "v12.5.1"
     },
     {
       "module_name": "googlecloudplatform/bq-schema-api",
@@ -58,7 +58,7 @@
     },
     {
       "module_name": "grpc/grpc",
-      "latest_reference": "cbb231341938471b78b38729c2e4a712a9e098d0"
+      "latest_reference": "2eb777aba6593c31e21f7f69a163486bdc793501"
     },
     {
       "module_name": "opencensus/opencensus",
@@ -74,7 +74,7 @@
     },
     {
       "module_name": "protocolbuffers/wellknowntypes",
-      "latest_reference": "v30.1"
+      "latest_reference": "v30.2"
     }
   ]
 }
