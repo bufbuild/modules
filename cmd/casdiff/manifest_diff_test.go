@@ -29,7 +29,7 @@ import (
 
 func TestManifestDiff(t *testing.T) {
 	t.Parallel()
-	ctx := context.Background()
+	ctx := t.Context()
 	casBucket, mFrom, mTo := prepareDiffCASBucket(ctx, t)
 	mdiff, err := buildManifestDiff(ctx, mFrom, mTo, casBucket)
 	require.NoError(t, err)
