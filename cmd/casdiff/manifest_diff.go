@@ -131,14 +131,14 @@ func buildManifestDiff(
 }
 
 func (d *manifestDiff) printText() {
-	os.Stdout.WriteString(fmt.Sprintf(
+	fmt.Fprintf(os.Stdout,
 		"%d files changed: %d removed, %d renamed, %d added, %d changed content\n",
 		len(d.pathsRemoved)+len(d.pathsRenamed)+len(d.pathsAdded)+len(d.pathsChangedContent),
 		len(d.pathsRemoved),
 		len(d.pathsRenamed),
 		len(d.pathsAdded),
 		len(d.pathsChangedContent),
-	))
+	)
 	if len(d.pathsRemoved) > 0 {
 		os.Stdout.WriteString("\n")
 		os.Stdout.WriteString("Files removed:\n\n")
@@ -176,14 +176,14 @@ func (d *manifestDiff) printText() {
 }
 
 func (d *manifestDiff) printMarkdown() {
-	os.Stdout.WriteString(fmt.Sprintf(
+	fmt.Fprintf(os.Stdout,
 		"> _%d files changed: %d removed, %d renamed, %d added, %d changed content_\n",
 		len(d.pathsRemoved)+len(d.pathsRenamed)+len(d.pathsAdded)+len(d.pathsChangedContent),
 		len(d.pathsRemoved),
 		len(d.pathsRenamed),
 		len(d.pathsAdded),
 		len(d.pathsChangedContent),
-	))
+	)
 	if len(d.pathsRemoved) > 0 {
 		os.Stdout.WriteString("\n")
 		os.Stdout.WriteString("# Files removed:\n\n")
