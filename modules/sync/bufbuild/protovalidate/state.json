@@ -207,6 +207,22 @@
     {
       "name": "v0.10.4",
       "digest": "8d500a36e4ef9debce91cbf500b1c2921e4a17e32c1407cbb425ca30c3ddc5f82d93005a0f0a3a7ef855353a00930cd84ca7aaf5abe6f000d4af24e678b0b658"
+    },
+    {
+      "name": "v0.10.5",
+      "digest": "29fa70880fe4b29e7b5d905cf8fe8efb666cf89a33cd8347714fd00aca358a364cefc7fb1a01c1849687e8bbf406aafc8758a9a462be8c9ef9c4e99508b78c0a"
+    },
+    {
+      "name": "v0.10.6",
+      "digest": "29fa70880fe4b29e7b5d905cf8fe8efb666cf89a33cd8347714fd00aca358a364cefc7fb1a01c1849687e8bbf406aafc8758a9a462be8c9ef9c4e99508b78c0a"
+    },
+    {
+      "name": "v0.10.7",
+      "digest": "76b2f79c20b7a680bf129280371de5980e22a6352c55abb2d8d504accfccff0a02f8c66ac9805d5b1b0cb58d5495c4dc10c8912d750aec955b182f10675b7820"
+    },
+    {
+      "name": "v0.11.0",
+      "digest": "1f322afba41ec6a16196c1fd5051d005d9b3e80b08afeba239f58762b0fb2d24c51eefc2c71b451e3337a5978e6f60f9243f56f7a8702a63eb8d5f60768e1691"
     }
   ]
 }
