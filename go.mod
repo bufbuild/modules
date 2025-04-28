@@ -18,7 +18,7 @@ require (
 )
 
 require (
-	buf.build/go/protoyaml v0.3.2 // indirect
+	buf.build/go/protoyaml v0.5.0 // indirect
 	cel.dev/expr v0.23.1 // indirect
 	github.com/antlr4-go/antlr/v4 v4.13.1 // indirect
 	github.com/bufbuild/protocompile v0.14.1 // indirect
