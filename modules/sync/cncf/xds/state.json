@@ -127,6 +127,10 @@
     {
       "name": "ae57f3c0d45fc76d0b323b79e8299a83ccb37a49",
       "digest": "b0ed17caeb32cb9c579d339d2b603e34477ea34d66fe68eb1ed3ba7af68ee64af08bf4edb770387221d40faf9ef0bf3dc4a72832f0e33b2f14812172ed74ef46"
+    },
+    {
+      "name": "2ac532fd44436293585084f8d94c6bdb17835af0",
+      "digest": "2a5d2cce987de374cf765ec5ec2f2435fe9fdc3d8a638dd26d92ce3130b7971d38894e406d8b42504890afafb45a277f492dad91f16ae5114e6486876fbff2c2"
     }
   ]
 }

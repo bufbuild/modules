@@ -18,7 +18,7 @@
     },
     {
       "module_name": "cncf/xds",
-      "latest_reference": "ae57f3c0d45fc76d0b323b79e8299a83ccb37a49"
+      "latest_reference": "2ac532fd44436293585084f8d94c6bdb17835af0"
     },
     {
       "module_name": "envoyproxy/envoy",
@@ -42,7 +42,7 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "a80b45b4fc1fa94a18efff40b91e1a0f75ed6d5f"
+      "latest_reference": "e56f0537499458f5ec77a3afc1ed08e2afbb15cd"
     },
     {
       "module_name": "googlechrome/lighthouse",
