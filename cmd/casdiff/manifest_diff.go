@@ -20,9 +20,9 @@ import (
 	"fmt"
 	"os"
 
+	"buf.build/go/standard/xslices"
 	"github.com/bufbuild/buf/private/bufpkg/bufcas"
 	"github.com/bufbuild/buf/private/pkg/diff"
-	"github.com/bufbuild/buf/private/pkg/slicesext"
 	"github.com/bufbuild/buf/private/pkg/storage"
 )
 
@@ -142,7 +142,7 @@ func (d *manifestDiff) printText() {
 	if len(d.pathsRemoved) > 0 {
 		os.Stdout.WriteString("\n")
 		os.Stdout.WriteString("Files removed:\n\n")
-		sortedPaths := slicesext.MapKeysToSortedSlice(d.pathsRemoved)
+		sortedPaths := xslices.MapKeysToSortedSlice(d.pathsRemoved)
 		for _, path := range sortedPaths {
 			os.Stdout.WriteString("- " + d.pathsRemoved[path].String() + "\n")
 		}
@@ -150,7 +150,7 @@ func (d *manifestDiff) printText() {
 	if len(d.pathsRenamed) > 0 {
 		os.Stdout.WriteString("\n")
 		os.Stdout.WriteString("Files renamed:\n\n")
-		sortedPaths := slicesext.MapKeysToSortedSlice(d.pathsRenamed)
+		sortedPaths := xslices.MapKeysToSortedSlice(d.pathsRenamed)
 		for _, path := range sortedPaths {
 			os.Stdout.WriteString("- " + d.pathsRenamed[path].from.String() + "\n")
 			os.Stdout.WriteString("+ " + d.pathsRenamed[path].to.String() + "\n")
@@ -159,7 +159,7 @@ func (d *manifestDiff) printText() {
 	if len(d.pathsAdded) > 0 {
 		os.Stdout.WriteString("\n")
 		os.Stdout.WriteString("Files added:\n\n")
-		sortedPaths := slicesext.MapKeysToSortedSlice(d.pathsAdded)
+		sortedPaths := xslices.MapKeysToSortedSlice(d.pathsAdded)
 		for _, path := range sortedPaths {
 			os.Stdout.WriteString("+ " + d.pathsAdded[path].String() + "\n")
 		}
@@ -167,7 +167,7 @@ func (d *manifestDiff) printText() {
 	if len(d.pathsChangedContent) > 0 {
 		os.Stdout.WriteString("\n")
 		os.Stdout.WriteString("Files changed content:\n\n")
-		sortedPaths := slicesext.MapKeysToSortedSlice(d.pathsChangedContent)
+		sortedPaths := xslices.MapKeysToSortedSlice(d.pathsChangedContent)
 		for _, path := range sortedPaths {
 			fnDiff := d.pathsChangedContent[path]
 			os.Stdout.WriteString(fnDiff.diff + "\n")
@@ -188,7 +188,7 @@ func (d *manifestDiff) printMarkdown() {
 		os.Stdout.WriteString("\n")
 		os.Stdout.WriteString("# Files removed:\n\n")
 		os.Stdout.WriteString("```diff\n")
-		sortedPaths := slicesext.MapKeysToSortedSlice(d.pathsRemoved)
+		sortedPaths := xslices.MapKeysToSortedSlice(d.pathsRemoved)
 		for _, path := range sortedPaths {
 			os.Stdout.WriteString("- " + d.pathsRemoved[path].String() + "\n")
 		}
@@ -198,7 +198,7 @@ func (d *manifestDiff) printMarkdown() {
 		os.Stdout.WriteString("\n")
 		os.Stdout.WriteString("# Files renamed:\n\n")
 		os.Stdout.WriteString("```diff\n")
-		sortedPaths := slicesext.MapKeysToSortedSlice(d.pathsRenamed)
+		sortedPaths := xslices.MapKeysToSortedSlice(d.pathsRenamed)
 		for _, path := range sortedPaths {
 			os.Stdout.WriteString("- " + d.pathsRenamed[path].from.String() + "\n")
 			os.Stdout.WriteString("+ " + d.pathsRenamed[path].to.String() + "\n")
@@ -209,7 +209,7 @@ func (d *manifestDiff) printMarkdown() {
 		os.Stdout.WriteString("\n")
 		os.Stdout.WriteString("# Files added:\n\n")
 		os.Stdout.WriteString("```diff\n")
-		sortedPaths := slicesext.MapKeysToSortedSlice(d.pathsAdded)
+		sortedPaths := xslices.MapKeysToSortedSlice(d.pathsAdded)
 		for _, path := range sortedPaths {
 			os.Stdout.WriteString("+ " + d.pathsAdded[path].String() + "\n")
 		}
@@ -218,7 +218,7 @@ func (d *manifestDiff) printMarkdown() {
 	if len(d.pathsChangedContent) > 0 {
 		os.Stdout.WriteString("\n")
 		os.Stdout.WriteString("# Files changed content:\n\n")
-		sortedPaths := slicesext.MapKeysToSortedSlice(d.pathsChangedContent)
+		sortedPaths := xslices.MapKeysToSortedSlice(d.pathsChangedContent)
 		for _, path := range sortedPaths {
 			fdiff := d.pathsChangedContent[path]
 			// the path we use here can be from/to, is the same, what changed was the content.

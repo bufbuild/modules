@@ -17,7 +17,7 @@ package bufstate
 import (
 	"fmt"
 
-	"github.com/bufbuild/protovalidate-go"
+	"buf.build/go/protovalidate"
 )
 
 type ReadWriter struct {

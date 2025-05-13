@@ -20,7 +20,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/bufbuild/buf/private/pkg/slicesext"
+	"buf.build/go/standard/xslices"
 	"github.com/bufbuild/modules/internal/modules"
 	"github.com/bufbuild/modules/private/bufpkg/bufstate"
 	statev1alpha1 "github.com/bufbuild/modules/private/gen/modules/state/v1alpha1"
@@ -544,8 +544,8 @@ func assertModuleStates(t *testing.T, expected, actual map[string]releaseModuleS
 	t.Helper()
 	assert.ElementsMatch(
 		t,
-		slicesext.MapKeysToSlice(expected),
-		slicesext.MapKeysToSlice(actual),
+		xslices.MapKeysToSlice(expected),
+		xslices.MapKeysToSlice(actual),
 	)
 	for actualModuleName, actualState := range actual {
 		expectedState, ok := expected[actualModuleName]
