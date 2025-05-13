@@ -17,7 +17,7 @@ package main
 import (
 	"context"
 
-	"github.com/bufbuild/buf/private/pkg/app/appcmd"
+	"buf.build/go/app/appcmd"
 )
 
 const (

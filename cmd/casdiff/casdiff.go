@@ -21,10 +21,10 @@ import (
 	"io/fs"
 	"strconv"
 
+	"buf.build/go/app/appcmd"
+	"buf.build/go/app/appext"
+	"buf.build/go/standard/xslices"
 	"github.com/bufbuild/buf/private/bufpkg/bufcas"
-	"github.com/bufbuild/buf/private/pkg/app/appcmd"
-	"github.com/bufbuild/buf/private/pkg/app/appext"
-	"github.com/bufbuild/buf/private/pkg/slicesext"
 	"github.com/bufbuild/buf/private/pkg/slogapp"
 	"github.com/bufbuild/buf/private/pkg/storage"
 	"github.com/bufbuild/buf/private/pkg/storage/storageos"
@@ -51,11 +51,11 @@ var (
 		formatText:     "text",
 		formatMarkdown: "markdown",
 	}
-	formatsNamesToValues, _ = slicesext.ToUniqueValuesMap(
-		slicesext.MapKeysToSlice(formatsValuesToNames),
+	formatsNamesToValues, _ = xslices.ToUniqueValuesMap(
+		xslices.MapKeysToSlice(formatsValuesToNames),
 		func(f format) string { return formatsValuesToNames[f] },
 	)
-	allFormatsString = slicesext.MapKeysToSortedSlice(formatsNamesToValues)
+	allFormatsString = xslices.MapKeysToSortedSlice(formatsNamesToValues)
 )
 
 func (f format) String() string {
