@@ -1,4 +1,0 @@
-version: v1
-name: buf.build/protocolbuffers/gofeatures
-deps:
-  - buf.build/protocolbuffers/wellknowntypes:v27.0

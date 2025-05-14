@@ -1,4 +1,4 @@
-// Copyright 2021-2023 Buf Technologies, Inc.
+// Copyright 2021-2025 Buf Technologies, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -410,10 +410,10 @@ func writeUpdatedReferencesTable(
 	references []*statev1alpha1.ModuleReference,
 ) error {
 	refCount := len(references)
-	if _, err := stringBuilder.WriteString(fmt.Sprintf(
+	if _, err := fmt.Fprintf(stringBuilder,
 		"\n<details><summary>%s: %d update(s)</summary>\n\n| Reference | Manifest Digest |\n|---|---|\n",
 		moduleName, refCount,
-	)); err != nil {
+	); err != nil {
 		return err
 	}
 	const (
@@ -436,14 +436,14 @@ func writeUpdatedReferencesTable(
 	for i, ref := range refsToWrite {
 		if !fitsInTable && i == topRows {
 			skippedRows := refCount - topRows - bottomRows
-			if _, err := stringBuilder.WriteString(fmt.Sprintf(
+			if _, err := fmt.Fprintf(stringBuilder,
 				"| ... %d references skipped ... | ... %d references skipped ... |\n",
 				skippedRows, skippedRows,
-			)); err != nil {
+			); err != nil {
 				return err
 			}
 		}
-		if _, err := stringBuilder.WriteString(fmt.Sprintf("| `%s` | `%s` |\n", ref.GetName(), ref.GetDigest())); err != nil {
+		if _, err := fmt.Fprintf(stringBuilder, "| `%s` | `%s` |\n", ref.GetName(), ref.GetDigest()); err != nil {
 			return err
 		}
 	}

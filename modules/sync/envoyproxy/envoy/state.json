@@ -3,6 +3,50 @@
     {
       "name": "v1.31.0",
       "digest": "408edeca13a1f1cacb84c294b2fb5f9872286d8f1c88320cd7d810cb47b1d592870a46e0a4738b59be23158ac28847f44db74da6e9c5522757d4d6601212a2dc"
+    },
+    {
+      "name": "v1.31.1",
+      "digest": "408edeca13a1f1cacb84c294b2fb5f9872286d8f1c88320cd7d810cb47b1d592870a46e0a4738b59be23158ac28847f44db74da6e9c5522757d4d6601212a2dc"
+    },
+    {
+      "name": "v1.31.2",
+      "digest": "534d465163f57404927579f2b7fc2f14bb3ee0091044c9b8d41493c1ca3f576c4b9d08f2743f2cfbba72fae5c91db998f1f652a4d24f77f51b730619f5263072"
+    },
+    {
+      "name": "v1.32.0",
+      "digest": "41a0880c562d8645ef71bf8221eb9153ddc648a5134d98591a1527a188c6e09255b00713a19f6c0a34f18ed2ab5d2615207a8062f36cca5ebd09b080e3fdedcb"
+    },
+    {
+      "name": "v1.32.1",
+      "digest": "41a0880c562d8645ef71bf8221eb9153ddc648a5134d98591a1527a188c6e09255b00713a19f6c0a34f18ed2ab5d2615207a8062f36cca5ebd09b080e3fdedcb"
+    },
+    {
+      "name": "v1.32.2",
+      "digest": "a85ebaf16e7fbb65c6c15e0b6f2ca8790e82d27d8952114ebb8c531ca3d8ca48ccef60fc6c13dd6788a3eaa47e03fd1d1aa23e0f7211380db969f1b5b48975cb"
+    },
+    {
+      "name": "v1.32.3",
+      "digest": "a85ebaf16e7fbb65c6c15e0b6f2ca8790e82d27d8952114ebb8c531ca3d8ca48ccef60fc6c13dd6788a3eaa47e03fd1d1aa23e0f7211380db969f1b5b48975cb"
+    },
+    {
+      "name": "v1.33.0",
+      "digest": "0f6f4339ea181ae26dd8156629ac3d40d49740ff4ba2cea29a7c393755902df2a8a5ab4140e97f28c86ca25c08b73d4610bd00d049e6fa2ed176191570b209f1"
+    },
+    {
+      "name": "v1.33.1",
+      "digest": "0f6f4339ea181ae26dd8156629ac3d40d49740ff4ba2cea29a7c393755902df2a8a5ab4140e97f28c86ca25c08b73d4610bd00d049e6fa2ed176191570b209f1"
+    },
+    {
+      "name": "v1.33.2",
+      "digest": "0f6f4339ea181ae26dd8156629ac3d40d49740ff4ba2cea29a7c393755902df2a8a5ab4140e97f28c86ca25c08b73d4610bd00d049e6fa2ed176191570b209f1"
+    },
+    {
+      "name": "v1.34.0",
+      "digest": "5cf35dc7756f3e2a12b6d97d0471c8ac8d185eae1e537802d9b3bb7c8e0a6a8c2366e735f4f0f5b8082c8c5f15c918233b5f5092553bbdcd08e91c8c2dd1ec6c"
+    },
+    {
+      "name": "v1.34.1",
+      "digest": "5cf35dc7756f3e2a12b6d97d0471c8ac8d185eae1e537802d9b3bb7c8e0a6a8c2366e735f4f0f5b8082c8c5f15c918233b5f5092553bbdcd08e91c8c2dd1ec6c"
     }
   ]
 }

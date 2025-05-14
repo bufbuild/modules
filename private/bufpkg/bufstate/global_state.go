@@ -1,4 +1,4 @@
-// Copyright 2021-2023 Buf Technologies, Inc.
+// Copyright 2021-2025 Buf Technologies, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,11 +15,11 @@
 package bufstate
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 	"sort"
 
+	"github.com/bufbuild/buf/private/pkg/protoencoding"
 	statev1alpha1 "github.com/bufbuild/modules/private/gen/modules/state/v1alpha1"
 	"go.uber.org/multierr"
 )
@@ -33,12 +33,16 @@ func (rw *ReadWriter) ReadGlobalState(reader io.ReadCloser) (_ *statev1alpha1.Gl
 			retErr = multierr.Append(retErr, fmt.Errorf("close file: %w", err))
 		}
 	}()
+	bytes, err := io.ReadAll(reader)
+	if err != nil {
+		return nil, fmt.Errorf("read global state file: %w", err)
+	}
 	var globalState statev1alpha1.GlobalState
-	if err := json.NewDecoder(reader).Decode(&globalState); err != nil {
-		return nil, fmt.Errorf("read file: %w", err)
+	if err := protoencoding.NewJSONUnmarshaler(protoencoding.EmptyResolver).Unmarshal(bytes, &globalState); err != nil {
+		return nil, fmt.Errorf("unmarshal global state: %w", err)
 	}
 	if err := rw.validator.Validate(&globalState); err != nil {
-		return nil, fmt.Errorf("validate: %w", err)
+		return nil, fmt.Errorf("validate global state: %w", err)
 	}
 	return &globalState, nil
 }
@@ -57,10 +61,14 @@ func (rw *ReadWriter) WriteGlobalState(writer io.WriteCloser, globalState *state
 	sort.Slice(mods, func(i, j int) bool {
 		return mods[i].GetModuleName() < mods[j].GetModuleName()
 	})
-	globalState.Modules = mods
-	data, err := json.MarshalIndent(globalState, "", "  ")
+	globalState.SetModules(mods)
+	data, err := protoencoding.NewJSONMarshaler(
+		protoencoding.EmptyResolver,
+		protoencoding.JSONMarshalerWithUseProtoNames(),
+		protoencoding.JSONMarshalerWithIndent(),
+	).Marshal(globalState)
 	if err != nil {
-		return fmt.Errorf("json marshal state: %w", err)
+		return fmt.Errorf("marshal global state: %w", err)
 	}
 	if _, err := writer.Write(data); err != nil {
 		return fmt.Errorf("write to file: %w", err)

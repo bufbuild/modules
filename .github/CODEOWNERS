@@ -1,0 +1,2 @@
+# WKT to check files match with the released artifact
+/modules/sync/protocolbuffers/wellknowntypes/state.json @jhump @pkwarren @unmultimedio

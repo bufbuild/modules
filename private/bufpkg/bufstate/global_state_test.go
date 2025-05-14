@@ -1,4 +1,4 @@
-// Copyright 2021-2023 Buf Technologies, Inc.
+// Copyright 2021-2025 Buf Technologies, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -31,21 +31,21 @@ func TestValidGlobalStates(t *testing.T) {
 	})
 	t.Run("valid", func(t *testing.T) {
 		t.Parallel()
-		require.NoError(t, readWriter.validator.Validate(&statev1alpha1.GlobalState{
+		require.NoError(t, readWriter.validator.Validate(statev1alpha1.GlobalState_builder{
 			Modules: []*statev1alpha1.GlobalStateReference{
-				{ModuleName: "aaa/bbb", LatestReference: "foo"},
-				{ModuleName: "ccc/ddd", LatestReference: "bar"},
+				statev1alpha1.GlobalStateReference_builder{ModuleName: "aaa/bbb", LatestReference: "foo"}.Build(),
+				statev1alpha1.GlobalStateReference_builder{ModuleName: "ccc/ddd", LatestReference: "bar"}.Build(),
 			},
-		}))
+		}.Build()))
 	})
 	t.Run("repeatedReferencesForDifferentModules", func(t *testing.T) {
 		t.Parallel()
-		require.NoError(t, readWriter.validator.Validate(&statev1alpha1.GlobalState{
+		require.NoError(t, readWriter.validator.Validate(statev1alpha1.GlobalState_builder{
 			Modules: []*statev1alpha1.GlobalStateReference{
-				{ModuleName: "aaa/bbb", LatestReference: "foo"},
-				{ModuleName: "ccc/ddd", LatestReference: "foo"},
+				statev1alpha1.GlobalStateReference_builder{ModuleName: "aaa/bbb", LatestReference: "foo"}.Build(),
+				statev1alpha1.GlobalStateReference_builder{ModuleName: "ccc/ddd", LatestReference: "foo"}.Build(),
 			},
-		}))
+		}.Build()))
 	})
 }
 
@@ -55,35 +55,35 @@ func TestInvalidGlobalStates(t *testing.T) {
 	require.NoError(t, err)
 	t.Run("repeatedModules", func(t *testing.T) {
 		t.Parallel()
-		err := readWriter.validator.Validate(&statev1alpha1.GlobalState{
+		err := readWriter.validator.Validate(statev1alpha1.GlobalState_builder{
 			Modules: []*statev1alpha1.GlobalStateReference{
-				{ModuleName: "aaa/bbb", LatestReference: "foo"},
-				{ModuleName: "aaa/bbb", LatestReference: "bar"},
-				{ModuleName: "aaa/ccc", LatestReference: "baz"},
+				statev1alpha1.GlobalStateReference_builder{ModuleName: "aaa/bbb", LatestReference: "foo"}.Build(),
+				statev1alpha1.GlobalStateReference_builder{ModuleName: "aaa/bbb", LatestReference: "bar"}.Build(),
+				statev1alpha1.GlobalStateReference_builder{ModuleName: "aaa/ccc", LatestReference: "baz"}.Build(),
 			},
-		})
+		}.Build())
 		require.Contains(t, err.Error(), "module name aaa/bbb has appeared multiple times")
 	})
 	t.Run("emptyReferences", func(t *testing.T) {
 		t.Parallel()
-		err := readWriter.validator.Validate(&statev1alpha1.GlobalState{
+		err := readWriter.validator.Validate(statev1alpha1.GlobalState_builder{
 			Modules: []*statev1alpha1.GlobalStateReference{
-				{ModuleName: "aaa/bbb", LatestReference: "foo"},
-				{ModuleName: "aaa/ccc", LatestReference: ""},
-				{ModuleName: "aaa/ddd", LatestReference: "bar"},
+				statev1alpha1.GlobalStateReference_builder{ModuleName: "aaa/bbb", LatestReference: "foo"}.Build(),
+				statev1alpha1.GlobalStateReference_builder{ModuleName: "aaa/ccc", LatestReference: ""}.Build(),
+				statev1alpha1.GlobalStateReference_builder{ModuleName: "aaa/ddd", LatestReference: "bar"}.Build(),
 			},
-		})
+		}.Build())
 		require.Contains(t, err.Error(), "modules[1].latest_reference: value is required")
 	})
 	t.Run("emptyModuleNames", func(t *testing.T) {
 		t.Parallel()
-		err := readWriter.validator.Validate(&statev1alpha1.GlobalState{
+		err := readWriter.validator.Validate(statev1alpha1.GlobalState_builder{
 			Modules: []*statev1alpha1.GlobalStateReference{
-				{ModuleName: "aaa/bbb", LatestReference: "foo"},
-				{ModuleName: "", LatestReference: "foo"},
-				{ModuleName: "aaa/ddd", LatestReference: "bar"},
+				statev1alpha1.GlobalStateReference_builder{ModuleName: "aaa/bbb", LatestReference: "foo"}.Build(),
+				statev1alpha1.GlobalStateReference_builder{ModuleName: "", LatestReference: "foo"}.Build(),
+				statev1alpha1.GlobalStateReference_builder{ModuleName: "aaa/ddd", LatestReference: "bar"}.Build(),
 			},
-		})
+		}.Build())
 		require.Contains(t, err.Error(), "modules[1].module_name: value is required")
 	})
 }

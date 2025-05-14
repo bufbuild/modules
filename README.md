@@ -31,7 +31,6 @@ We currently sync automatically the following modules:
 | opencensus/opencensus | https://github.com/census-instrumentation/opencensus-proto |  |
 | opentelemetry/opentelemetry | https://github.com/open-telemetry/opentelemetry-proto |  |
 | prometheus/client-model | https://github.com/prometheus/client_model |  |
-| protocolbuffers/gofeatures | https://github.com/protocolbuffers/protobuf-go | - protocolbuffers/wellknowntypes |
 | protocolbuffers/wellknowntypes | https://github.com/protocolbuffers/protobuf |  |
 
 ### How we handle dependencies
@@ -45,6 +44,11 @@ To minimize issues with pinned dependencies on these modules, we sync them in th
 First, we sync standalone modules. After they succeed, we then sync the modules that depend on them,
 which use the latest pushed dependency commit. As long as the dependencies don’t have any breaking
 change in the source code, this should be sufficient and stable for upstream modules.
+
+For special cases, we can pin a dependency in the static `buf.yaml` that we control, to force a
+managed module depend on a specific synced reference from another managed module. To know if a
+managed module has pinned dependencies for a specific reference, take a look at the `buf.yaml` in
+that reference's manifest in the `sync` directory.
 
 ## Community
 

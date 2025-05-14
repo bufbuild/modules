@@ -403,6 +403,46 @@
     {
       "name": "v28.0",
       "digest": "e4bb315f5a90aace88fe39709c831eda8eb0ce66b4cf947065888100b9867c2eb9a0f61f6b8d73c51b1fcccdfe8611090f55ce5db1aee6901ec9b4e6d8fa8e52"
+    },
+    {
+      "name": "v28.1",
+      "digest": "e4bb315f5a90aace88fe39709c831eda8eb0ce66b4cf947065888100b9867c2eb9a0f61f6b8d73c51b1fcccdfe8611090f55ce5db1aee6901ec9b4e6d8fa8e52"
+    },
+    {
+      "name": "v28.2",
+      "digest": "e4bb315f5a90aace88fe39709c831eda8eb0ce66b4cf947065888100b9867c2eb9a0f61f6b8d73c51b1fcccdfe8611090f55ce5db1aee6901ec9b4e6d8fa8e52"
+    },
+    {
+      "name": "v28.3",
+      "digest": "e4bb315f5a90aace88fe39709c831eda8eb0ce66b4cf947065888100b9867c2eb9a0f61f6b8d73c51b1fcccdfe8611090f55ce5db1aee6901ec9b4e6d8fa8e52"
+    },
+    {
+      "name": "v29.0",
+      "digest": "2ed272f48ab530c2581a71237043ce20e93724aa2e84f0ac555e82d7dca8061ee530d0e5f91835f1b7374b8db179ab2a75e8452af71ceb2285f411de8816bec3"
+    },
+    {
+      "name": "v29.1",
+      "digest": "2ed272f48ab530c2581a71237043ce20e93724aa2e84f0ac555e82d7dca8061ee530d0e5f91835f1b7374b8db179ab2a75e8452af71ceb2285f411de8816bec3"
+    },
+    {
+      "name": "v29.2",
+      "digest": "c9824714afd6cc432c2e1fafa20df47c87a8a0aca9e27192cd5732619453997af1721c2eac5c0fbbe7b29a741af5b8d7ba4ee89c85903e782d9c725d7b9436b5"
+    },
+    {
+      "name": "v29.3",
+      "digest": "c9824714afd6cc432c2e1fafa20df47c87a8a0aca9e27192cd5732619453997af1721c2eac5c0fbbe7b29a741af5b8d7ba4ee89c85903e782d9c725d7b9436b5"
+    },
+    {
+      "name": "v30.0",
+      "digest": "af5094c3e1e98e824e94928eb24fa2dcba0d8a34d516094b53667099dccb2e669debfff7094fca2f63b563e26d440af681025fb872fc1eabfb22b0273d8027c0"
+    },
+    {
+      "name": "v30.1",
+      "digest": "74c046f009811965d227acd11bb2c6259bf387759d4230b95405e402a2ed4212d6f4babab690407d07bc81095c3917c4ae9144195ddfb081525c9aec58e51173"
+    },
+    {
+      "name": "v30.2",
+      "digest": "74c046f009811965d227acd11bb2c6259bf387759d4230b95405e402a2ed4212d6f4babab690407d07bc81095c3917c4ae9144195ddfb081525c9aec58e51173"
     }
   ]
 }

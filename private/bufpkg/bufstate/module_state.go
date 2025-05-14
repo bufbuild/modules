@@ -1,4 +1,4 @@
-// Copyright 2021-2023 Buf Technologies, Inc.
+// Copyright 2021-2025 Buf Technologies, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,10 +15,10 @@
 package bufstate
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 
+	"github.com/bufbuild/buf/private/pkg/protoencoding"
 	statev1alpha1 "github.com/bufbuild/modules/private/gen/modules/state/v1alpha1"
 	"go.uber.org/multierr"
 )
@@ -32,9 +32,13 @@ func (rw *ReadWriter) ReadModStateFile(readCloser io.ReadCloser) (_ *statev1alph
 			retErr = multierr.Append(retErr, fmt.Errorf("close file: %w", err))
 		}
 	}()
+	bytes, err := io.ReadAll(readCloser)
+	if err != nil {
+		return nil, fmt.Errorf("read module state file: %w", err)
+	}
 	var moduleState statev1alpha1.ModuleState
-	if err := json.NewDecoder(readCloser).Decode(&moduleState); err != nil {
-		return nil, fmt.Errorf("read file: %w", err)
+	if err := protoencoding.NewJSONUnmarshaler(protoencoding.EmptyResolver).Unmarshal(bytes, &moduleState); err != nil {
+		return nil, fmt.Errorf("unmarshal module state: %w", err)
 	}
 	if err := rw.validator.Validate(&moduleState); err != nil {
 		return nil, fmt.Errorf("validate: %w", err)
@@ -52,11 +56,14 @@ func (rw *ReadWriter) WriteModStateFile(writeCloser io.WriteCloser, moduleState 
 	if err := rw.validator.Validate(moduleState); err != nil {
 		return fmt.Errorf("validate: %w", err)
 	}
-	data, err := json.MarshalIndent(moduleState, "", "  ")
+	data, err := protoencoding.NewJSONMarshaler(
+		protoencoding.EmptyResolver,
+		protoencoding.JSONMarshalerWithUseProtoNames(),
+		protoencoding.JSONMarshalerWithIndent(),
+	).Marshal(moduleState)
 	if err != nil {
-		return fmt.Errorf("json marshal state: %w", err)
+		return fmt.Errorf("marshal module state: %w", err)
 	}
-
 	if _, err := writeCloser.Write(data); err != nil {
 		return fmt.Errorf("write to file: %w", err)
 	}

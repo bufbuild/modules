@@ -7,12 +7,24 @@ MAKEFLAGS += --warn-undefined-variables
 MAKEFLAGS += --no-builtin-rules
 MAKEFLAGS += --no-print-directory
 BIN := .tmp/bin
-COPYRIGHT_YEARS := 2021-2023
-GOLANGCI_LINT_VERSION ?= v1.60.3
+COPYRIGHT_YEARS := 2021-2025
+GOLANGCI_LINT_VERSION ?= v2.0.2
 LICENSE_IGNORE := --ignore /testdata/
 # Set to use a different compiler. For example, `GO=go1.18rc1 make test`.
 GO ?= go
-BUF_VERSION ?= $(shell $(GO) list -m -json github.com/bufbuild/buf | jq -r .Version)
+BUF_VERSION ?= $(shell $(GO) list -m -f '{{.Version}}' github.com/bufbuild/buf)
+
+UNAME_OS := $(shell uname -s)
+UNAME_ARCH := $(shell uname -m)
+ifeq ($(UNAME_OS),Darwin)
+# Explicitly use the "BSD" sed shipped with Darwin. Otherwise if the user has a
+# different sed (such as gnu-sed) on their PATH this will fail in an opaque
+# manner. /usr/bin/sed can only be modified if SIP is disabled, so this should
+# be relatively safe.
+SED_I := /usr/bin/sed -i ''
+else
+SED_I := sed -i
+endif
 
 .PHONY: help
 help: ## Describe useful make targets
@@ -43,12 +55,13 @@ install: ## Install all binaries
 .PHONY: lint
 lint: $(BIN)/golangci-lint $(BIN)/buf ## Lint Go and protobuf
 	test -z "$$($(BIN)/buf format -d . | tee /dev/stderr)"
-	$(GO) vet ./...
+	$(BIN)/golangci-lint fmt --diff
 	$(BIN)/golangci-lint run
 	$(BIN)/buf format -d --exit-code
 
 .PHONY: lintfix
 lintfix: $(BIN)/golangci-lint $(BIN)/buf ## Automatically fix some lint errors
+	$(BIN)/golangci-lint fmt
 	$(BIN)/golangci-lint run --fix
 	$(BIN)/buf format -w
 
@@ -63,10 +76,18 @@ generate: $(BIN)/buf $(BIN)/license-header ## Regenerate code and licenses
 
 .PHONY: upgrade
 upgrade: ## Upgrade dependencies
-	go get -u -t ./... && go mod tidy -v
+	@UPDATE_PKGS=$$($(GO) list -u -f '{{if and .Update (not (or .Main .Indirect .Replace))}}{{.Path}}@{{.Update.Version}}{{end}}' -m all); \
+	if [[ -n "$${UPDATE_PKGS}" ]]; then \
+		$(GO) get $${UPDATE_PKGS}; \
+		$(GO) mod tidy -v; \
+	fi
+	@PROTOBUF_VERSION=$$($(GO) list -m -f '{{.Version}}' google.golang.org/protobuf); \
+	if [[ "$${PROTOBUF_VERSION}" =~ ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+$$ ]]; then \
+		$(SED_I) -e "s|buf.build/protocolbuffers/go:.*|buf.build/protocolbuffers/go:$${PROTOBUF_VERSION}|" buf.gen.yaml; \
+	fi
 
 .PHONY: checkgenerate
-checkgenerate:
+checkgenerate: generate
 	@# Used in CI to verify that `make generate` doesn't produce a diff.
 	test -z "$$(git status --porcelain | tee /dev/stderr)"
 
@@ -81,4 +102,4 @@ $(BIN)/license-header: Makefile
 
 $(BIN)/golangci-lint: Makefile
 	@mkdir -p $(@D)
-	GOBIN=$(abspath $(@D)) $(GO) install github.com/golangci/golangci-lint/cmd/golangci-lint@$(GOLANGCI_LINT_VERSION)
+	GOBIN=$(abspath $(@D)) $(GO) install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@$(GOLANGCI_LINT_VERSION)
