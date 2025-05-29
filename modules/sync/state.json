@@ -30,7 +30,7 @@
     },
     {
       "module_name": "envoyproxy/ratelimit",
-      "latest_reference": "3e085e5bbbf5e0e106b4aee8427a0b5def4ec706"
+      "latest_reference": "bb4dae24e16ecfa1c70660cdd37d31a8babf24e1"
     },
     {
       "module_name": "gogo/protobuf",
@@ -42,7 +42,7 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "361c4941ccff4b02f608a0c1af63dcb65a888358"
+      "latest_reference": "ea40277431fb821fd5a9b1eb8227535846388770"
     },
     {
       "module_name": "googlechrome/lighthouse",
@@ -74,7 +74,7 @@
     },
     {
       "module_name": "protocolbuffers/wellknowntypes",
-      "latest_reference": "v31.0"
+      "latest_reference": "v31.1"
     }
   ]
 }
