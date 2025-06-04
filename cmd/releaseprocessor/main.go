@@ -124,8 +124,9 @@ func (c *command) run() error {
 	return nil
 }
 
-// filterReleaseTags takes a list of released git tags, filters them to only include valid semver
-// tags, uses [c.reference] and [c.inclusive], and returns them semver-sorted.
+// filterReleaseTags takes a list of released git tags, filters them to only include valid stable
+// semver tags and release candidates, compares them to [c.reference] using [c.inclusive], and
+// returns them semver-sorted.
 func (c *command) filterReleaseTags(releaseTags []string) []string {
 	tags := xslices.Filter(
 		releaseTags,
