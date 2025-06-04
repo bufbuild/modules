@@ -150,12 +150,10 @@ func (c *command) filterReleaseTags(releaseTags []string) []string {
 			case compare < 0:
 				return false
 			case compare == 0:
-				if !c.inclusive {
-					return false
-				}
-			case compare > 0:
+				return c.inclusive
+			default: // compare > 0
+				return true
 			}
-			return true
 		},
 	)
 	semver.Sort(tags)
