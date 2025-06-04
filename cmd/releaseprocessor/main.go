@@ -20,11 +20,13 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 
+	"buf.build/go/standard/xslices"
 	"github.com/bufbuild/modules/internal/githubutil"
-	"github.com/bufbuild/modules/internal/semverutil"
 	"go.uber.org/multierr"
+	"golang.org/x/mod/semver"
 )
 
 const (
@@ -43,6 +45,8 @@ var (
 			"v0.8.0": {}, // v0.8.0 is (intentionally) broken
 		},
 	}
+	// only allow unstable semver releases if they're release candidates in the shape of v1.2.3-rc.4
+	allowedPreReleaseRx = regexp.MustCompile(`^-rc\.\d+$`)
 )
 
 type command struct {
@@ -111,16 +115,49 @@ func (c *command) run() error {
 	if err != nil {
 		return fmt.Errorf("fetch all release tag names: %w", err)
 	}
-	stableSemverTagNames := semverutil.StableSemverTagNames(semverutil.SemverTagNames(releaseTagNames))
-	filteredSemverTagNames := semverutil.SemverTagNamesExcept(
-		semverutil.SemverTagNamesAtLeast(stableSemverTagNames, c.reference, c.inclusive),
-		skipTags[filepath.Join(c.owner, c.repo)],
-	)
-	semverutil.SortSemverTagNames(filteredSemverTagNames)
+	filteredTags := c.filterReleaseTags(releaseTagNames)
 	// write the release tags to stdout, separated by line breaks so that
 	// assignment to a bash variable can interpret it as a list
-	if _, err := os.Stdout.WriteString(strings.Join(filteredSemverTagNames, "\n")); err != nil {
+	if _, err := os.Stdout.WriteString(strings.Join(filteredTags, "\n")); err != nil {
 		return fmt.Errorf("write release tags to stdout: %w", err)
 	}
 	return nil
+}
+
+// filterReleaseTags takes a list of released git tags, filters them to only include valid semver
+// tags, uses [c.reference] and [c.inclusive], and returns them semver-sorted.
+func (c *command) filterReleaseTags(releaseTags []string) []string {
+	tags := xslices.Filter(
+		releaseTags,
+		func(tag string) bool {
+			if skippableTags, ok := skipTags[filepath.Join(c.owner, c.repo)]; ok {
+				if _, shouldSkip := skippableTags[tag]; shouldSkip {
+					return false
+				}
+			}
+			if !semver.IsValid(tag) {
+				return false
+			}
+			if semver.Build(tag) != "" {
+				return false
+			}
+			if preRelease := semver.Prerelease(tag); preRelease != "" {
+				if !allowedPreReleaseRx.MatchString(preRelease) {
+					return false
+				}
+			}
+			switch compare := semver.Compare(tag, c.reference); {
+			case compare < 0:
+				return false
+			case compare == 0:
+				if !c.inclusive {
+					return false
+				}
+			case compare > 0:
+			}
+			return true
+		},
+	)
+	semver.Sort(tags)
+	return tags
 }
