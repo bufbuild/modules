@@ -157,16 +157,16 @@ func TestFilterReleaseTags(t *testing.T) {
 			},
 		},
 	}
-	for _, tc := range testCases {
+	for _, tc := range testCases { //nolint:varnamelen // tc is an standard varname for test cases
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			c := command{
+			cmd := command{
 				owner:     tc.ownerName,
 				repo:      tc.repoName,
 				inclusive: tc.inclusive,
 				reference: tc.startRef,
 			}
-			assert.Equal(t, tc.want, c.filterReleaseTags(tc.tags))
+			assert.Equal(t, tc.want, cmd.filterReleaseTags(tc.tags))
 		})
 	}
 }
