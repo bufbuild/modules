@@ -7,6 +7,7 @@ linters:
     - exhaustruct       # irrelevant for modules
     - funlen            # rely on code review to limit function length
     - gocognit          # dubious "cognitive overhead" quantification
+    - godot             # we don't enforce any comments shape
     - ireturn           # "accept interfaces, return structs" isn't ironclad
     - lll               # don't want hard limits for line length
     - maintidx          # covered by gocyclo
