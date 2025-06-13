@@ -6,11 +6,11 @@
     },
     {
       "module_name": "bufbuild/protovalidate",
-      "latest_reference": "v0.13.2"
+      "latest_reference": "v0.13.3"
     },
     {
       "module_name": "bufbuild/protovalidate-testing",
-      "latest_reference": "v0.13.2"
+      "latest_reference": "v0.13.3"
     },
     {
       "module_name": "bufbuild/reflect",
@@ -42,7 +42,7 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "3a45aa38968f4fe537cd3837c0e95af8c189b11b"
+      "latest_reference": "1de7d6fbed8f10ea52bd7c557f68e9410a265212"
     },
     {
       "module_name": "googlechrome/lighthouse",
