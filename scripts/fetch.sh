@@ -68,8 +68,8 @@ process_ref() {
   # In our example, this can cause the `buf build` validation step to fail for protovalidate-testing,
   # since it cannot resolve a version of protovalidate that does not exist yet through `buf dep update`.
 
-  # To validatate the build in these cases, we will instead build the entire workspace. This
-  # step is sued to validate that the module we are syncing is from a buildable workspace state.
+  # To validate the build in these cases, we will instead build the entire workspace. This
+  # step is used to validate that the module we are syncing is from a buildable workspace state.
   if [ "${source_config_version}" == "v2" ] && [ "${proto_subdir}" != "." ]; then
     pushd "${module_root}/${git_owner}/${git_repo}" > /dev/null
     buf build
