@@ -61,14 +61,30 @@ process_ref() {
   [ ! -e "${module_static_path}/buf.md" ] || cp "${module_static_path}/buf.md" "${mod_tmp_path}"
   [ ! -e "${module_static_path}/buf.yaml" ] || cp "${module_static_path}/buf.yaml" "${mod_tmp_path}"
 
-  # Go into the copied files, make sure it has right files and is buildable. Then remove `buf.lock`
-  # file since it's no longer relevant: each BSR cluster will sync itself from the base files and
-  # regenerate its own `buf.lock`.
-  pushd "${mod_tmp_path}" > /dev/null
-  buf dep update
-  buf build
-  rm -f buf.lock
-  popd > /dev/null
+  # If the source of the module that we are syncing is from a v2 workspace with another module
+  # we are syncing, e.g. protovalidate and protovalidate-testing, then it is possible that
+  # there are local dependencies between the modules (e.g. protovalidate-testing@local_version
+  # depends on protovalidate@local_version).
+  # In our example, this can cause the `buf build` validation step to fail for protovalidate-testing,
+  # since it cannot resolve a version of protovalidate that does not exist yet through `buf dep update`.
+
+  # To validate the build in these cases, we will instead build the entire workspace. This
+  # step is used to validate that the module we are syncing is from a buildable workspace state.
+  if [ "${source_config_version}" == "v2" ] && [ "${proto_subdir}" != "." ]; then
+    pushd "${module_root}/${git_owner}/${git_repo}" > /dev/null
+    buf build
+    popd > /dev/null
+  else
+    # For all other modules (e.g. v1 modules and individual v2 modules), we go into the
+    # copied files, make sure it has right files and is buildable. Then remove `buf.lock`
+    # file since it's no longer relevant: each BSR cluster will sync itself from the base files and
+    # regenerate its own `buf.lock`.
+    pushd "${mod_tmp_path}" > /dev/null
+    buf dep update
+    buf build
+    rm -f buf.lock
+    popd > /dev/null
+  fi
 
   # process the prepared module: convert it to CAS from the tmp mod directory and put blob files in
   # the cas path in the repo, and update the state file.
@@ -90,7 +106,8 @@ sync_references() {
   local -r owner="${2}"
   local -r repo="${3}"
   local -r git_remote="${4}"
-  local -r proto_subdir="${5:-.}"
+  local -r source_config_version="${5}"
+  local -r proto_subdir="${6:-.}"
   local -r mod_static_path="${all_mods_static_path}/${owner}/${repo}"
   local -r mod_sync_path="${all_mods_sync_path}/${owner}/${repo}"
   local -r mod_state_file="${mod_sync_path}/state.json"
@@ -208,26 +225,28 @@ trap cleanup EXIT
 # any BSR cluster, so we are not immediately receiving the updated versions of the dependencies in
 # the dependent modules.
 
+# Modules from source repositories that do not have a buf.yaml configuration are defaulted to v1.
+
 # Keep this module list synced with README.md
-# sync_references ${sync_strategy} ${owner} ${repo} ${git_remote} ${opt_proto_subdir}
-sync_references releases bufbuild confluent https://github.com/bufbuild/confluent-proto
-sync_references releases bufbuild protovalidate https://github.com/bufbuild/protovalidate proto/protovalidate
-sync_references releases bufbuild protovalidate-testing https://github.com/bufbuild/protovalidate proto/protovalidate-testing
-sync_references commits bufbuild reflect https://github.com/bufbuild/reflect
-sync_references commits cncf xds https://github.com/cncf/xds
-sync_references releases envoyproxy envoy https://github.com/envoyproxy/envoy api
+# sync_references ${sync_strategy} ${owner} ${repo} ${git_remote} ${source_config_version} ${opt_proto_subdir}
+sync_references releases bufbuild confluent https://github.com/bufbuild/confluent-proto v2
+sync_references releases bufbuild protovalidate https://github.com/bufbuild/protovalidate v2 proto/protovalidate
+sync_references releases bufbuild protovalidate-testing https://github.com/bufbuild/protovalidate v2 proto/protovalidate-testing
+sync_references commits bufbuild reflect https://github.com/bufbuild/reflect v1
+sync_references commits cncf xds https://github.com/cncf/xds v1
+sync_references releases envoyproxy envoy https://github.com/envoyproxy/envoy v1 api
 sync_references releases envoyproxy protoc-gen-validate https://github.com/envoyproxy/protoc-gen-validate
-sync_references commits envoyproxy ratelimit https://github.com/envoyproxy/ratelimit api
-sync_references releases gogo protobuf https://github.com/gogo/protobuf
-sync_references releases google cel-spec https://github.com/google/cel-spec proto
-sync_references commits googleapis googleapis https://github.com/googleapis/googleapis
-sync_references releases googlechrome lighthouse https://github.com/GoogleChrome/lighthouse proto
-sync_references releases googlecloudplatform bq-schema-api https://github.com/GoogleCloudPlatform/protoc-gen-bq-schema
-sync_references commits grpc grpc https://github.com/grpc/grpc-proto
-sync_references releases grpc-ecosystem grpc-gateway https://github.com/grpc-ecosystem/grpc-gateway
-sync_references releases opencensus opencensus https://github.com/census-instrumentation/opencensus-proto src
-sync_references releases opentelemetry opentelemetry https://github.com/open-telemetry/opentelemetry-proto
-sync_references releases prometheus client-model https://github.com/prometheus/client_model
-sync_references releases protocolbuffers wellknowntypes https://github.com/protocolbuffers/protobuf src
+sync_references commits envoyproxy ratelimit https://github.com/envoyproxy/ratelimit v1 api
+sync_references releases gogo protobuf https://github.com/gogo/protobuf v1
+sync_references releases google cel-spec https://github.com/google/cel-spec v1 proto
+sync_references commits googleapis googleapis https://github.com/googleapis/googleapis v1
+sync_references releases googlechrome lighthouse https://github.com/GoogleChrome/lighthouse v1 proto
+sync_references releases googlecloudplatform bq-schema-api https://github.com/GoogleCloudPlatform/protoc-gen-bq-schema v1
+sync_references commits grpc grpc https://github.com/grpc/grpc-proto v1
+sync_references releases grpc-ecosystem grpc-gateway https://github.com/grpc-ecosystem/grpc-gateway v1
+sync_references releases opencensus opencensus https://github.com/census-instrumentation/opencensus-proto v1 src
+sync_references releases opentelemetry opentelemetry https://github.com/open-telemetry/opentelemetry-proto v1
+sync_references releases prometheus client-model https://github.com/prometheus/client_model v1
+sync_references releases protocolbuffers wellknowntypes https://github.com/protocolbuffers/protobuf v1 src
 
 popd > /dev/null
