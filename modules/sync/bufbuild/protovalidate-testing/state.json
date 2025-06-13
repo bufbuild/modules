@@ -239,6 +239,10 @@
     {
       "name": "v0.13.2",
       "digest": "595afc2dfe22098a151e0313a41aa7d7fd21b855ec537394860ddfc19fb6ade707183d19f99df6c7bc2b56ab3e9f7bcafc335c78168f8ec5e3267f80ff3c9dab"
+    },
+    {
+      "name": "v0.13.3",
+      "digest": "aded78a06e0d2382326d090f50457c725619ffa62dc4acbae8035af3af77d699ca39fd35466b8b59e30faccb0ddf59842d5b55811ae0293fa16e19c5c6118f1a"
     }
   ]
 }
