@@ -6,11 +6,11 @@
     },
     {
       "module_name": "bufbuild/protovalidate",
-      "latest_reference": "v0.13.3"
+      "latest_reference": "v0.13.4"
     },
     {
       "module_name": "bufbuild/protovalidate-testing",
-      "latest_reference": "v0.13.3"
+      "latest_reference": "v0.13.4"
     },
     {
       "module_name": "bufbuild/reflect",
@@ -42,7 +42,7 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "fc1e32c211bbb46c7213ffa68fe3273da16ab358"
+      "latest_reference": "b08bb2f9704bd5e604b015b4d5ca819cf1f1e941"
     },
     {
       "module_name": "googlechrome/lighthouse",
@@ -54,7 +54,7 @@
     },
     {
       "module_name": "grpc-ecosystem/grpc-gateway",
-      "latest_reference": "v2.27.0"
+      "latest_reference": "v2.27.1"
     },
     {
       "module_name": "grpc/grpc",
