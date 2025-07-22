@@ -255,6 +255,10 @@
     {
       "name": "v0.14.1",
       "digest": "3741a033d727a07d5cadef542aa21f7e6590d6db026493bd012aa3512ffd6565460eed2692f23fdb0fc252fdadabef6aee79e887085efde25cb5d592047b29b5"
+    },
+    {
+      "name": "v0.14.2",
+      "digest": "3741a033d727a07d5cadef542aa21f7e6590d6db026493bd012aa3512ffd6565460eed2692f23fdb0fc252fdadabef6aee79e887085efde25cb5d592047b29b5"
     }
   ]
 }
