@@ -49,7 +49,7 @@ jobs:
           title: "Found new managed modules references"
           body: |
             New managed modules references found. Please review.
-          team-reviewers: bufbuild/bsr-team
+          team-reviewers: bufbuild/core-team
           token: ${{ steps.generate_token.outputs.token }}
       - name: Generate Github Token
         id: generate_issues_token
