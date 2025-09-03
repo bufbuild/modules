@@ -42,7 +42,7 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "c850d956dff879087f2db411f035959098af9de2"
+      "latest_reference": "b246fb02ef3664ca126151bad614baeb6fbf47ba"
     },
     {
       "module_name": "googlechrome/lighthouse",
@@ -66,7 +66,7 @@
     },
     {
       "module_name": "opentelemetry/opentelemetry",
-      "latest_reference": "v1.7.0"
+      "latest_reference": "v1.8.0"
     },
     {
       "module_name": "prometheus/client-model",
