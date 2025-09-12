@@ -455,6 +455,10 @@
     {
       "name": "v32.0",
       "digest": "7e2aa4fb37e2be8dc8a4bcbebaec00635abbcc7333df40ba6412a666335f66c5c0705ce4cc5c207e728412ac3d81850545f90e8535da66712a17ab42923be6bd"
+    },
+    {
+      "name": "v32.1",
+      "digest": "7e2aa4fb37e2be8dc8a4bcbebaec00635abbcc7333df40ba6412a666335f66c5c0705ce4cc5c207e728412ac3d81850545f90e8535da66712a17ab42923be6bd"
     }
   ]
 }
