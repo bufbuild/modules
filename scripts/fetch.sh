@@ -235,24 +235,24 @@ trap cleanup EXIT
 
 # Keep this module list synced with README.md
 # sync_references ${sync_strategy} ${owner} ${repo} ${git_remote} ${source_config_version} ${opt_proto_subdir}
-# sync_references releases bufbuild confluent https://github.com/bufbuild/confluent-proto v2
+sync_references releases bufbuild confluent https://github.com/bufbuild/confluent-proto v2
 sync_references releases bufbuild protovalidate https://github.com/bufbuild/protovalidate v2 proto/protovalidate
 sync_references releases bufbuild protovalidate-testing https://github.com/bufbuild/protovalidate v2 proto/protovalidate-testing
-# sync_references commits bufbuild reflect https://github.com/bufbuild/reflect v1
-# sync_references commits cncf xds https://github.com/cncf/xds v1
-# sync_references releases envoyproxy envoy https://github.com/envoyproxy/envoy v1 api
-# sync_references releases envoyproxy protoc-gen-validate https://github.com/envoyproxy/protoc-gen-validate
-# sync_references commits envoyproxy ratelimit https://github.com/envoyproxy/ratelimit v1 api
-# sync_references releases gogo protobuf https://github.com/gogo/protobuf v1
-# sync_references releases google cel-spec https://github.com/google/cel-spec v1 proto
-# sync_references commits googleapis googleapis https://github.com/googleapis/googleapis v1
-# sync_references releases googlechrome lighthouse https://github.com/GoogleChrome/lighthouse v1 proto
-# sync_references releases googlecloudplatform bq-schema-api https://github.com/GoogleCloudPlatform/protoc-gen-bq-schema v1
-# sync_references commits grpc grpc https://github.com/grpc/grpc-proto v1
-# sync_references releases grpc-ecosystem grpc-gateway https://github.com/grpc-ecosystem/grpc-gateway v1
-# sync_references releases opencensus opencensus https://github.com/census-instrumentation/opencensus-proto v1 src
-# sync_references releases opentelemetry opentelemetry https://github.com/open-telemetry/opentelemetry-proto v1
-# sync_references releases prometheus client-model https://github.com/prometheus/client_model v1
-# sync_references releases protocolbuffers wellknowntypes https://github.com/protocolbuffers/protobuf v1 src
+sync_references commits bufbuild reflect https://github.com/bufbuild/reflect v1
+sync_references commits cncf xds https://github.com/cncf/xds v1
+sync_references releases envoyproxy envoy https://github.com/envoyproxy/envoy v1 api
+sync_references releases envoyproxy protoc-gen-validate https://github.com/envoyproxy/protoc-gen-validate
+sync_references commits envoyproxy ratelimit https://github.com/envoyproxy/ratelimit v1 api
+sync_references releases gogo protobuf https://github.com/gogo/protobuf v1
+sync_references releases google cel-spec https://github.com/google/cel-spec v1 proto
+sync_references commits googleapis googleapis https://github.com/googleapis/googleapis v1
+sync_references releases googlechrome lighthouse https://github.com/GoogleChrome/lighthouse v1 proto
+sync_references releases googlecloudplatform bq-schema-api https://github.com/GoogleCloudPlatform/protoc-gen-bq-schema v1
+sync_references commits grpc grpc https://github.com/grpc/grpc-proto v1
+sync_references releases grpc-ecosystem grpc-gateway https://github.com/grpc-ecosystem/grpc-gateway v1
+sync_references releases opencensus opencensus https://github.com/census-instrumentation/opencensus-proto v1 src
+sync_references releases opentelemetry opentelemetry https://github.com/open-telemetry/opentelemetry-proto v1
+sync_references releases prometheus client-model https://github.com/prometheus/client_model v1
+sync_references releases protocolbuffers wellknowntypes https://github.com/protocolbuffers/protobuf v1 src
 
 popd > /dev/null
