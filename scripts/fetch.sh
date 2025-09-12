@@ -59,7 +59,13 @@ process_ref() {
   )
   rsync "${rsync_args[@]}" . "${mod_tmp_path}"
   [ ! -e "${module_static_path}/buf.md" ] || cp "${module_static_path}/buf.md" "${mod_tmp_path}"
-  [ ! -e "${module_static_path}/buf.yaml" ] || cp "${module_static_path}/buf.yaml" "${mod_tmp_path}"
+  if [ -e "${module_static_path}/buf.yaml" ]; then
+    cp "${module_static_path}/buf.yaml" "${mod_tmp_path}"
+    # Replace REF_FROM_WORKSPACE sentinel keyword in the just copied buf.yaml with the actual git
+    # ref we are processing, so we make sure the BSR respects the original dependency content, in
+    # the case they both come from the same workspace.
+    sed -i '' "s/:REF_FROM_WORKSPACE/:${mod_ref}/g" "${mod_tmp_path}/buf.yaml"
+  fi
 
   # If the source of the module that we are syncing is from a v2 workspace with another module
   # we are syncing, e.g. protovalidate and protovalidate-testing, then it is possible that

@@ -1,4 +1,4 @@
 version: v1
 name: buf.build/bufbuild/protovalidate-testing
 deps:
-  - buf.build/bufbuild/protovalidate
+  - buf.build/bufbuild/protovalidate:REF_FROM_WORKSPACE
