@@ -3,9 +3,9 @@ module github.com/bufbuild/modules
 go 1.24.0
 
 require (
-	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.8-20250717185734-6c6e0d3c608e.1
+	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.9-20250912141014-52f32327d4b0.1
 	buf.build/go/app v0.1.0
-	buf.build/go/protovalidate v0.14.0
+	buf.build/go/protovalidate v1.0.0
 	buf.build/go/standard v0.1.0
 	github.com/bufbuild/buf v1.57.0
 	github.com/google/go-cmp v0.7.0
@@ -16,7 +16,7 @@ require (
 	go.uber.org/multierr v1.11.0
 	golang.org/x/mod v0.28.0
 	golang.org/x/oauth2 v0.31.0
-	google.golang.org/protobuf v1.36.8
+	google.golang.org/protobuf v1.36.9
 )
 
 require (
@@ -27,7 +27,7 @@ require (
 	github.com/bufbuild/protocompile v0.14.1 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.7 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/google/cel-go v0.26.0 // indirect
+	github.com/google/cel-go v0.26.1 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
