@@ -71,6 +71,30 @@
     {
       "name": "v1.35.3",
       "digest": "b586adf6eebcb993444a47e6aea8f80c8f5642a18c2cf618fbe0d566a75de1696a707dbc7babb1c30e0546ba31c1e69e791fa5d1f7bf323d19c731b4575e53eb"
+    },
+    {
+      "name": "v1.35.4",
+      "digest": "3f412b3191f2a03f0e2ffffc9f45803b3db58bd1e6842a7ec18d509f3623096a4ff7bc8fb2c2305d22d8dc403f4c0b4eca7e4e88c0a8475f952e405525d9ccb7"
+    },
+    {
+      "name": "v1.35.5",
+      "digest": "3f412b3191f2a03f0e2ffffc9f45803b3db58bd1e6842a7ec18d509f3623096a4ff7bc8fb2c2305d22d8dc403f4c0b4eca7e4e88c0a8475f952e405525d9ccb7"
+    },
+    {
+      "name": "v1.35.6",
+      "digest": "3f412b3191f2a03f0e2ffffc9f45803b3db58bd1e6842a7ec18d509f3623096a4ff7bc8fb2c2305d22d8dc403f4c0b4eca7e4e88c0a8475f952e405525d9ccb7"
+    },
+    {
+      "name": "v1.36.0",
+      "digest": "7f087cb09cf323d4b7a6618148870959c3affaded64b3510afbf484eee19791cf12caf80aa4d5721809b6bfef662053913aeff0e8aa92b3f57774d6ed3f86253"
+    },
+    {
+      "name": "v1.36.1",
+      "digest": "7f087cb09cf323d4b7a6618148870959c3affaded64b3510afbf484eee19791cf12caf80aa4d5721809b6bfef662053913aeff0e8aa92b3f57774d6ed3f86253"
+    },
+    {
+      "name": "v1.36.2",
+      "digest": "7f087cb09cf323d4b7a6618148870959c3affaded64b3510afbf484eee19791cf12caf80aa4d5721809b6bfef662053913aeff0e8aa92b3f57774d6ed3f86253"
     }
   ]
 }
