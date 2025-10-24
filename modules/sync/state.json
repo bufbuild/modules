@@ -18,7 +18,7 @@
     },
     {
       "module_name": "cncf/xds",
-      "latest_reference": "2ee22ca5838277e4cff0f0219b1c62e5c0cd3cc1"
+      "latest_reference": "0feb69152e9f7e8a45c8a3cfe8c7dd93bca3512f"
     },
     {
       "module_name": "envoyproxy/envoy",
@@ -30,7 +30,7 @@
     },
     {
       "module_name": "envoyproxy/ratelimit",
-      "latest_reference": "110924a508f2dc27abb59d5eba20574d371bfca6"
+      "latest_reference": "aaa9907aade57c9ee351761d69de10f61a0162c2"
     },
     {
       "module_name": "gogo/protobuf",
@@ -42,11 +42,11 @@
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "94ccdfe4519e0ba817bd33aa22eb9c64f88a6874"
+      "latest_reference": "e8365a7f88fabe8717cb8322b8ce784b03b6daea"
     },
     {
       "module_name": "googlechrome/lighthouse",
-      "latest_reference": "v13.0.0"
+      "latest_reference": "v13.0.1"
     },
     {
       "module_name": "googlecloudplatform/bq-schema-api",
