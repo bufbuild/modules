@@ -18,7 +18,7 @@
     },
     {
       "module_name": "cncf/xds",
-      "latest_reference": "0feb69152e9f7e8a45c8a3cfe8c7dd93bca3512f"
+      "latest_reference": "5cf4b19495289a9e992ce5e2c3ffb08f2cf387be"
     },
     {
       "module_name": "envoyproxy/envoy",
@@ -38,7 +38,7 @@
     },
     {
       "module_name": "google/cel-spec",
-      "latest_reference": "v0.24.0"
+      "latest_reference": "v0.25.0"
     },
     {
       "module_name": "googleapis/googleapis",
@@ -66,7 +66,7 @@
     },
     {
       "module_name": "opentelemetry/opentelemetry",
-      "latest_reference": "v1.8.0"
+      "latest_reference": "v1.9.0"
     },
     {
       "module_name": "prometheus/client-model",
