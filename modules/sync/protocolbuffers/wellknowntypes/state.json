@@ -463,6 +463,10 @@
     {
       "name": "v33.0",
       "digest": "49b3059e6608c257ea7cf60926a16fb8bb1f3d37f39862e66db55338a4ebf59a4aebff39fdfd1f6d4e66ece567db327ff5846a09b51762574b857a27e77a2b55"
+    },
+    {
+      "name": "v33.1",
+      "digest": "49b3059e6608c257ea7cf60926a16fb8bb1f3d37f39862e66db55338a4ebf59a4aebff39fdfd1f6d4e66ece567db327ff5846a09b51762574b857a27e77a2b55"
     }
   ]
 }
