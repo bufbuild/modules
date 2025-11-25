@@ -16,6 +16,8 @@
 + api/visibility.proto
 # Required for api/client.proto
 + api/launch_stage.proto
+# Required for googleapis/cloud-run
++ api/routing.proto
 
 # api/expr/v1alpha1 is required for xds and envoy.
 + api/expr/v1alpha1/checked.proto
@@ -41,6 +43,11 @@
 
 # All of geo
 + geo/type/viewport.proto
+
+# Required for googleapis/cloud-run
++ iam/v1/iam_policy.proto
++ iam/v1/options.proto
++ iam/v1/policy.proto
 
 # All of rpc
 + rpc/code.proto
