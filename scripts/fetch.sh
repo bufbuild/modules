@@ -239,6 +239,7 @@ sync_references releases envoyproxy protoc-gen-validate https://github.com/envoy
 sync_references commits envoyproxy ratelimit https://github.com/envoyproxy/ratelimit v1 api
 sync_references releases gogo protobuf https://github.com/gogo/protobuf v1
 sync_references releases google cel-spec https://github.com/google/cel-spec v1 proto
+sync_references commits googleapis cloud-run https://github.com/googleapis/googleapis v1
 sync_references commits googleapis googleapis https://github.com/googleapis/googleapis v1
 sync_references releases googlechrome lighthouse https://github.com/GoogleChrome/lighthouse v1 proto
 sync_references releases googlecloudplatform bq-schema-api https://github.com/GoogleCloudPlatform/protoc-gen-bq-schema v1

@@ -1,0 +1,22 @@
++ LICENSE
+
++ cloud/run/v2/build.proto
++ cloud/run/v2/condition.proto
++ cloud/run/v2/execution.proto
++ cloud/run/v2/execution_template.proto
++ cloud/run/v2/instance_split.proto
++ cloud/run/v2/job.proto
++ cloud/run/v2/k8s.min.proto
++ cloud/run/v2/revision.proto
++ cloud/run/v2/revision_template.proto
++ cloud/run/v2/service.proto
++ cloud/run/v2/status.proto
++ cloud/run/v2/task.proto
++ cloud/run/v2/task_template.proto
++ cloud/run/v2/traffic_target.proto
++ cloud/run/v2/vendor_settings.proto
++ cloud/run/v2/worker_pool.proto
++ cloud/run/v2/worker_pool_revision_template.proto
+
++ */
+- *

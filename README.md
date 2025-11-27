@@ -23,6 +23,7 @@ We currently sync automatically the following modules:
 | envoyproxy/ratelimit | https://github.com/envoyproxy/ratelimit | - envoyproxy/envoy |
 | gogo/protobuf | https://github.com/gogo/protobuf |  |
 | google/cel-spec | https://github.com/google/cel-spec | - googleapis/googleapis |
+| googleapis/cloud-run | https://github.com/googleapis/googleapis | - googleapis/googleapis |
 | googleapis/googleapis | https://github.com/googleapis/googleapis |  |
 | googlechrome/lighthouse | https://github.com/GoogleChrome/lighthouse |  |
 | googlecloudplatform/bq-schema-api | https://github.com/GoogleCloudPlatform/protoc-gen-bq-schema | |
