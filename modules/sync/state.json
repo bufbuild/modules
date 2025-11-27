@@ -41,6 +41,10 @@
       "latest_reference": "v0.25.1"
     },
     {
+      "module_name": "googleapis/cloud-run",
+      "latest_reference": "8cd3749f4b98f2eeeef511c16431979aeb3a6502"
+    },
+    {
       "module_name": "googleapis/googleapis",
       "latest_reference": "8cd3749f4b98f2eeeef511c16431979aeb3a6502"
     },
