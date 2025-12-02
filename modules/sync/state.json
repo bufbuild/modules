@@ -41,8 +41,12 @@
       "latest_reference": "v0.25.1"
     },
     {
+      "module_name": "googleapis/cloud-run",
+      "latest_reference": "9f786b58f34980b058b854d1e5d33f4435946d0a"
+    },
+    {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "02f73f5309229c62662217036d5ea533577b31b4"
+      "latest_reference": "9f786b58f34980b058b854d1e5d33f4435946d0a"
     },
     {
       "module_name": "googlechrome/lighthouse",
