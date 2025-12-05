@@ -15,6 +15,10 @@
     {
       "name": "v1.2.1",
       "digest": "4ae167d7eed10da5f83a3f5df8c670d249170f11b1f2fd19afda06be2cff4d47dcc95e9e4a15151ecc8ce2d3d3614caf9a04d3ad82fb768a3870dedfa9455f36"
+    },
+    {
+      "name": "v1.3.0",
+      "digest": "4ae167d7eed10da5f83a3f5df8c670d249170f11b1f2fd19afda06be2cff4d47dcc95e9e4a15151ecc8ce2d3d3614caf9a04d3ad82fb768a3870dedfa9455f36"
     }
   ]
 }
