@@ -18,11 +18,11 @@
     },
     {
       "module_name": "cncf/xds",
-      "latest_reference": "8bfbf64dc13ee1a570be4fbdcfccbdd8532463f0"
+      "latest_reference": "ee656c7534f5d7dc23d44dd611689568f72017a6"
     },
     {
       "module_name": "envoyproxy/envoy",
-      "latest_reference": "v1.36.3"
+      "latest_reference": "v1.36.4"
     },
     {
       "module_name": "envoyproxy/protoc-gen-validate",
@@ -30,7 +30,7 @@
     },
     {
       "module_name": "envoyproxy/ratelimit",
-      "latest_reference": "fc446700d2734ca68fb8fcf2972c90ff976a9215"
+      "latest_reference": "f52a616c004d7c40540a8a8e8ab0f6370debcab0"
     },
     {
       "module_name": "gogo/protobuf",
@@ -42,11 +42,11 @@
     },
     {
       "module_name": "googleapis/cloud-run",
-      "latest_reference": "effe5c4fa816021e724ca856d5640f2e55b14a8b"
+      "latest_reference": "b32495a713a68dd0dff90cf0b24021debfca048a"
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "effe5c4fa816021e724ca856d5640f2e55b14a8b"
+      "latest_reference": "b32495a713a68dd0dff90cf0b24021debfca048a"
     },
     {
       "module_name": "googlechrome/lighthouse",
