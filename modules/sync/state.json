@@ -42,11 +42,11 @@
     },
     {
       "module_name": "googleapis/cloud-run",
-      "latest_reference": "a11bbeb44bb184d9677ddbf334b09a54208cc52a"
+      "latest_reference": "4149dbdc4685cc9f6f693e72d86a23f8eba55b64"
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "a11bbeb44bb184d9677ddbf334b09a54208cc52a"
+      "latest_reference": "4149dbdc4685cc9f6f693e72d86a23f8eba55b64"
     },
     {
       "module_name": "googlechrome/lighthouse",
@@ -62,7 +62,7 @@
     },
     {
       "module_name": "grpc/grpc",
-      "latest_reference": "23f5b568eefcb876e6ebc3b01725f1f20cff999e"
+      "latest_reference": "ec99424f3b7dae9db194f848b4cea52ecfae07af"
     },
     {
       "module_name": "opencensus/opencensus",
