@@ -103,6 +103,10 @@
     {
       "name": "v1.36.4",
       "digest": "b1087822a6832d5a5c1a89c76f714e5386391872b88095aa20bc4389e41d899609a92da3db2f31dd5e4bbd347cc446a0512d4dde17e1495be69a02627dbf218b"
+    },
+    {
+      "name": "v1.37.0",
+      "digest": "1df85d6b2e4538bf21786d82c70b53e0683f6d87b2f8ab87f5c2b0e50f39dd952b14fdb58c7d0e5548d7912ccb7b068e3dde6ce4203d7c8de1491c7f15b2dc95"
     }
   ]
 }
