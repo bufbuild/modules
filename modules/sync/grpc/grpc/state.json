@@ -191,6 +191,10 @@
     {
       "name": "ec99424f3b7dae9db194f848b4cea52ecfae07af",
       "digest": "cd6af936f9c1bcc462d8648e3c2c759e01dffee9d8d29370c3d2177cf0b56917a4f63e50f99eefca95d324c4f13fef92d40676267f39000f1a81773213f2a3ee"
+    },
+    {
+      "name": "dafe8c0aa9c80e28da7808ffade0f33638a16e3d",
+      "digest": "58836eb3ab2a52d7d855f9da2b672fa280479bb3c06fd0bc499fedfb212c3ec4e6132499b0b8243181a7072cf118a4c98f7b2a1ef75af08be33c56585f27dec1"
     }
   ]
 }
