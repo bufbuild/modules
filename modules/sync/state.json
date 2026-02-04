@@ -18,7 +18,7 @@
     },
     {
       "module_name": "cncf/xds",
-      "latest_reference": "a486691bba94a0e058a6926d7504096c76725411"
+      "latest_reference": "dba9d589def2cd10099a3a64887d859188c2f57a"
     },
     {
       "module_name": "envoyproxy/envoy",
@@ -42,11 +42,11 @@
     },
     {
       "module_name": "googleapis/cloud-run",
-      "latest_reference": "c0fcb35628690e9eb15dcefae41c651c67cd050b"
+      "latest_reference": "d077e5979c3e99b53fe43d606f553bba96b744d6"
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "c0fcb35628690e9eb15dcefae41c651c67cd050b"
+      "latest_reference": "d077e5979c3e99b53fe43d606f553bba96b744d6"
     },
     {
       "module_name": "googlechrome/lighthouse",
