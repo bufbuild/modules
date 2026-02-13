@@ -166,12 +166,14 @@ func getLineNumbersForAppendedRefs(
 		return nil, fmt.Errorf("git diff: %w", err)
 	}
 
-	// Parse the diff to find line numbers for added references
-	// We're looking for lines like: +      "digest": "..."
-	// that correspond to the appended references
+	return parseLineNumbersFromDiff(string(output), headCount-baseCount)
+}
 
-	lineNumbers := make([]int, headCount-baseCount)
-	scanner := bufio.NewScanner(strings.NewReader(string(output)))
+// parseLineNumbersFromDiff parses a git diff output and extracts line numbers
+// where "digest" fields appear in added lines.
+func parseLineNumbersFromDiff(diffOutput string, expectedCount int) ([]int, error) {
+	lineNumbers := make([]int, expectedCount)
+	scanner := bufio.NewScanner(strings.NewReader(diffOutput))
 
 	var (
 		currentLine    int
