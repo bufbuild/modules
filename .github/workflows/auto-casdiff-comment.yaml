@@ -1,0 +1,36 @@
+name: Auto-comment PR with casdiff
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches:
+      - fetch-modules
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  comment-changes:
+    runs-on: ubuntu-latest
+    if: github.repository == 'bufbuild/modules'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0  # Need full history to compare branches
+
+      - name: Install Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: 1.24.x
+          check-latest: true
+          cache: true
+
+      - name: Run commentprcasdiff
+        run: go run ./cmd/commentprcasdiff
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          BASE_REF: ${{ github.event.pull_request.base.sha }}
+          HEAD_REF: ${{ github.event.pull_request.head.sha }}
