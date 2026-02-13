@@ -157,7 +157,7 @@ func getLineNumbersForAppendedRefs(ctx context.Context, filePath, baseRef, headR
 	// that correspond to the appended references
 
 	lineNumbers := make([]int, headCount-baseCount)
-	scanner := bufio.Scanner(strings.NewReader(string(output)))
+	scanner := bufio.NewScanner(strings.NewReader(string(output)))
 
 	var currentLine int
 	refIndex := 0
