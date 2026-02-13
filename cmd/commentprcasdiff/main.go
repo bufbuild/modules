@@ -43,7 +43,7 @@ func run(ctx context.Context) error {
 		return fmt.Errorf("HEAD_REF environment variable is required")
 	}
 
-	fmt.Printf("Processing PR #%s (base: %s, head: %s)\n", prNumber, baseRef, headRef)
+	fmt.Fprintf(os.Stdout, "Processing PR #%s (base: %s, head: %s)\n", prNumber, baseRef, headRef)
 
 	// Find changed module state directories
 	modulePaths, err := ChangedModuleStatesFromPR(ctx, prNumber, baseRef, headRef)
@@ -52,17 +52,17 @@ func run(ctx context.Context) error {
 	}
 
 	if len(modulePaths) == 0 {
-		fmt.Println("No module state.json files changed in this PR")
+		fmt.Fprintf(os.Stdout, "No module state.json files changed in this PR\n")
 		return nil
 	}
 
-	fmt.Printf("Found %d changed module(s)\n", len(modulePaths))
+	fmt.Fprintf(os.Stdout, "Found %d changed module(s)\n", len(modulePaths))
 
 	// Collect all transitions from all modules
 	var allTransitions []StateTransition
 	for _, modulePath := range modulePaths {
 		stateFilePath := modulePath + "/state.json"
-		fmt.Printf("Analyzing %s...\n", stateFilePath)
+		fmt.Fprintf(os.Stdout, "Analyzing %s...\n", stateFilePath)
 
 		transitions, err := GetStateFileTransitions(ctx, stateFilePath, baseRef, headRef)
 		if err != nil {
@@ -71,19 +71,19 @@ func run(ctx context.Context) error {
 		}
 
 		if len(transitions) > 0 {
-			fmt.Printf("  Found %d digest transition(s)\n", len(transitions))
+			fmt.Fprintf(os.Stdout, "  Found %d digest transition(s)\n", len(transitions))
 			allTransitions = append(allTransitions, transitions...)
 		} else {
-			fmt.Printf("  No digest changes\n")
+			fmt.Fprintf(os.Stdout, "  No digest changes\n")
 		}
 	}
 
 	if len(allTransitions) == 0 {
-		fmt.Println("No digest transitions found")
+		fmt.Fprintf(os.Stdout, "No digest transitions found\n")
 		return nil
 	}
 
-	fmt.Printf("\nRunning casdiff for %d transition(s)...\n", len(allTransitions))
+	fmt.Fprintf(os.Stdout, "\nRunning casdiff for %d transition(s)...\n", len(allTransitions))
 
 	// Run casdiff for all transitions in parallel
 	results := RunCASDiffParallel(ctx, allTransitions)
@@ -107,7 +107,7 @@ func run(ctx context.Context) error {
 
 	// Post comments for successful results
 	if len(successfulResults) > 0 {
-		fmt.Printf("\nPosting %d comment(s) to PR...\n", len(successfulResults))
+		fmt.Fprintf(os.Stdout, "\nPosting %d comment(s) to PR...\n", len(successfulResults))
 
 		comments := make([]PRReviewComment, len(successfulResults))
 		for i, result := range successfulResults {
@@ -127,7 +127,7 @@ func run(ctx context.Context) error {
 			}
 		}
 
-		fmt.Printf("Successfully posted %d comment(s)\n", len(successfulResults)-len(errors))
+		fmt.Fprintf(os.Stdout, "Successfully posted %d comment(s)\n", len(successfulResults)-len(errors))
 	}
 
 	// Log summary of failures
@@ -141,6 +141,6 @@ func run(ctx context.Context) error {
 		}
 	}
 
-	fmt.Println("\nDone!")
+	fmt.Fprintf(os.Stdout, "\nDone!\n")
 	return nil
 }
