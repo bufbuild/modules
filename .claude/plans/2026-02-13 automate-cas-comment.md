@@ -35,47 +35,60 @@ When a digest changes (indicating actual proto content changed, not just a new t
 3. Comment the output on the PR
 
 Example: If a PR adds references with digests `[foo, bar, baz]` where the previous latest was `foo`, we need:
-- Comment 1: `casdiff <last_ref_with_foo> <first_ref_with_bar> --format=markdown`
-- Comment 2: `casdiff <last_ref_with_bar> <first_ref_with_baz> --format=markdown`
+- Comment 1: `casdiff foo bar --format=markdown` (in the line where the `bar` hash first appeared)
+- Comment 2: `casdiff bar baz --format=markdown` (in the line where the `baz` hash first appeared)
 
 ## Solution
 
-Create a Go command (`cmd/prdiff`) that automates this process:
+Create a Go command "Comment PR CAS Diff" (`cmd/commentprcasdiff`) that automates this process:
 
 ### 1. Input & Detection
 - Run in GitHub Actions context
 - Read PR number from environment (`github.event.pull_request.number`)
-- Fetch PR diff using `gh` CLI
-- Parse diff to identify changed `state.json` files
-- For each changed state.json, identify digest transitions
+- Read base and head refs (typically `main` and `fetch-modules`)
+- Identify changed `state.json` files in the PR
 
 ### 2. Core Logic
 
 **For each `modules/sync/<owner>/<repo>/state.json` that changed:**
 
-1. Parse the git diff to extract old and new state
-2. Build a list of digest transitions:
-   - Read old references (from diff `-` lines or base commit)
-   - Read new references (from diff `+` lines or head commit)
-   - Identify where digest changes occur
-   - For each digest change, record: `(last_ref_with_old_digest, first_ref_with_new_digest)`
+1. **Read full JSON from both branches:**
+   - Read `state.json` from base branch (e.g., `main`)
+   - Read `state.json` from head branch (e.g., `fetch-modules`)
+   - Parse both as JSON to get reference arrays
+
+2. **Identify appended references:**
+   - Since `state.json` is append-only, compare array lengths
+   - Extract only the newly appended references from the head branch
+   - Track line numbers in the diff for each new reference
+
+3. **Detect digest transitions in appended portion:**
+   - Get the last reference from base state (has the "baseline" digest)
+   - Iterate through appended references
+   - When digest changes from previous reference:
+     - Record: `StateTransition{fromRef, toRef, fromDigest, toDigest, lineNumber}`
+   - Track line number where the new digest first appears
 
 **Example:**
 ```
-Old state: [..., {name: "v1.0.0", digest: "aaa"}]
-New state: [..., {name: "v1.0.0", digest: "aaa"},
-                {name: "v1.1.0", digest: "aaa"},  // Same digest, no comment needed
-                {name: "v1.2.0", digest: "bbb"},  // Digest changed! Comment: casdiff v1.1.0 v1.2.0
-                {name: "v1.3.0", digest: "ccc"}]  // Digest changed! Comment: casdiff v1.2.0 v1.3.0
+Base state: [..., {name: "v1.0.0", digest: "aaa"}]
+Head state: [..., {name: "v1.0.0", digest: "aaa"},
+                  {name: "v1.1.0", digest: "aaa"},  // L267: Same digest, no comment
+                  {name: "v1.2.0", digest: "bbb"},  // L269: Digest changed! Comment here
+                  {name: "v1.3.0", digest: "ccc"}]  // L271: Digest changed! Comment here
 ```
+
+**Important:** Don't rely on git diff `-` (subtraction) lines since the file is append-only. Instead, parse the complete JSON arrays and compare them structurally.
 
 ### 3. Run casdiff & Comment
 
-For each digest transition `(fromRef, toRef)`:
+For each `StateTransition`:
 1. Navigate to the module's directory: `modules/sync/<owner>/<repo>`
 2. Run: `casdiff <fromRef> <toRef> --format=markdown`
 3. Capture stdout
-4. Post as a PR comment using `gh pr comment <pr_number> --body <output>`
+4. Post as a PR review comment on the specific line where the new digest appears
+   - Use GitHub API to post comment at the line number tracked in StateTransition
+   - This creates an inline review comment, not a general PR comment
 
 **Run casdiff calls in parallel** using goroutines for performance.
 
@@ -125,8 +138,8 @@ jobs:
           check-latest: true
           cache: true
 
-      - name: Run prdiff and comment
-        run: go run ./cmd/prdiff
+      - name: Run commentprcasdiff and comment
+        run: go run ./cmd/commentprcasdiff
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
@@ -138,91 +151,155 @@ jobs:
 
 ```
 cmd/
-  prdiff/
+  commentprcasdiff/
     main.go              # Entry point, orchestrates the workflow
-    diff_parser.go       # Parse git diff to extract state.json changes
+    module_finder.go     # Find changed module state.json files
     state_analyzer.go    # Analyze state.json changes to find digest transitions
     casdiff_runner.go    # Execute casdiff commands (with parallelization)
-    comment_poster.go    # Post comments to GitHub PR
+    comment_poster.go    # Post review comments to GitHub PR on specific lines
 ```
 
 ## Key Components
 
 ### main.go
 - Parse environment variables (PR_NUMBER, BASE_REF, HEAD_REF)
-- Get PR diff using `gh pr diff <pr_number>`
-- Identify changed state.json files
-- For each state.json, analyze digest transitions
+- Identify changed module state directories
+- For each module, analyze digest transitions
 - Run casdiff for each transition (in parallel)
-- Post comments
+- Post review comments on specific lines
 - Log any errors
 
-### diff_parser.go
+### module_finder.go
 ```go
-// ParsePRDiff extracts paths of changed state.json files from PR diff
-func ParsePRDiff(prNumber string) ([]string, error)
-
-// GetStateFileChanges reads old and new content of a state.json file
-func GetStateFileChanges(filePath, baseRef, headRef string) (oldContent, newContent []byte, error)
+// ChangedModuleStatesFromPR returns module state directories that changed in the PR
+// Returns paths like "modules/sync/bufbuild/protovalidate"
+func ChangedModuleStatesFromPR(prNumber, baseRef, headRef string) ([]string, error)
 ```
 
 ### state_analyzer.go
 ```go
-type DigestTransition struct {
+type StateTransition struct {
     ModulePath string  // e.g., "modules/sync/bufbuild/protovalidate"
-    FromRef    string  // Last reference with old digest
-    ToRef      string  // First reference with new digest
-    FromDigest string
-    ToDigest   string
+    FilePath   string  // e.g., "modules/sync/bufbuild/protovalidate/state.json"
+    FromRef    string  // Last reference with old digest (e.g., "v1.1.0")
+    ToRef      string  // First reference with new digest (e.g., "v1.2.0")
+    FromDigest string  // Old digest
+    ToDigest   string  // New digest
+    LineNumber int     // Line in diff where new digest first appears
 }
 
-// AnalyzeDigestTransitions compares old and new state to find digest changes
-func AnalyzeDigestTransitions(oldState, newState []byte, modulePath string) ([]DigestTransition, error)
+// GetStateFileTransitions reads state.json from base and head branches,
+// compares the JSON arrays to find appended references, and detects digest transitions.
+// baseRef and headRef are typically "main" and "fetch-modules" respectively.
+func GetStateFileTransitions(filePath, baseRef, headRef string) ([]StateTransition, error)
 ```
 
 ### casdiff_runner.go
 ```go
-type CasdiffResult struct {
-    Transition DigestTransition
-    Output     string
+type CASDiffResult struct {
+    Transition StateTransition
+    Output     string  // Markdown output from casdiff
     Error      error
 }
 
-// RunCasdiff executes casdiff command in the module directory
-func RunCasdiff(transition DigestTransition) CasdiffResult
+// RunCASDiff executes casdiff command in the module directory
+func RunCASDiff(transition StateTransition) CASDiffResult
 
-// RunCasdiffParallel runs multiple casdiff commands concurrently
-func RunCasdiffParallel(transitions []DigestTransition) []CasdiffResult
+// RunCASDiffParallel runs multiple casdiff commands concurrently
+func RunCASDiffParallel(transitions []StateTransition) []CASDiffResult
 ```
 
 ### comment_poster.go
 ```go
-// PostComment posts a comment to the PR using gh CLI
-func PostComment(prNumber string, body string) error
+type PRReviewComment struct {
+    PRNumber   string
+    FilePath   string  // File path in the PR (e.g., "modules/sync/bufbuild/protovalidate/state.json")
+    LineNumber int     // Line number in the diff
+    Body       string  // Comment body (casdiff output)
+    CommitID   string  // Head commit SHA
+}
 
-// PostAllComments posts all successful casdiff results as separate comments
-func PostAllComments(prNumber string, results []CasdiffResult) []error
+// PostReviewComments posts review comments to specific lines in the PR diff.
+// Uses GitHub API (via gh CLI or direct API) to create inline comments.
+func PostReviewComments(comments ...PRReviewComment) []error
 ```
 
 ## Algorithm Details
 
 ### Finding Digest Transitions
 
-Given old and new state.json references:
+Given a state.json file path, base ref, and head ref:
 
-1. Parse both old and new references into lists
-2. Find the last reference in the old state (this has the "current" digest)
-3. Iterate through new references starting after the last old reference
-4. Track the current digest
-5. When digest changes:
-   - Record transition: (last_ref_with_current_digest, current_ref)
-   - Update current_digest
-6. Return all transitions
+1. **Read and parse JSON from both branches:**
+   ```go
+   baseContent := git show baseRef:filePath
+   headContent := git show headRef:filePath
+   baseState := parseJSON(baseContent)  // {references: [...]}
+   headState := parseJSON(headContent)  // {references: [...]}
+   ```
+
+2. **Identify appended references:**
+   ```go
+   baseCount := len(baseState.references)
+   headCount := len(headState.references)
+   appendedRefs := headState.references[baseCount:]  // Only new ones
+   ```
+
+3. **Find the baseline digest:**
+   ```go
+   var currentDigest string
+   var currentRef string
+   if baseCount > 0 {
+       lastBaseRef := baseState.references[baseCount-1]
+       currentDigest = lastBaseRef.digest
+       currentRef = lastBaseRef.name
+   }
+   ```
+
+4. **Detect transitions in appended references:**
+   ```go
+   var transitions []StateTransition
+   for i, ref := range appendedRefs {
+       if ref.digest != currentDigest {
+           // Digest changed! Record transition
+           transition := StateTransition{
+               FromRef:    currentRef,
+               ToRef:      ref.name,
+               FromDigest: currentDigest,
+               ToDigest:   ref.digest,
+               LineNumber: calculateLineNumber(baseCount + i, headContent),
+           }
+           transitions = append(transitions, transition)
+
+           // Update current for next iteration
+           currentDigest = ref.digest
+       }
+       currentRef = ref.name
+   }
+   ```
+
+5. **Calculate line numbers:**
+   - Parse the diff to map array indices to line numbers in the diff
+   - The line number should point to where `"digest": "new_hash"` appears
 
 **Edge cases:**
-- If old state is empty, compare first ref against itself (no comment)
-- If no new references added, return empty transitions
-- If all new references have same digest as old, return empty transitions
+- If base state is empty (new module), first reference becomes baseline (no comment)
+- If no new references appended, return empty transitions
+- If all appended references have same digest as baseline, return empty transitions
+
+### Posting Comments on Specific Lines
+
+Use GitHub's review comment API to post inline comments:
+
+```bash
+gh api repos/{owner}/{repo}/pulls/{pr_number}/comments \
+  -f body="<casdiff output>" \
+  -f path="modules/sync/bufbuild/protovalidate/state.json" \
+  -f commit_id="<head_sha>" \
+  -F line=269
+```
+
+This creates a review comment attached to a specific line in the diff, similar to manual code review comments.
 
 ## Testing Strategy
 
@@ -263,5 +340,5 @@ Given old and new state.json references:
 
 - Update existing comments instead of posting new ones
 - Add a comment summary at the top listing all modules changed
-- Support for commenting on specific lines in the diff
 - Dry-run mode for testing
+- Support running locally (not just in GitHub Actions)
