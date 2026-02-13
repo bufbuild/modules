@@ -89,17 +89,21 @@ func run(ctx context.Context) error {
 	results := RunCASDiffParallel(ctx, allTransitions)
 
 	// Separate successful results from errors
-	var successfulResults []CASDiffResult
-	var failedResults []CASDiffResult
+	var (
+		successfulResults []CASDiffResult
+		failedResults     []CASDiffResult
+	)
 
 	for _, result := range results {
 		if result.Error != nil {
 			failedResults = append(failedResults, result)
-			fmt.Fprintf(os.Stderr, "Warning: casdiff failed for %s %s->%s: %v\n",
+			fmt.Fprintf(
+				os.Stderr, "Warning: casdiff failed for %s %s->%s: %v\n",
 				result.Transition.ModulePath,
 				result.Transition.FromRef,
 				result.Transition.ToRef,
-				result.Error)
+				result.Error,
+			)
 		} else {
 			successfulResults = append(successfulResults, result)
 		}

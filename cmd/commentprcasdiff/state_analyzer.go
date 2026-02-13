@@ -46,7 +46,12 @@ type reference struct {
 
 // GetStateFileTransitions reads state.json from base and head branches,
 // compares the JSON arrays to find appended references, and detects digest transitions.
-func GetStateFileTransitions(ctx context.Context, filePath, baseRef, headRef string) ([]StateTransition, error) {
+func GetStateFileTransitions(
+	ctx context.Context,
+	filePath string,
+	baseRef string,
+	headRef string,
+) ([]StateTransition, error) {
 	// Read state.json from both branches
 	baseContent, err := readFileAtRef(ctx, filePath, baseRef)
 	if err != nil {
@@ -79,8 +84,10 @@ func GetStateFileTransitions(ctx context.Context, filePath, baseRef, headRef str
 	appendedRefs := headState.References[baseCount:]
 
 	// Get the baseline digest (last reference in base state)
-	var currentDigest string
-	var currentRef string
+	var (
+		currentDigest string
+		currentRef    string
+	)
 	if baseCount > 0 {
 		lastBaseRef := baseState.References[baseCount-1]
 		currentDigest = lastBaseRef.Digest
@@ -133,7 +140,7 @@ func GetStateFileTransitions(ctx context.Context, filePath, baseRef, headRef str
 }
 
 // readFileAtRef reads a file's content at a specific git ref using git show.
-func readFileAtRef(ctx context.Context, filePath, ref string) ([]byte, error) {
+func readFileAtRef(ctx context.Context, filePath string, ref string) ([]byte, error) {
 	cmd := exec.CommandContext(ctx, "git", "show", fmt.Sprintf("%s:%s", ref, filePath))
 	output, err := cmd.Output()
 	if err != nil {
@@ -144,7 +151,14 @@ func readFileAtRef(ctx context.Context, filePath, ref string) ([]byte, error) {
 
 // getLineNumbersForAppendedRefs calculates the line numbers in the diff where each
 // appended reference's digest appears.
-func getLineNumbersForAppendedRefs(ctx context.Context, filePath, baseRef, headRef string, baseCount, headCount int) ([]int, error) {
+func getLineNumbersForAppendedRefs(
+	ctx context.Context,
+	filePath string,
+	baseRef string,
+	headRef string,
+	baseCount int,
+	headCount int,
+) ([]int, error) {
 	// Get the unified diff
 	cmd := exec.CommandContext(ctx, "git", "diff", "-U0", baseRef, headRef, "--", filePath)
 	output, err := cmd.Output()
@@ -159,9 +173,11 @@ func getLineNumbersForAppendedRefs(ctx context.Context, filePath, baseRef, headR
 	lineNumbers := make([]int, headCount-baseCount)
 	scanner := bufio.NewScanner(strings.NewReader(string(output)))
 
-	var currentLine int
-	refIndex := 0
-	inAddedSection := false
+	var (
+		currentLine    int
+		refIndex       = 0
+		inAddedSection = false
+	)
 
 	for scanner.Scan() {
 		line := scanner.Text()

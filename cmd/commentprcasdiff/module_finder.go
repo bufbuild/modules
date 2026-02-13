@@ -24,7 +24,12 @@ import (
 
 // ChangedModuleStatesFromPR returns module state directories that changed in the PR.
 // Returns paths like "modules/sync/bufbuild/protovalidate" (without /state.json suffix).
-func ChangedModuleStatesFromPR(ctx context.Context, prNumber, baseRef, headRef string) ([]string, error) {
+func ChangedModuleStatesFromPR(
+	ctx context.Context,
+	prNumber string,
+	baseRef string,
+	headRef string,
+) ([]string, error) {
 	// Get list of changed files in the PR
 	cmd := exec.CommandContext(ctx, "git", "diff", "--name-only", baseRef, headRef)
 	output, err := cmd.Output()
