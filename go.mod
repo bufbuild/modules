@@ -3,9 +3,9 @@ module github.com/bufbuild/modules
 go 1.24.0
 
 require (
-	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.11-20251209175733-2a1774d88802.1
+	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.11-20260209202127-80ab13bee0bf.1
 	buf.build/go/app v0.2.0
-	buf.build/go/protovalidate v1.1.0
+	buf.build/go/protovalidate v1.1.2
 	buf.build/go/standard v0.1.0
 	github.com/bufbuild/buf v1.65.0
 	github.com/google/go-cmp v0.7.0
