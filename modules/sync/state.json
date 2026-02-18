@@ -42,11 +42,11 @@
     },
     {
       "module_name": "googleapis/cloud-run",
-      "latest_reference": "b026ba89b3f609ad36df3dc8cc4ddc396f0cc941"
+      "latest_reference": "4ed62e490650b7b6b64c4cb95917395cfc69de7a"
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "b026ba89b3f609ad36df3dc8cc4ddc396f0cc941"
+      "latest_reference": "4ed62e490650b7b6b64c4cb95917395cfc69de7a"
     },
     {
       "module_name": "googlechrome/lighthouse",
@@ -58,7 +58,7 @@
     },
     {
       "module_name": "grpc-ecosystem/grpc-gateway",
-      "latest_reference": "v2.27.8"
+      "latest_reference": "v2.28.0"
     },
     {
       "module_name": "grpc/grpc",
