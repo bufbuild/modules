@@ -12,9 +12,11 @@ linters:
     - maintidx          # covered by gocyclo
     - mnd               # some unnamed constants are okay
     - nlreturn          # generous whitespace violates house style
+    - noinlineerr       # inline error handling is idiomatic here
     - testpackage       # internal tests are fine
     - wrapcheck         # don't _always_ need to wrap errors
     - wsl               # generous whitespace violates house style
+    - wsl_v5            # generous whitespace violates house style
   settings:
     errcheck:
       check-type-assertions: true
@@ -55,6 +57,9 @@ linters:
       - linters:
           - goconst
         path: cmd/release/main_test.go
+      - linters:
+          - gosec
+        text: "G705:"
 issues:
   max-same-issues: 0
 formatters:

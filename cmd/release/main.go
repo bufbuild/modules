@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"sort"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -306,10 +306,10 @@ func createRelease(
 		githubutil.GithubOwnerBufbuild,
 		githubutil.GithubRepoModules,
 		&github.RepositoryRelease{
-			TagName: github.String(releaseName),
-			Name:    github.String(releaseName),
-			Body:    github.String(releaseBody),
-			Draft:   github.Bool(true), // Start release as a draft until all assets are uploaded
+			TagName: new(releaseName),
+			Name:    new(releaseName),
+			Body:    new(releaseBody),
+			Draft:   new(true), // Start release as a draft until all assets are uploaded
 		})
 	if err != nil {
 		return err
@@ -323,7 +323,7 @@ func createRelease(
 	); err != nil {
 		return err
 	}
-	repositoryRelease.Draft = github.Bool(false)
+	repositoryRelease.Draft = new(false)
 	if _, err := client.EditRelease(ctx,
 		githubutil.GithubOwnerBufbuild,
 		githubutil.GithubRepoModules,
@@ -337,7 +337,7 @@ func createRelease(
 
 func createReleaseBody(name string, moduleStates map[string]releaseModuleState) (string, error) {
 	var mainStringBuilder strings.Builder
-	if _, err := mainStringBuilder.WriteString(fmt.Sprintf("# Buf Modules Release %s\n\n", name)); err != nil {
+	if _, err := fmt.Fprintf(&mainStringBuilder, "# Buf Modules Release %s\n\n", name); err != nil {
 		return "", err
 	}
 
@@ -345,9 +345,7 @@ func createReleaseBody(name string, moduleStates map[string]releaseModuleState) 
 	for modName := range moduleStates {
 		sortedModNames = append(sortedModNames, modName)
 	}
-	sort.Slice(sortedModNames, func(i, j int) bool {
-		return sortedModNames[i] < sortedModNames[j]
-	})
+	slices.Sort(sortedModNames)
 	var newStringBuilder, updatedStringBuilder, unchangedStringBuilder, removedStringBuilder strings.Builder
 	for _, modName := range sortedModNames {
 		modState := moduleStates[modName]
@@ -361,11 +359,11 @@ func createReleaseBody(name string, moduleStates map[string]releaseModuleState) 
 				return "", fmt.Errorf("write updated modules table: %w", err)
 			}
 		case modules.Unchanged:
-			if _, err := unchangedStringBuilder.WriteString(fmt.Sprintf("- %s\n", modName)); err != nil {
+			if _, err := fmt.Fprintf(&unchangedStringBuilder, "- %s\n", modName); err != nil {
 				return "", err
 			}
 		case modules.Removed:
-			if _, err := removedStringBuilder.WriteString(fmt.Sprintf("- %s\n", modName)); err != nil {
+			if _, err := fmt.Fprintf(&removedStringBuilder, "- %s\n", modName); err != nil {
 				return "", err
 			}
 		default:
@@ -375,28 +373,28 @@ func createReleaseBody(name string, moduleStates map[string]releaseModuleState) 
 
 	if newStr := newStringBuilder.String(); newStr != "" {
 		newModuleHeader := "## New Modules\n"
-		if _, err := mainStringBuilder.WriteString(fmt.Sprintf("%s%s\n", newModuleHeader, newStr)); err != nil {
+		if _, err := fmt.Fprintf(&mainStringBuilder, "%s%s\n", newModuleHeader, newStr); err != nil {
 			return "", err
 		}
 	}
 
 	if updated := updatedStringBuilder.String(); updated != "" {
 		updatedModuleHeader := "## Updated Modules\n"
-		if _, err := mainStringBuilder.WriteString(fmt.Sprintf("%s%s\n", updatedModuleHeader, updated)); err != nil {
+		if _, err := fmt.Fprintf(&mainStringBuilder, "%s%s\n", updatedModuleHeader, updated); err != nil {
 			return "", err
 		}
 	}
 
 	if unchanged := unchangedStringBuilder.String(); unchanged != "" {
 		unchangedModuleHeader := "## Unchanged Modules\n\n<details><summary>Expand</summary>\n"
-		if _, err := mainStringBuilder.WriteString(fmt.Sprintf("%s\n%s\n</details>\n", unchangedModuleHeader, unchanged)); err != nil {
+		if _, err := fmt.Fprintf(&mainStringBuilder, "%s\n%s\n</details>\n", unchangedModuleHeader, unchanged); err != nil {
 			return "", err
 		}
 	}
 
 	if removed := removedStringBuilder.String(); removed != "" {
 		removedModuleHeader := "## Removed Modules\n\n<details><summary>Expand</summary>\n"
-		if _, err := mainStringBuilder.WriteString(fmt.Sprintf("\n%s\n%s\n</details>\n", removedModuleHeader, removed)); err != nil {
+		if _, err := fmt.Fprintf(&mainStringBuilder, "\n%s\n%s\n</details>\n", removedModuleHeader, removed); err != nil {
 			return "", err
 		}
 	}
