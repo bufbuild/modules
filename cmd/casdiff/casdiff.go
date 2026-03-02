@@ -24,7 +24,7 @@ import (
 	"buf.build/go/app/appcmd"
 	"buf.build/go/app/appext"
 	"buf.build/go/standard/xslices"
-	"github.com/bufbuild/buf/private/bufpkg/bufcas"
+	"github.com/bufbuild/buf/private/pkg/cas"
 	"github.com/bufbuild/buf/private/pkg/slogapp"
 	"github.com/bufbuild/buf/private/pkg/storage"
 	"github.com/bufbuild/buf/private/pkg/storage/storageos"
@@ -202,12 +202,12 @@ func calculateDiffFromCASDirectory(
 	return buildManifestDiff(ctx, fromManifest, toManifest, casBucket)
 }
 
-func readManifest(ctx context.Context, bucket storage.ReadBucket, manifestPath string) (bufcas.Manifest, error) {
+func readManifest(ctx context.Context, bucket storage.ReadBucket, manifestPath string) (cas.Manifest, error) {
 	data, err := storage.ReadPath(ctx, bucket, manifestPath)
 	if err != nil {
 		return nil, fmt.Errorf("read path: %w", err)
 	}
-	m, err := bufcas.ParseManifest(string(data))
+	m, err := cas.ParseManifest(string(data))
 	if err != nil {
 		return nil, fmt.Errorf("parse manifest: %w", err)
 	}
