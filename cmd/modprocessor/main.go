@@ -24,7 +24,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/bufbuild/buf/private/bufpkg/bufcas"
+	"github.com/bufbuild/buf/private/pkg/cas"
 	"github.com/bufbuild/buf/private/pkg/storage/storageos"
 	"github.com/bufbuild/modules/private/bufpkg/bufstate"
 	"go.uber.org/multierr"
@@ -129,17 +129,17 @@ func (c *command) run() error {
 // convertToCAS converts all files in the source directory to blobs, and a saves
 // them in the module destination directory using its manifest digest hex string
 // as filenames.
-func (c *command) convertToCAS(ctx context.Context) (bufcas.Digest, error) {
+func (c *command) convertToCAS(ctx context.Context) (cas.Digest, error) {
 	storageosProvider := storageos.NewProvider()
 	bucket, err := storageosProvider.NewReadWriteBucket(c.srcDir)
 	if err != nil {
 		return nil, fmt.Errorf("new bucket from buf dir: %w", err)
 	}
-	fileSet, err := bufcas.NewFileSetForBucket(ctx, bucket)
+	fileSet, err := cas.NewFileSetForBucket(ctx, bucket)
 	if err != nil {
 		return nil, fmt.Errorf("new file set from bucket: %w", err)
 	}
-	manifestBlob, err := bufcas.ManifestToBlob(fileSet.Manifest())
+	manifestBlob, err := cas.ManifestToBlob(fileSet.Manifest())
 	if err != nil {
 		return nil, fmt.Errorf("manifest to blob: %w", err)
 	}
@@ -149,7 +149,7 @@ func (c *command) convertToCAS(ctx context.Context) (bufcas.Digest, error) {
 		return nil, fmt.Errorf("make module sync cas dir: %w", err)
 	}
 	// TODO: parallelize
-	for _, blob := range append([]bufcas.Blob{manifestBlob}, fileSet.BlobSet().Blobs()...) {
+	for _, blob := range append([]cas.Blob{manifestBlob}, fileSet.BlobSet().Blobs()...) {
 		if err := writeBlobInDir(blob, modSyncDir); err != nil {
 			hexDigest := hex.EncodeToString(blob.Digest().Value())
 			return nil, fmt.Errorf("write blob %q to file: %w", hexDigest, err)
@@ -160,7 +160,7 @@ func (c *command) convertToCAS(ctx context.Context) (bufcas.Digest, error) {
 
 // writeBlobInDir takes a blob and writes its content to a file named as its
 // digest hex in the given directory (only if it doesn't exist already).
-func writeBlobInDir(blob bufcas.Blob, dir string) (retErr error) {
+func writeBlobInDir(blob cas.Blob, dir string) (retErr error) {
 	fileName := hex.EncodeToString(blob.Digest().Value())
 	filePath := filepath.Join(dir, fileName)
 	_, err := os.Stat(filePath)

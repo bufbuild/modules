@@ -21,37 +21,37 @@ import (
 	"os"
 
 	"buf.build/go/standard/xslices"
-	"github.com/bufbuild/buf/private/bufpkg/bufcas"
+	"github.com/bufbuild/buf/private/pkg/cas"
 	"github.com/bufbuild/buf/private/pkg/diff"
 	"github.com/bufbuild/buf/private/pkg/storage"
 )
 
 type manifestDiff struct {
-	pathsAdded          map[string]bufcas.FileNode
+	pathsAdded          map[string]cas.FileNode
 	pathsRenamed        map[string]fileDiff
-	pathsRemoved        map[string]bufcas.FileNode
+	pathsRemoved        map[string]cas.FileNode
 	pathsChangedContent map[string]fileDiff
 }
 
 type fileDiff struct {
-	from bufcas.FileNode
-	to   bufcas.FileNode
+	from cas.FileNode
+	to   cas.FileNode
 	diff string
 }
 
 func newManifestDiff() *manifestDiff {
 	return &manifestDiff{
-		pathsAdded:          make(map[string]bufcas.FileNode),
+		pathsAdded:          make(map[string]cas.FileNode),
 		pathsRenamed:        make(map[string]fileDiff),
-		pathsRemoved:        make(map[string]bufcas.FileNode),
+		pathsRemoved:        make(map[string]cas.FileNode),
 		pathsChangedContent: make(map[string]fileDiff),
 	}
 }
 
 func buildManifestDiff(
 	ctx context.Context,
-	from bufcas.Manifest,
-	to bufcas.Manifest, //nolint:varnamelen // from/to used symmetrically
+	from cas.Manifest,
+	to cas.Manifest, //nolint:varnamelen // from/to used symmetrically
 	bucket storage.ReadBucket,
 ) (*manifestDiff, error) {
 	var (
@@ -68,7 +68,7 @@ func buildManifestDiff(
 			digestToRemovedPaths[fromNode.Digest().String()] = append(digestToRemovedPaths[fromNode.Digest().String()], path)
 			continue
 		}
-		if bufcas.DigestEqual(fromNode.Digest(), toNode.Digest()) {
+		if cas.DigestEqual(fromNode.Digest(), toNode.Digest()) {
 			continue // no changes
 		}
 		diffString, err := calculateFileNodeDiff(ctx, fromNode, toNode, bucket)
@@ -234,11 +234,11 @@ func (d *manifestDiff) printMarkdown() {
 
 func calculateFileNodeDiff(
 	ctx context.Context,
-	from bufcas.FileNode,
-	to bufcas.FileNode, //nolint:varnamelen // from/to used symmetrically
+	from cas.FileNode,
+	to cas.FileNode, //nolint:varnamelen // from/to used symmetrically
 	bucket storage.ReadBucket,
 ) (string, error) {
-	if from.Path() == to.Path() && bufcas.DigestEqual(from.Digest(), to.Digest()) {
+	if from.Path() == to.Path() && cas.DigestEqual(from.Digest(), to.Digest()) {
 		return "", nil
 	}
 	var (

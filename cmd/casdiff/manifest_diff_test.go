@@ -19,7 +19,7 @@ import (
 	"encoding/hex"
 	"testing"
 
-	"github.com/bufbuild/buf/private/bufpkg/bufcas"
+	"github.com/bufbuild/buf/private/pkg/cas"
 	"github.com/bufbuild/buf/private/pkg/storage"
 	"github.com/bufbuild/buf/private/pkg/storage/storagemem"
 	"github.com/bufbuild/buf/private/pkg/storage/storageos"
@@ -46,7 +46,7 @@ func TestManifestDiff(t *testing.T) {
 			actual, present := mdiff.pathsRemoved[expectedRemovedPath]
 			require.True(t, present)
 			assert.Equal(t, expectedRemovedPath, actual.Path())
-			assert.True(t, bufcas.DigestEqual(expected.Digest(), actual.Digest()))
+			assert.True(t, cas.DigestEqual(expected.Digest(), actual.Digest()))
 		}
 	})
 	t.Run("renamed", func(t *testing.T) {
@@ -70,8 +70,8 @@ func TestManifestDiff(t *testing.T) {
 			require.True(t, present)
 			assert.Equal(t, fromPath, actual.from.Path())
 			assert.Equal(t, toPath, actual.to.Path())
-			assert.True(t, bufcas.DigestEqual(expected.Digest(), actual.from.Digest()))
-			assert.True(t, bufcas.DigestEqual(actual.from.Digest(), actual.to.Digest()))
+			assert.True(t, cas.DigestEqual(expected.Digest(), actual.from.Digest()))
+			assert.True(t, cas.DigestEqual(actual.from.Digest(), actual.to.Digest()))
 			assert.Empty(t, actual.diff)
 		}
 	})
@@ -87,7 +87,7 @@ func TestManifestDiff(t *testing.T) {
 			actual, present := mdiff.pathsAdded[expectedAddedPath]
 			require.True(t, present)
 			assert.Equal(t, expectedAddedPath, actual.Path())
-			assert.True(t, bufcas.DigestEqual(expected.Digest(), actual.Digest()))
+			assert.True(t, cas.DigestEqual(expected.Digest(), actual.Digest()))
 		}
 	})
 	t.Run("changed_content", func(t *testing.T) {
@@ -102,7 +102,7 @@ func TestManifestDiff(t *testing.T) {
 			actual, present := mdiff.pathsChangedContent[expectedChangedContentPath]
 			require.True(t, present)
 			assert.Equal(t, actual.from.Path(), actual.to.Path())
-			assert.False(t, bufcas.DigestEqual(actual.from.Digest(), actual.to.Digest()))
+			assert.False(t, cas.DigestEqual(actual.from.Digest(), actual.to.Digest()))
 			assert.NotEmpty(t, actual.diff)
 		}
 	})
@@ -110,17 +110,17 @@ func TestManifestDiff(t *testing.T) {
 
 func prepareDiffCASBucket(ctx context.Context, t *testing.T) (
 	storage.ReadBucket,
-	bufcas.Manifest,
-	bufcas.Manifest,
+	cas.Manifest,
+	cas.Manifest,
 ) {
 	t.Helper()
 	casBucket := storagemem.NewReadWriteBucket()
-	casWrite := func(dirpath string) bufcas.Manifest {
+	casWrite := func(dirpath string) cas.Manifest {
 		testFiles, err := storageos.NewProvider().NewReadWriteBucket("testdata/manifest_diff/" + dirpath)
 		require.NoError(t, err)
-		fileSet, err := bufcas.NewFileSetForBucket(ctx, testFiles)
+		fileSet, err := cas.NewFileSetForBucket(ctx, testFiles)
 		require.NoError(t, err)
-		mBlob, err := bufcas.ManifestToBlob(fileSet.Manifest())
+		mBlob, err := cas.ManifestToBlob(fileSet.Manifest())
 		require.NoError(t, err)
 		blobsToPut := append(fileSet.BlobSet().Blobs(), mBlob)
 		for _, blob := range blobsToPut {
