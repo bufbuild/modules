@@ -26,12 +26,12 @@ import (
 // Returns paths like "modules/sync/bufbuild/protovalidate" (without /state.json suffix).
 func ChangedModuleStatesFromPR(
 	ctx context.Context,
-	prNumber string,
+	_ string,
 	baseRef string,
 	headRef string,
 ) ([]string, error) {
 	// Get list of changed files in the PR
-	cmd := exec.CommandContext(ctx, "git", "diff", "--name-only", baseRef, headRef)
+	cmd := exec.CommandContext(ctx, "git", "diff", "--name-only", baseRef, headRef) //nolint:gosec
 	output, err := cmd.Output()
 	if err != nil {
 		return nil, fmt.Errorf("git diff: %w", err)
@@ -41,7 +41,7 @@ func ChangedModuleStatesFromPR(
 	var modulePaths []string
 	seen := make(map[string]bool)
 
-	for _, line := range strings.Split(string(output), "\n") {
+	for line := range strings.SplitSeq(string(output), "\n") {
 		line = strings.TrimSpace(line)
 		if line == "" {
 			continue

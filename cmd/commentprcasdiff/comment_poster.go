@@ -18,6 +18,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -72,7 +73,7 @@ func getRepositoryInfo(ctx context.Context) (string, error) {
 // postSingleReviewComment posts a single review comment using GitHub API.
 func postSingleReviewComment(ctx context.Context, repo string, comment PRReviewComment) error {
 	// Prepare the API request body
-	requestBody := map[string]interface{}{
+	requestBody := map[string]any{
 		"body":      comment.Body,
 		"commit_id": comment.CommitID,
 		"path":      comment.FilePath,
@@ -86,7 +87,7 @@ func postSingleReviewComment(ctx context.Context, repo string, comment PRReviewC
 
 	// Use gh CLI to make the API request
 	// gh api repos/{owner}/{repo}/pulls/{pr_number}/comments -X POST --input -
-	cmd := exec.CommandContext(
+	cmd := exec.CommandContext( //nolint:gosec
 		ctx,
 		"gh", "api",
 		fmt.Sprintf("repos/%s/pulls/%s/comments", repo, comment.PRNumber),
@@ -102,7 +103,7 @@ func postSingleReviewComment(ctx context.Context, repo string, comment PRReviewC
 	if err := cmd.Run(); err != nil {
 		// Check if GITHUB_TOKEN is set
 		if os.Getenv("GITHUB_TOKEN") == "" {
-			return fmt.Errorf("GITHUB_TOKEN environment variable not set")
+			return errors.New("GITHUB_TOKEN environment variable not set")
 		}
 		return fmt.Errorf("gh api failed: %w (stderr: %s)", err, stderr.String())
 	}

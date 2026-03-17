@@ -20,6 +20,7 @@ import (
 )
 
 func TestParseLineNumbersFromDiff(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		name          string
 		diffOutput    string
@@ -106,6 +107,7 @@ func TestParseLineNumbersFromDiff(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			got, err := parseLineNumbersFromDiff(tt.diffOutput, tt.expectedCount)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("parseLineNumbersFromDiff() error = %v, wantErr %v", err, tt.wantErr)

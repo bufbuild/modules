@@ -92,13 +92,11 @@ func GetStateFileTransitions(
 		lastBaseRef := baseState.References[baseCount-1]
 		currentDigest = lastBaseRef.Digest
 		currentRef = lastBaseRef.Name
-	} else {
+	} else if len(appendedRefs) > 0 {
 		// If base state is empty, use first appended ref as baseline
-		if len(appendedRefs) > 0 {
-			currentDigest = appendedRefs[0].Digest
-			currentRef = appendedRefs[0].Name
-			appendedRefs = appendedRefs[1:] // Skip first as it's now the baseline
-		}
+		currentDigest = appendedRefs[0].Digest
+		currentRef = appendedRefs[0].Name
+		appendedRefs = appendedRefs[1:] // Skip first as it's now the baseline
 	}
 
 	// Get line number mapping for the appended references
@@ -141,7 +139,7 @@ func GetStateFileTransitions(
 
 // readFileAtRef reads a file's content at a specific git ref using git show.
 func readFileAtRef(ctx context.Context, filePath string, ref string) ([]byte, error) {
-	cmd := exec.CommandContext(ctx, "git", "show", fmt.Sprintf("%s:%s", ref, filePath))
+	cmd := exec.CommandContext(ctx, "git", "show", fmt.Sprintf("%s:%s", ref, filePath)) //nolint:gosec
 	output, err := cmd.Output()
 	if err != nil {
 		return nil, fmt.Errorf("git show %s:%s: %w", ref, filePath, err)
@@ -160,7 +158,7 @@ func getLineNumbersForAppendedRefs(
 	headCount int,
 ) ([]int, error) {
 	// Get the unified diff
-	cmd := exec.CommandContext(ctx, "git", "diff", "-U0", baseRef, headRef, "--", filePath)
+	cmd := exec.CommandContext(ctx, "git", "diff", "-U0", baseRef, headRef, "--", filePath) //nolint:gosec
 	output, err := cmd.Output()
 	if err != nil {
 		return nil, fmt.Errorf("git diff: %w", err)
@@ -191,7 +189,9 @@ func parseLineNumbersFromDiff(diffOutput string, expectedCount int) ([]int, erro
 				// Extract new file line number from +276,12
 				newRange := strings.TrimPrefix(parts[2], "+")
 				newRange = strings.Split(newRange, ",")[0]
-				fmt.Sscanf(newRange, "%d", &currentLine)
+				if _, err := fmt.Sscanf(newRange, "%d", &currentLine); err != nil {
+				return nil, fmt.Errorf("parse hunk header line number %q: %w", newRange, err)
+			}
 				inAddedSection = true
 				continue
 			}

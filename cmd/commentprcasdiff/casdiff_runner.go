@@ -36,7 +36,7 @@ func RunCASDiff(ctx context.Context, transition StateTransition) CASDiffResult {
 	}
 
 	// Run casdiff in the module directory
-	cmd := exec.CommandContext(
+	cmd := exec.CommandContext( //nolint:gosec
 		ctx,
 		"go", "run", "../../cmd/casdiff",
 		transition.FromRef,

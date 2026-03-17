@@ -16,6 +16,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os"
 )
@@ -34,13 +35,13 @@ func run(ctx context.Context) error {
 	headRef := os.Getenv("HEAD_REF")
 
 	if prNumber == "" {
-		return fmt.Errorf("PR_NUMBER environment variable is required")
+		return errors.New("PR_NUMBER environment variable is required")
 	}
 	if baseRef == "" {
-		return fmt.Errorf("BASE_REF environment variable is required")
+		return errors.New("BASE_REF environment variable is required")
 	}
 	if headRef == "" {
-		return fmt.Errorf("HEAD_REF environment variable is required")
+		return errors.New("HEAD_REF environment variable is required")
 	}
 
 	fmt.Fprintf(os.Stdout, "Processing PR #%s (base: %s, head: %s)\n", prNumber, baseRef, headRef)
