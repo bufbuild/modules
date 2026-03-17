@@ -111,6 +111,7 @@ func run(ctx context.Context) error {
 	}
 
 	// Post comments for successful results
+	var postErrs []error
 	if len(successfulResults) > 0 {
 		fmt.Fprintf(os.Stdout, "\nPosting %d comment(s) to PR...\n", len(successfulResults))
 
@@ -125,17 +126,19 @@ func run(ctx context.Context) error {
 			}
 		}
 
-		errors := PostReviewComments(ctx, comments...)
-		for _, err := range errors {
+		postErrs = PostReviewComments(ctx, comments...)
+		posted := 0
+		for _, err := range postErrs {
 			if err != nil {
-				fmt.Fprintf(os.Stderr, "Warning: failed to post comment: %v\n", err)
+				fmt.Fprintf(os.Stderr, "Error: failed to post comment: %v\n", err)
+			} else {
+				posted++
 			}
 		}
-
-		fmt.Fprintf(os.Stdout, "Successfully posted %d comment(s)\n", len(successfulResults)-len(errors))
+		fmt.Fprintf(os.Stdout, "Successfully posted %d comment(s)\n", posted)
 	}
 
-	// Log summary of failures
+	// Report failures and exit non-zero if anything went wrong.
 	if len(failedResults) > 0 {
 		fmt.Fprintf(os.Stderr, "\nSummary: %d casdiff command(s) failed:\n", len(failedResults))
 		for _, result := range failedResults {
@@ -143,6 +146,12 @@ func run(ctx context.Context) error {
 				result.Transition.ModulePath,
 				result.Transition.FromRef,
 				result.Transition.ToRef)
+		}
+		return fmt.Errorf("%d casdiff command(s) failed", len(failedResults))
+	}
+	for _, err := range postErrs {
+		if err != nil {
+			return fmt.Errorf("one or more comments failed to post")
 		}
 	}
 

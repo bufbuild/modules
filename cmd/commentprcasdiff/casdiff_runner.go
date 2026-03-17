@@ -18,7 +18,9 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"os"
 	"os/exec"
+	"path/filepath"
 	"sync"
 )
 
@@ -35,15 +37,23 @@ func RunCASDiff(ctx context.Context, transition StateTransition) CASDiffResult {
 		Transition: transition,
 	}
 
-	// Run casdiff in the module directory
+	repoRoot, err := os.Getwd()
+	if err != nil {
+		result.Error = fmt.Errorf("get working directory: %w", err)
+		return result
+	}
+
+	// Run casdiff in the module directory. casdiff reads state.json from "." so it must
+	// run from the module directory. We use an absolute path to the package to avoid
+	// path resolution issues when cmd.Dir is set.
 	cmd := exec.CommandContext( //nolint:gosec
 		ctx,
-		"go", "run", "../../cmd/casdiff",
+		"go", "run", filepath.Join(repoRoot, "cmd", "casdiff"),
 		transition.FromRef,
 		transition.ToRef,
 		"--format=markdown",
 	)
-	cmd.Dir = transition.ModulePath
+	cmd.Dir = filepath.Join(repoRoot, transition.ModulePath)
 
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout
