@@ -3,8 +3,9 @@ name: Auto-comment PR with casdiff
 on:
   pull_request:
     types: [opened, synchronize]
-    branches:
-      - fetch-modules
+    # FIXME: re-enable once tested
+    # branches:
+    #   - main
 
 permissions:
   contents: read
