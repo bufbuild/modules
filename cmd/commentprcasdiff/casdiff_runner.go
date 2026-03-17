@@ -24,60 +24,60 @@ import (
 	"sync"
 )
 
-// CASDiffResult contains the result of running casdiff for a transition.
-type CASDiffResult struct {
-	Transition StateTransition
-	Output     string // Markdown output from casdiff
-	Error      error
+// casDiffResult contains the result of running casdiff for a transition.
+type casDiffResult struct {
+	transition stateTransition
+	output     string // Markdown output from casdiff
+	err        error
 }
 
-// RunCASDiff executes casdiff command in the module directory.
-func RunCASDiff(ctx context.Context, transition StateTransition) CASDiffResult {
-	result := CASDiffResult{
-		Transition: transition,
+// runCASDiff executes casdiff command in the module directory.
+func runCASDiff(ctx context.Context, transition stateTransition) casDiffResult {
+	result := casDiffResult{
+		transition: transition,
 	}
 
 	repoRoot, err := os.Getwd()
 	if err != nil {
-		result.Error = fmt.Errorf("get working directory: %w", err)
+		result.err = fmt.Errorf("get working directory: %w", err)
 		return result
 	}
 
-	// Run casdiff in the module directory. casdiff reads state.json from "." so it must
-	// run from the module directory. We use an absolute path to the package to avoid
-	// path resolution issues when cmd.Dir is set.
+	// Run casdiff in the module directory. casdiff reads state.json from "." so it must run from the
+	// module directory. We use an absolute path to the package to avoid path resolution issues when
+	// cmd.Dir is set.
 	cmd := exec.CommandContext( //nolint:gosec
 		ctx,
 		"go", "run", filepath.Join(repoRoot, "cmd", "casdiff"),
-		transition.FromRef,
-		transition.ToRef,
+		transition.fromRef,
+		transition.toRef,
 		"--format=markdown",
 	)
-	cmd.Dir = filepath.Join(repoRoot, transition.ModulePath)
+	cmd.Dir = filepath.Join(repoRoot, transition.modulePath)
 
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
 
 	if err := cmd.Run(); err != nil {
-		result.Error = fmt.Errorf("casdiff failed: %w (stderr: %s)", err, stderr.String())
+		result.err = fmt.Errorf("casdiff failed: %w (stderr: %s)", err, stderr.String())
 		return result
 	}
 
-	result.Output = stdout.String()
+	result.output = stdout.String()
 	return result
 }
 
-// RunCASDiffParallel runs multiple casdiff commands concurrently.
-func RunCASDiffParallel(ctx context.Context, transitions []StateTransition) []CASDiffResult {
-	results := make([]CASDiffResult, len(transitions))
+// runCASDiffs runs multiple casdiff commands concurrently.
+func runCASDiffs(ctx context.Context, transitions []stateTransition) []casDiffResult {
+	results := make([]casDiffResult, len(transitions))
 	var wg sync.WaitGroup
 
 	for i, transition := range transitions {
 		wg.Add(1)
-		go func(index int, trans StateTransition) {
+		go func(index int, trans stateTransition) {
 			defer wg.Done()
-			results[index] = RunCASDiff(ctx, trans)
+			results[index] = runCASDiff(ctx, trans)
 		}(i, transition)
 	}
 

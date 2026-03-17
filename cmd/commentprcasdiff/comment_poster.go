@@ -24,18 +24,18 @@ import (
 	"os/exec"
 )
 
-// PRReviewComment represents a comment to post on a specific line in a PR.
-type PRReviewComment struct {
-	PRNumber   string
-	FilePath   string // File path in the PR (e.g., "modules/sync/bufbuild/protovalidate/state.json")
-	LineNumber int    // Line number in the diff
-	Body       string // Comment body (casdiff output)
-	CommitID   string // Head commit SHA
+// prReviewComment represents a comment to post on a specific line in a PR.
+type prReviewComment struct {
+	prNumber   string
+	filePath   string // File path in the PR (e.g., "modules/sync/bufbuild/protovalidate/state.json")
+	lineNumber int    // Line number in the diff
+	body       string // Comment body (casdiff output)
+	commitID   string // Head commit SHA
 }
 
-// PostReviewComments posts review comments to specific lines in the PR diff.
-// Uses GitHub API (via gh CLI) to create inline comments.
-func PostReviewComments(ctx context.Context, comments ...PRReviewComment) []error {
+// postReviewComments posts review comments to specific lines in the PR diff. Uses GitHub API (via
+// gh CLI) to create inline comments.
+func postReviewComments(ctx context.Context, comments ...prReviewComment) []error {
 	var errors []error
 
 	// Get repository information
@@ -71,13 +71,13 @@ func getRepositoryInfo(ctx context.Context) (string, error) {
 }
 
 // postSingleReviewComment posts a single review comment using GitHub API.
-func postSingleReviewComment(ctx context.Context, repo string, comment PRReviewComment) error {
+func postSingleReviewComment(ctx context.Context, repo string, comment prReviewComment) error {
 	// Prepare the API request body
 	requestBody := map[string]any{
-		"body":      comment.Body,
-		"commit_id": comment.CommitID,
-		"path":      comment.FilePath,
-		"line":      comment.LineNumber,
+		"body":      comment.body,
+		"commit_id": comment.commitID,
+		"path":      comment.filePath,
+		"line":      comment.lineNumber,
 	}
 
 	requestJSON, err := json.Marshal(requestBody)
@@ -90,7 +90,7 @@ func postSingleReviewComment(ctx context.Context, repo string, comment PRReviewC
 	cmd := exec.CommandContext( //nolint:gosec
 		ctx,
 		"gh", "api",
-		fmt.Sprintf("repos/%s/pulls/%s/comments", repo, comment.PRNumber),
+		fmt.Sprintf("repos/%s/pulls/%s/comments", repo, comment.prNumber),
 		"-X", "POST",
 		"--input", "-",
 	)

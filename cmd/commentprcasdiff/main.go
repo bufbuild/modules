@@ -21,6 +21,9 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
+
+	"buf.build/go/standard/xslices"
 )
 
 func main() {
@@ -59,27 +62,37 @@ func run(ctx context.Context) error {
 	)
 
 	// Find changed module state directories
-	modulePaths, err := changedModuleStates(ctx, baseRef, headRef)
+	moduleStatePaths, err := changedModuleStateFiles(ctx, baseRef, headRef)
 	if err != nil {
 		return fmt.Errorf("find changed modules: %w", err)
 	}
 
-	if len(modulePaths) == 0 {
-		fmt.Fprintf(os.Stdout, "No module state.json files changed in between base..head refs\n")
+	if len(moduleStatePaths) == 0 {
+		fmt.Fprintf(
+			os.Stdout,
+			"No module state.json files changed in between %s..%s refs\n",
+			baseRef,
+			headRef,
+		)
 		return nil
 	}
+	moduleStatePathsSorted := xslices.MapKeysToSortedSlice(moduleStatePaths)
 
-	fmt.Fprintf(os.Stdout, "Found %d changed module(s)\n", len(modulePaths))
+	fmt.Fprintf(
+		os.Stdout,
+		"Found %d changed module(s):\n%s\n",
+		len(moduleStatePaths),
+		strings.Join(moduleStatePathsSorted, "\n"),
+	)
 
 	// Collect all transitions from all modules
-	var allTransitions []StateTransition
-	for _, modulePath := range modulePaths {
-		stateFilePath := modulePath + "/state.json"
-		fmt.Fprintf(os.Stdout, "Analyzing %s...\n", stateFilePath)
+	var allTransitions []stateTransition
+	for _, moduleStatePath := range moduleStatePathsSorted {
+		fmt.Fprintf(os.Stdout, "Analyzing %s...\n", moduleStatePath)
 
-		transitions, err := GetStateFileTransitions(ctx, stateFilePath, baseRef, headRef)
+		transitions, err := getStateFileTransitions(ctx, moduleStatePath, baseRef, headRef)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "Warning: failed to analyze %s: %v\n", stateFilePath, err)
+			fmt.Fprintf(os.Stderr, "Warning: failed to analyze %s: %v\n", moduleStatePath, err)
 			continue
 		}
 
@@ -97,25 +110,23 @@ func run(ctx context.Context) error {
 	}
 
 	fmt.Fprintf(os.Stdout, "\nRunning casdiff for %d transition(s)...\n", len(allTransitions))
-
-	// Run casdiff for all transitions in parallel
-	results := RunCASDiffParallel(ctx, allTransitions)
+	results := runCASDiffs(ctx, allTransitions)
 
 	// Separate successful results from errors
 	var (
-		successfulResults []CASDiffResult
-		failedResults     []CASDiffResult
+		successfulResults []casDiffResult
+		failedResults     []casDiffResult
 	)
 
 	for _, result := range results {
-		if result.Error != nil {
+		if result.err != nil {
 			failedResults = append(failedResults, result)
 			fmt.Fprintf(
-				os.Stderr, "Warning: casdiff failed for %s %s->%s: %v\n",
-				result.Transition.ModulePath,
-				result.Transition.FromRef,
-				result.Transition.ToRef,
-				result.Error,
+				os.Stderr, "Warning: casdiff failed for %s %s->%s: %w\n",
+				result.transition.modulePath,
+				result.transition.fromRef,
+				result.transition.toRef,
+				result.err,
 			)
 		} else {
 			successfulResults = append(successfulResults, result)
@@ -129,28 +140,28 @@ func run(ctx context.Context) error {
 			fmt.Fprintf(os.Stdout, "\n[dry-run] %d comment(s) would be posted:\n", len(successfulResults))
 			for _, result := range successfulResults {
 				fmt.Fprintf(os.Stdout, "\n--- %s (line %d: %s -> %s) ---\n%s\n",
-					result.Transition.FilePath,
-					result.Transition.LineNumber,
-					result.Transition.FromRef,
-					result.Transition.ToRef,
-					result.Output,
+					result.transition.filePath,
+					result.transition.lineNumber,
+					result.transition.fromRef,
+					result.transition.toRef,
+					result.output,
 				)
 			}
 		} else {
 			fmt.Fprintf(os.Stdout, "\nPosting %d comment(s) to PR...\n", len(successfulResults))
 
-			comments := make([]PRReviewComment, len(successfulResults))
+			comments := make([]prReviewComment, len(successfulResults))
 			for i, result := range successfulResults {
-				comments[i] = PRReviewComment{
-					PRNumber:   prNumber,
-					FilePath:   result.Transition.FilePath,
-					LineNumber: result.Transition.LineNumber,
-					Body:       result.Output,
-					CommitID:   headRef,
+				comments[i] = prReviewComment{
+					prNumber:   prNumber,
+					filePath:   result.transition.filePath,
+					lineNumber: result.transition.lineNumber,
+					body:       result.output,
+					commitID:   headRef,
 				}
 			}
 
-			postErrs = PostReviewComments(ctx, comments...)
+			postErrs = postReviewComments(ctx, comments...)
 			posted := 0
 			for _, err := range postErrs {
 				if err != nil {
@@ -168,9 +179,9 @@ func run(ctx context.Context) error {
 		fmt.Fprintf(os.Stderr, "\nSummary: %d casdiff command(s) failed:\n", len(failedResults))
 		for _, result := range failedResults {
 			fmt.Fprintf(os.Stderr, "  - %s: %s -> %s\n",
-				result.Transition.ModulePath,
-				result.Transition.FromRef,
-				result.Transition.ToRef)
+				result.transition.modulePath,
+				result.transition.fromRef,
+				result.transition.toRef)
 		}
 		return fmt.Errorf("%d casdiff command(s) failed", len(failedResults))
 	}

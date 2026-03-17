@@ -18,20 +18,12 @@ import (
 	"context"
 	"fmt"
 	"os/exec"
-	"path/filepath"
 	"strings"
-
-	"buf.build/go/standard/xslices"
 )
 
-// changedModuleStates returns module directories that had *any change* on its state.json files
-// between the passed base and head refs. Returns paths like "modules/sync/bufbuild/protovalidate"
-// (without /state.json suffix).
-func changedModuleStates(
-	ctx context.Context,
-	baseRef string,
-	headRef string,
-) ([]string, error) {
+// changedModuleStateFiles returns modules' state files that had *any change* between the passed
+// base and head refs.
+func changedModuleStateFiles(ctx context.Context, baseRef string, headRef string) (map[string]struct{}, error) {
 	// Get list of changed files in the PR
 	cmd := exec.CommandContext(ctx, "git", "diff", "--name-only", baseRef, headRef) //nolint:gosec
 	output, err := cmd.Output()
@@ -39,20 +31,20 @@ func changedModuleStates(
 		return nil, fmt.Errorf("git diff: %w", err)
 	}
 
-	// Filter for state.json files in modules/sync/
-	modulePaths := make(map[string]struct{})
+	moduleStatePaths := make(map[string]struct{})
 	for line := range strings.SplitSeq(string(output), "\n") {
 		line = strings.TrimSpace(line)
 		if line == "" {
 			continue
 		}
+		if line == "modules/sync/state.json" {
+			continue // exclude the global modules' state.json
+		}
 		// Look for "modules/sync/<owner>/<module>/state.json" files
 		if strings.HasPrefix(line, "modules/sync/") && strings.HasSuffix(line, "/state.json") {
-			// Extract module path (remove /state.json suffix)
-			modulePath := filepath.Dir(line)
-			modulePaths[modulePath] = struct{}{}
+			moduleStatePaths[line] = struct{}{}
 		}
 	}
 
-	return xslices.MapKeysToSortedSlice(modulePaths), nil
+	return moduleStatePaths, nil
 }

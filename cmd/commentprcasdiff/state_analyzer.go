@@ -24,17 +24,18 @@ import (
 	"strings"
 )
 
-// StateTransition represents a digest change in a module's state.json file.
-type StateTransition struct {
-	ModulePath string // e.g., "modules/sync/bufbuild/protovalidate"
-	FilePath   string // e.g., "modules/sync/bufbuild/protovalidate/state.json"
-	FromRef    string // Last reference with old digest (e.g., "v1.1.0")
-	ToRef      string // First reference with new digest (e.g., "v1.2.0")
-	FromDigest string // Old digest
-	ToDigest   string // New digest
-	LineNumber int    // Line in diff where new digest first appears
+// stateTransition represents a digest change in a module's state.json file.
+type stateTransition struct {
+	modulePath string // e.g., "modules/sync/bufbuild/protovalidate"
+	filePath   string // e.g., "modules/sync/bufbuild/protovalidate/state.json"
+	fromRef    string // Last reference with old digest (e.g., "v1.1.0")
+	toRef      string // First reference with new digest (e.g., "v1.2.0")
+	fromDigest string // Old digest
+	toDigest   string // New digest
+	lineNumber int    // Line in diff where new digest first appears
 }
 
+// FIXME: these references/state should use the proto schema.
 type moduleState struct {
 	References []reference `json:"references"`
 }
@@ -44,14 +45,14 @@ type reference struct {
 	Digest string `json:"digest"`
 }
 
-// GetStateFileTransitions reads state.json from base and head branches,
-// compares the JSON arrays to find appended references, and detects digest transitions.
-func GetStateFileTransitions(
+// getStateFileTransitions reads state.json from base and head branches, compares the JSON arrays to
+// find appended references, and detects digest transitions.
+func getStateFileTransitions(
 	ctx context.Context,
 	filePath string,
 	baseRef string,
 	headRef string,
-) ([]StateTransition, error) {
+) ([]stateTransition, error) {
 	// Read state.json from both branches
 	baseContent, err := readFileAtRef(ctx, filePath, baseRef)
 	if err != nil {
@@ -73,23 +74,24 @@ func GetStateFileTransitions(
 	}
 
 	// Identify appended references
-	baseCount := len(baseState.References)
-	headCount := len(headState.References)
-
-	if headCount <= baseCount {
+	//
+	// This only works for diffs that append references in the state file, not for diffs that
+	// update/remove existing refs in base.
+	baseRefsCount := len(baseState.References)
+	headRefsCount := len(headState.References)
+	if headRefsCount <= baseRefsCount {
 		// No new references added
 		return nil, nil
 	}
-
-	appendedRefs := headState.References[baseCount:]
+	appendedRefs := headState.References[baseRefsCount:]
 
 	// Get the baseline digest (last reference in base state)
 	var (
 		currentDigest string
 		currentRef    string
 	)
-	if baseCount > 0 {
-		lastBaseRef := baseState.References[baseCount-1]
+	if baseRefsCount > 0 {
+		lastBaseRef := baseState.References[baseRefsCount-1]
 		currentDigest = lastBaseRef.Digest
 		currentRef = lastBaseRef.Name
 	} else if len(appendedRefs) > 0 {
@@ -100,31 +102,30 @@ func GetStateFileTransitions(
 	}
 
 	// Get line number mapping for the appended references
-	lineNumbers, err := getLineNumbersForAppendedRefs(ctx, filePath, baseRef, headRef, baseCount, headCount)
+	lineNumbers, err := getLineNumbersForAppendedRefs(ctx, filePath, baseRef, headRef, baseRefsCount, headRefsCount)
 	if err != nil {
 		return nil, fmt.Errorf("get line numbers: %w", err)
 	}
 
 	// Detect digest transitions
-	var transitions []StateTransition
+	var transitions []stateTransition
 	modulePath := filepath.Dir(filePath)
-
 	for i, ref := range appendedRefs {
 		if ref.Digest != currentDigest {
 			// Digest changed! Record transition
-			lineNumber := 0
+			var lineNumber int
 			if i < len(lineNumbers) {
 				lineNumber = lineNumbers[i]
 			}
 
-			transition := StateTransition{
-				ModulePath: modulePath,
-				FilePath:   filePath,
-				FromRef:    currentRef,
-				ToRef:      ref.Name,
-				FromDigest: currentDigest,
-				ToDigest:   ref.Digest,
-				LineNumber: lineNumber,
+			transition := stateTransition{
+				modulePath: modulePath,
+				filePath:   filePath,
+				fromRef:    currentRef,
+				toRef:      ref.Name,
+				fromDigest: currentDigest,
+				toDigest:   ref.Digest,
+				lineNumber: lineNumber,
 			}
 			transitions = append(transitions, transition)
 
@@ -147,8 +148,8 @@ func readFileAtRef(ctx context.Context, filePath string, ref string) ([]byte, er
 	return output, nil
 }
 
-// getLineNumbersForAppendedRefs calculates the line numbers in the diff where each
-// appended reference's digest appears.
+// getLineNumbersForAppendedRefs calculates the line numbers in the diff where each appended
+// reference's digest appears.
 func getLineNumbersForAppendedRefs(
 	ctx context.Context,
 	filePath string,
@@ -167,8 +168,8 @@ func getLineNumbersForAppendedRefs(
 	return parseLineNumbersFromDiff(string(output), headCount-baseCount)
 }
 
-// parseLineNumbersFromDiff parses a git diff output and extracts line numbers
-// where "digest" fields appear in added lines.
+// parseLineNumbersFromDiff parses a git diff output and extracts line numbers where "digest" fields
+// appear in added lines.
 func parseLineNumbersFromDiff(diffOutput string, expectedCount int) ([]int, error) {
 	lineNumbers := make([]int, expectedCount)
 	scanner := bufio.NewScanner(strings.NewReader(diffOutput))
