@@ -20,13 +20,15 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+
+	"buf.build/go/standard/xslices"
 )
 
-// ChangedModuleStatesFromPR returns module state directories that changed in the PR.
-// Returns paths like "modules/sync/bufbuild/protovalidate" (without /state.json suffix).
-func ChangedModuleStatesFromPR(
+// changedModuleStates returns module directories that had *any change* on its state.json files
+// between the passed base and head refs. Returns paths like "modules/sync/bufbuild/protovalidate"
+// (without /state.json suffix).
+func changedModuleStates(
 	ctx context.Context,
-	_ string,
 	baseRef string,
 	headRef string,
 ) ([]string, error) {
@@ -38,25 +40,19 @@ func ChangedModuleStatesFromPR(
 	}
 
 	// Filter for state.json files in modules/sync/
-	var modulePaths []string
-	seen := make(map[string]bool)
-
+	modulePaths := make(map[string]struct{})
 	for line := range strings.SplitSeq(string(output), "\n") {
 		line = strings.TrimSpace(line)
 		if line == "" {
 			continue
 		}
-
-		// Look for state.json files in modules/sync/
+		// Look for "modules/sync/<owner>/<module>/state.json" files
 		if strings.HasPrefix(line, "modules/sync/") && strings.HasSuffix(line, "/state.json") {
 			// Extract module path (remove /state.json suffix)
 			modulePath := filepath.Dir(line)
-			if !seen[modulePath] {
-				seen[modulePath] = true
-				modulePaths = append(modulePaths, modulePath)
-			}
+			modulePaths[modulePath] = struct{}{}
 		}
 	}
 
-	return modulePaths, nil
+	return xslices.MapKeysToSortedSlice(modulePaths), nil
 }

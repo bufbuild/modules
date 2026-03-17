@@ -15,6 +15,7 @@
 package main
 
 import (
+	"cmp"
 	"context"
 	"errors"
 	"flag"
@@ -40,7 +41,7 @@ func run(ctx context.Context) error {
 	headRef := os.Getenv("HEAD_REF")
 
 	if prNumber == "" && !dryRun {
-		return errors.New("PR_NUMBER environment variable is required")
+		return errors.New("PR_NUMBER environment variable is required when not a dry-run")
 	}
 	if baseRef == "" {
 		return errors.New("BASE_REF environment variable is required")
@@ -49,16 +50,22 @@ func run(ctx context.Context) error {
 		return errors.New("HEAD_REF environment variable is required")
 	}
 
-	fmt.Fprintf(os.Stdout, "Processing PR #%s (base: %s, head: %s)\n", prNumber, baseRef, headRef)
+	fmt.Fprintf(
+		os.Stdout,
+		"Processing PR #%s (base: %s, head: %s)\n",
+		cmp.Or(prNumber, "dry-run"),
+		baseRef,
+		headRef,
+	)
 
 	// Find changed module state directories
-	modulePaths, err := ChangedModuleStatesFromPR(ctx, prNumber, baseRef, headRef)
+	modulePaths, err := changedModuleStates(ctx, baseRef, headRef)
 	if err != nil {
 		return fmt.Errorf("find changed modules: %w", err)
 	}
 
 	if len(modulePaths) == 0 {
-		fmt.Fprintf(os.Stdout, "No module state.json files changed in this PR\n")
+		fmt.Fprintf(os.Stdout, "No module state.json files changed in between base..head refs\n")
 		return nil
 	}
 
