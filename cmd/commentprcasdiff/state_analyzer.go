@@ -190,8 +190,8 @@ func parseLineNumbersFromDiff(diffOutput string, expectedCount int) ([]int, erro
 				newRange := strings.TrimPrefix(parts[2], "+")
 				newRange = strings.Split(newRange, ",")[0]
 				if _, err := fmt.Sscanf(newRange, "%d", &currentLine); err != nil {
-				return nil, fmt.Errorf("parse hunk header line number %q: %w", newRange, err)
-			}
+					return nil, fmt.Errorf("parse hunk header line number %q: %w", newRange, err)
+				}
 				inAddedSection = true
 				continue
 			}
