@@ -17,6 +17,7 @@ package main
 import (
 	"context"
 	"errors"
+	"flag"
 	"fmt"
 	"os"
 )
@@ -29,12 +30,16 @@ func main() {
 }
 
 func run(ctx context.Context) error {
+	var dryRun bool
+	flag.BoolVar(&dryRun, "dry-run", false, "print comments to stdout instead of posting to GitHub")
+	flag.Parse()
+
 	// Read environment variables
 	prNumber := os.Getenv("PR_NUMBER")
 	baseRef := os.Getenv("BASE_REF")
 	headRef := os.Getenv("HEAD_REF")
 
-	if prNumber == "" {
+	if prNumber == "" && !dryRun {
 		return errors.New("PR_NUMBER environment variable is required")
 	}
 	if baseRef == "" {
@@ -110,32 +115,45 @@ func run(ctx context.Context) error {
 		}
 	}
 
-	// Post comments for successful results
+	// Post or print comments for successful results
 	var postErrs []error
 	if len(successfulResults) > 0 {
-		fmt.Fprintf(os.Stdout, "\nPosting %d comment(s) to PR...\n", len(successfulResults))
-
-		comments := make([]PRReviewComment, len(successfulResults))
-		for i, result := range successfulResults {
-			comments[i] = PRReviewComment{
-				PRNumber:   prNumber,
-				FilePath:   result.Transition.FilePath,
-				LineNumber: result.Transition.LineNumber,
-				Body:       result.Output,
-				CommitID:   headRef,
+		if dryRun {
+			fmt.Fprintf(os.Stdout, "\n[dry-run] %d comment(s) would be posted:\n", len(successfulResults))
+			for _, result := range successfulResults {
+				fmt.Fprintf(os.Stdout, "\n--- %s (line %d: %s -> %s) ---\n%s\n",
+					result.Transition.FilePath,
+					result.Transition.LineNumber,
+					result.Transition.FromRef,
+					result.Transition.ToRef,
+					result.Output,
+				)
 			}
-		}
+		} else {
+			fmt.Fprintf(os.Stdout, "\nPosting %d comment(s) to PR...\n", len(successfulResults))
 
-		postErrs = PostReviewComments(ctx, comments...)
-		posted := 0
-		for _, err := range postErrs {
-			if err != nil {
-				fmt.Fprintf(os.Stderr, "Error: failed to post comment: %v\n", err)
-			} else {
-				posted++
+			comments := make([]PRReviewComment, len(successfulResults))
+			for i, result := range successfulResults {
+				comments[i] = PRReviewComment{
+					PRNumber:   prNumber,
+					FilePath:   result.Transition.FilePath,
+					LineNumber: result.Transition.LineNumber,
+					Body:       result.Output,
+					CommitID:   headRef,
+				}
 			}
+
+			postErrs = PostReviewComments(ctx, comments...)
+			posted := 0
+			for _, err := range postErrs {
+				if err != nil {
+					fmt.Fprintf(os.Stderr, "Error: failed to post comment: %v\n", err)
+				} else {
+					posted++
+				}
+			}
+			fmt.Fprintf(os.Stdout, "Successfully posted %d comment(s)\n", posted)
 		}
-		fmt.Fprintf(os.Stdout, "Successfully posted %d comment(s)\n", posted)
 	}
 
 	// Report failures and exit non-zero if anything went wrong.
