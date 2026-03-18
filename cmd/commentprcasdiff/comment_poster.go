@@ -18,6 +18,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/bufbuild/modules/internal/githubutil"
@@ -101,7 +102,7 @@ func listExistingBotComments(ctx context.Context, client *githubutil.Client, prN
 
 func postSingleReviewComment(ctx context.Context, client *githubutil.Client, prNumber int, gitCommitID string, comment prReviewComment) error {
 	body := fmt.Sprintf("_[Posted at %s]_\n\n%s", time.Now().Format(time.RFC3339), comment.body)
-	_, _, err := client.GitHub.PullRequests.CreateComment(
+	created, _, err := client.GitHub.PullRequests.CreateComment(
 		ctx,
 		string(githubutil.GithubOwnerBufbuild),
 		string(githubutil.GithubRepoModules),
@@ -116,12 +117,13 @@ func postSingleReviewComment(ctx context.Context, client *githubutil.Client, prN
 	if err != nil {
 		return fmt.Errorf("create PR comment: %w", err)
 	}
+	fmt.Fprintf(os.Stdout, "Posted comment: %s\n", created.GetHTMLURL())
 	return nil
 }
 
 func updateReviewComment(ctx context.Context, client *githubutil.Client, prCommentID int64, body string) error {
 	body = fmt.Sprintf("_[Updated at %s]_\n\n%s", time.Now().Format(time.RFC3339), body)
-	_, _, err := client.GitHub.PullRequests.EditComment(
+	updated, _, err := client.GitHub.PullRequests.EditComment(
 		ctx,
 		string(githubutil.GithubOwnerBufbuild),
 		string(githubutil.GithubRepoModules),
@@ -133,5 +135,6 @@ func updateReviewComment(ctx context.Context, client *githubutil.Client, prComme
 	if err != nil {
 		return fmt.Errorf("edit PR comment: %w", err)
 	}
+	fmt.Fprintf(os.Stdout, "Updated comment: %s\n", updated.GetHTMLURL())
 	return nil
 }
