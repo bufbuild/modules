@@ -28,7 +28,6 @@ func TestParseLineNumbersFromDiff(t *testing.T) {
 		diffOutput    string
 		expectedCount int
 		want          []int
-		wantErr       bool
 	}
 	testCases := []testCase{
 		{
