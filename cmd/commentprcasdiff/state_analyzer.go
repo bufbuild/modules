@@ -149,13 +149,12 @@ func getLineNumbersForAppendedRefs(
 	baseCount int,
 	headCount int,
 ) ([]int, error) {
-	// Get the unified diff
+	// Get the unified diff, with zero lines of context up or down.
 	cmd := exec.CommandContext(ctx, "git", "diff", "-U0", baseRef, headRef, "--", filePath) //nolint:gosec
 	output, err := cmd.Output()
 	if err != nil {
 		return nil, fmt.Errorf("git diff: %w", err)
 	}
-
 	return parseLineNumbersFromDiff(string(output), headCount-baseCount)
 }
 
@@ -170,10 +169,8 @@ func parseLineNumbersFromDiff(diffOutput string, expectedCount int) ([]int, erro
 		refIndex       = 0
 		inAddedSection = false
 	)
-
 	for scanner.Scan() {
 		line := scanner.Text()
-
 		// Parse hunk headers like: @@ -275,0 +276,12 @@
 		if strings.HasPrefix(line, "@@") {
 			parts := strings.Split(line, " ")
@@ -188,15 +185,12 @@ func parseLineNumbersFromDiff(diffOutput string, expectedCount int) ([]int, erro
 				continue
 			}
 		}
-
 		if !inAddedSection {
 			continue
 		}
-
-		// Look for added lines (starting with +)
+		// Look for added lines (starting with +) with the string `"digest":`
 		if strings.HasPrefix(line, "+") && !strings.HasPrefix(line, "+++") {
-			// Check if this line contains "digest"
-			if strings.Contains(line, `"digest"`) {
+			if strings.Contains(line, `"digest":`) {
 				if refIndex < len(lineNumbers) {
 					lineNumbers[refIndex] = currentLine
 					refIndex++
@@ -205,10 +199,8 @@ func parseLineNumbersFromDiff(diffOutput string, expectedCount int) ([]int, erro
 			currentLine++
 		}
 	}
-
 	if err := scanner.Err(); err != nil {
 		return nil, fmt.Errorf("scan diff: %w", err)
 	}
-
 	return lineNumbers, nil
 }

@@ -21,7 +21,7 @@ import (
 
 func TestParseLineNumbersFromDiff(t *testing.T) {
 	t.Parallel()
-	tests := []struct {
+	testCases := []struct {
 		name          string
 		diffOutput    string
 		expectedCount int
@@ -34,7 +34,7 @@ func TestParseLineNumbersFromDiff(t *testing.T) {
 +    },
 +    {
 +      "name": "v1.1.0",
-+      "digest": "35b3d88f6b0fbf159d9eedfc2fbfa976490e6bca1d98914c1c71f29bfe2da6261fca56c057975b3e5c022b3234a0f2eea8e2d1b599a937c6c5d63d21201a9bc3"
++      "digest": "aaa"
 +    }
 +  ]`,
 			expectedCount: 1,
@@ -65,13 +65,17 @@ func TestParseLineNumbersFromDiff(t *testing.T) {
 +      "name": "v2.0.0",
 +      "digest": "xxx"
 +    }
-@@ -100,0 +105,4 @@
+@@ -100,0 +105,8 @@
 +    {
 +      "name": "v3.0.0",
 +      "digest": "yyy"
++    },
++    {
++      "name": "v4.0.0",
++      "digest": "zzz"
 +    }`,
-			expectedCount: 2,
-			want:          []int{53, 107},
+			expectedCount: 3,
+			want:          []int{53, 107, 111},
 		},
 		{
 			name: "no_digest_lines",
@@ -90,22 +94,22 @@ func TestParseLineNumbersFromDiff(t *testing.T) {
 			want:          []int{0},
 		},
 		{
-			name: "digest_with_spaces_and_formatting",
+			name: "digest_with_formatting",
 			diffOutput: `@@ -200,0 +201,8 @@
-+    {
-+      "name": "v0.1.0",
-+      "digest": "abc123"
-+    },
-+    {
-+      "name": "v0.2.0",
-+      "digest": "def456"
-+    }`,
++{
++"name": "v0.1.0",
++"digest": "abc123"
++},
++		{
++			"name": "v0.2.0",
++			"digest": "def456"
++		}`,
 			expectedCount: 2,
 			want:          []int{203, 207},
 		},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			got, err := parseLineNumbersFromDiff(tt.diffOutput, tt.expectedCount)

@@ -64,7 +64,12 @@ func runCASDiff(ctx context.Context, transition stateTransition) casDiffResult {
 		return result
 	}
 
-	result.output = stdout.String()
+	result.output = fmt.Sprintf(
+		"```sh\n$ casdiff %s %s --format=markdown\n```\n\n%s",
+		transition.fromRef,
+		transition.toRef,
+		stdout.String(),
+	)
 	return result
 }
 
