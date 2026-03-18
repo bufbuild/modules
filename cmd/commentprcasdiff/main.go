@@ -21,6 +21,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 
 	"buf.build/go/standard/xslices"
@@ -39,24 +40,35 @@ func run(ctx context.Context) error {
 	flag.Parse()
 
 	// Read environment variables
-	prNumber := os.Getenv("PR_NUMBER")
 	baseRef := os.Getenv("BASE_REF")
 	headRef := os.Getenv("HEAD_REF")
+	prNumberString := os.Getenv("PR_NUMBER")
+	var prNumber uint64
 
-	if prNumber == "" && !dryRun {
-		return errors.New("PR_NUMBER environment variable is required when not a dry-run")
-	}
 	if baseRef == "" {
 		return errors.New("BASE_REF environment variable is required")
 	}
 	if headRef == "" {
 		return errors.New("HEAD_REF environment variable is required")
 	}
+	if !dryRun {
+		if os.Getenv("GITHUB_TOKEN") == "" {
+			return errors.New("GITHUB_TOKEN environment variable is required when not a dry-run")
+		}
+		if prNumberString == "" {
+			return errors.New("PR_NUMBER environment variable is required when not a dry-run")
+		}
+		var err error
+		prNumber, err = strconv.ParseUint(prNumberString, 10, 64)
+		if err != nil {
+			return fmt.Errorf("parse PR_NUMBER: %w", err)
+		}
+	}
 
 	fmt.Fprintf(
 		os.Stdout,
 		"Processing PR #%s (base: %s, head: %s)\n",
-		cmp.Or(prNumber, "dry-run"),
+		cmp.Or(prNumberString, "dry-run"),
 		baseRef,
 		headRef,
 	)
@@ -112,33 +124,33 @@ func run(ctx context.Context) error {
 	fmt.Fprintf(os.Stdout, "\nRunning casdiff for %d transition(s)...\n", len(allTransitions))
 	results := runCASDiffs(ctx, allTransitions)
 
-	// Separate successful results from errors
 	var (
-		successfulResults []casDiffResult
-		failedResults     []casDiffResult
+		casResults   []casDiffResult
+		errsToReturn []error
 	)
 
 	for _, result := range results {
 		if result.err != nil {
-			failedResults = append(failedResults, result)
-			fmt.Fprintf(
-				os.Stderr, "Warning: casdiff failed for %s %s->%s: %v\n",
-				result.transition.modulePath,
-				result.transition.fromRef,
-				result.transition.toRef,
-				result.err,
+			errsToReturn = append(
+				errsToReturn,
+				fmt.Errorf(
+					"casdiff failed for %s %s->%s: %w",
+					result.transition.modulePath,
+					result.transition.fromRef,
+					result.transition.toRef,
+					result.err,
+				),
 			)
 		} else {
-			successfulResults = append(successfulResults, result)
+			casResults = append(casResults, result)
 		}
 	}
 
 	// Post or print comments for successful results
-	var postErrs []error
-	if len(successfulResults) > 0 {
+	if len(casResults) > 0 {
 		if dryRun {
-			fmt.Fprintf(os.Stdout, "\n[dry-run] %d comment(s) would be posted:\n", len(successfulResults))
-			for _, result := range successfulResults {
+			fmt.Fprintf(os.Stdout, "\n[dry-run] %d comment(s) would be posted:\n", len(casResults))
+			for _, result := range casResults {
 				fmt.Fprintf(os.Stdout, "\n--- %s (line %d: %s -> %s) ---\n%s\n",
 					result.transition.filePath,
 					result.transition.lineNumber,
@@ -148,49 +160,24 @@ func run(ctx context.Context) error {
 				)
 			}
 		} else {
-			fmt.Fprintf(os.Stdout, "\nPosting %d comment(s) to PR...\n", len(successfulResults))
-
-			comments := make([]prReviewComment, len(successfulResults))
-			for i, result := range successfulResults {
+			fmt.Fprintf(os.Stdout, "\nPosting %d comment(s) to PR...\n", len(casResults))
+			comments := make([]prReviewComment, len(casResults))
+			for i, result := range casResults {
 				comments[i] = prReviewComment{
-					prNumber:   prNumber,
 					filePath:   result.transition.filePath,
 					lineNumber: result.transition.lineNumber,
 					body:       result.output,
-					commitID:   headRef,
 				}
 			}
-
-			postErrs = postReviewComments(ctx, comments...)
-			posted := 0
-			for _, err := range postErrs {
-				if err != nil {
-					fmt.Fprintf(os.Stderr, "Error: failed to post comment: %v\n", err)
-				} else {
-					posted++
-				}
+			if err := postReviewComments(ctx, uint(prNumber), headRef, comments...); err != nil {
+				errsToReturn = append(errsToReturn, fmt.Errorf("post review comments: %w", err))
 			}
-			fmt.Fprintf(os.Stdout, "Successfully posted %d comment(s)\n", posted)
 		}
 	}
 
-	// Report failures and exit non-zero if anything went wrong.
-	if len(failedResults) > 0 {
-		fmt.Fprintf(os.Stderr, "\nSummary: %d casdiff command(s) failed:\n", len(failedResults))
-		for _, result := range failedResults {
-			fmt.Fprintf(os.Stderr, "  - %s: %s -> %s\n",
-				result.transition.modulePath,
-				result.transition.fromRef,
-				result.transition.toRef)
-		}
-		return fmt.Errorf("%d casdiff command(s) failed", len(failedResults))
+	if len(errsToReturn) > 0 {
+		return errors.Join(errsToReturn...)
 	}
-	for _, err := range postErrs {
-		if err != nil {
-			return fmt.Errorf("one or more comments failed to post")
-		}
-	}
-
 	fmt.Fprintf(os.Stdout, "\nDone!\n")
 	return nil
 }
