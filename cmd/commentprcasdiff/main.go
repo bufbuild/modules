@@ -18,29 +18,56 @@ import (
 	"cmp"
 	"context"
 	"errors"
-	"flag"
 	"fmt"
 	"os"
 	"strconv"
 	"strings"
 
+	"buf.build/go/app/appcmd"
+	"buf.build/go/app/appext"
 	"buf.build/go/standard/xslices"
+	"github.com/bufbuild/buf/private/pkg/slogapp"
 	"github.com/bufbuild/modules/private/bufpkg/bufstate"
+	"github.com/spf13/pflag"
 )
 
+const rootCmdName = "commentprcasdiff"
+
 func main() {
-	if err := run(context.Background()); err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		os.Exit(1)
+	appcmd.Main(context.Background(), newCommand(rootCmdName))
+}
+
+func newCommand(name string) *appcmd.Command {
+	builder := appext.NewBuilder(
+		name,
+		appext.BuilderWithLoggerProvider(slogapp.LoggerProvider),
+	)
+	flags := newFlags()
+	return &appcmd.Command{
+		Use:       name,
+		Short:     "Post CAS diff comments on PRs when module digests change.",
+		BindFlags: flags.bind,
+		Run: builder.NewRunFunc(
+			func(ctx context.Context, _ appext.Container) error {
+				return run(ctx, flags)
+			},
+		),
 	}
 }
 
-func run(ctx context.Context) error {
-	var dryRun bool
-	flag.BoolVar(&dryRun, "dry-run", false, "print comments to stdout instead of posting to GitHub")
-	flag.Parse()
+type flags struct {
+	dryRun bool
+}
 
-	// Read environment variables
+func newFlags() *flags {
+	return &flags{}
+}
+
+func (f *flags) bind(flagSet *pflag.FlagSet) {
+	flagSet.BoolVar(&f.dryRun, "dry-run", false, "print comments to stdout instead of posting to GitHub")
+}
+
+func run(ctx context.Context, flags *flags) error {
 	baseRef := os.Getenv("BASE_REF")
 	headRef := os.Getenv("HEAD_REF")
 	prNumberString := os.Getenv("PR_NUMBER")
@@ -52,7 +79,7 @@ func run(ctx context.Context) error {
 	if headRef == "" {
 		return errors.New("HEAD_REF environment variable is required")
 	}
-	if !dryRun {
+	if !flags.dryRun {
 		if os.Getenv("GITHUB_TOKEN") == "" {
 			return errors.New("GITHUB_TOKEN environment variable is required when not a dry-run")
 		}
@@ -74,7 +101,6 @@ func run(ctx context.Context) error {
 		headRef,
 	)
 
-	// Find changed module state directories
 	moduleStatePaths, err := changedModuleStateFiles(ctx, baseRef, headRef)
 	if err != nil {
 		return fmt.Errorf("find changed modules: %w", err)
@@ -103,7 +129,6 @@ func run(ctx context.Context) error {
 		return fmt.Errorf("new state read writer: %w", err)
 	}
 
-	// Collect all transitions from all modules
 	var allTransitions []stateTransition
 	for _, moduleStatePath := range moduleStatePathsSorted {
 		fmt.Fprintf(os.Stdout, "Analyzing %s...\n", moduleStatePath)
@@ -152,9 +177,8 @@ func run(ctx context.Context) error {
 		}
 	}
 
-	// Post or print comments for successful results
 	if len(casResults) > 0 {
-		if dryRun {
+		if flags.dryRun {
 			fmt.Fprintf(os.Stdout, "\n[dry-run] %d comment(s) would be posted:\n", len(casResults))
 			for _, result := range casResults {
 				fmt.Fprintf(os.Stdout, "\n--- %s (line %d: %s -> %s) ---\n%s\n",
