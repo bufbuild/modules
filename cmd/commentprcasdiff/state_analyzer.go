@@ -25,6 +25,7 @@ import (
 	"strings"
 
 	"github.com/bufbuild/modules/private/bufpkg/bufstate"
+	statev1alpha1 "github.com/bufbuild/modules/private/gen/modules/state/v1alpha1"
 )
 
 // stateTransition represents a digest change in a module's state.json file.
@@ -72,41 +73,26 @@ func getStateFileTransitions(
 	// update/remove existing refs in base.
 	baseRefs := baseState.GetReferences()
 	headRefs := headState.GetReferences()
-	baseRefsCount := len(baseRefs)
-	headRefsCount := len(headRefs)
-	if headRefsCount <= baseRefsCount {
-		// No new references added
+	current, appendedRefs := resolveAppendedRefs(baseRefs, headRefs)
+	if current == nil {
 		return nil, nil
-	}
-	appendedRefs := headRefs[baseRefsCount:]
-
-	// Get the baseline digest (last reference in base state)
-	var (
-		currentDigest string
-		currentRef    string
-	)
-	if baseRefsCount > 0 {
-		lastBaseRef := baseRefs[baseRefsCount-1]
-		currentDigest = lastBaseRef.GetDigest()
-		currentRef = lastBaseRef.GetName()
-	} else if len(appendedRefs) > 0 {
-		// If base state is empty, use first appended ref as baseline
-		currentDigest = appendedRefs[0].GetDigest()
-		currentRef = appendedRefs[0].GetName()
-		appendedRefs = appendedRefs[1:] // Skip first as it's now the baseline
 	}
 
 	// Get line number mapping for the appended references
-	lineNumbers, err := getLineNumbersForAppendedRefs(ctx, filePath, baseRef, headRef, baseRefsCount, headRefsCount)
+	lineNumbers, err := getLineNumbersForAppendedRefs(ctx, filePath, baseRef, headRef, len(baseRefs), len(headRefs))
 	if err != nil {
 		return nil, fmt.Errorf("get line numbers: %w", err)
 	}
 
 	// Detect digest transitions
-	var transitions []stateTransition
-	modulePath := filepath.Dir(filePath)
-	for i, ref := range appendedRefs {
-		if ref.GetDigest() != currentDigest {
+	var (
+		modulePath    = filepath.Dir(filePath)
+		currentRef    = current.GetName()
+		currentDigest = current.GetDigest()
+		transitions   []stateTransition
+	)
+	for i, appendedRef := range appendedRefs {
+		if appendedRef.GetDigest() != currentDigest {
 			// Digest changed! Record transition
 			var lineNumber int
 			if i < len(lineNumbers) {
@@ -116,17 +102,53 @@ func getStateFileTransitions(
 				modulePath: modulePath,
 				filePath:   filePath,
 				fromRef:    currentRef,
-				toRef:      ref.GetName(),
+				toRef:      appendedRef.GetName(),
 				fromDigest: currentDigest,
-				toDigest:   ref.GetDigest(),
+				toDigest:   appendedRef.GetDigest(),
 				lineNumber: lineNumber,
 			})
-			currentDigest = ref.GetDigest()
+			currentDigest = appendedRef.GetDigest()
 		}
-		currentRef = ref.GetName()
+		currentRef = appendedRef.GetName()
 	}
 
 	return transitions, nil
+}
+
+// resolveAppendedRefs identifies the refs from headRefs that are new, considering new by
+// index-behavior, not its content. Meaning if base has 3 refs and head has 5, we assume the first 3
+// in head are the same 3 in base, and the latest 2 are "appended". That is the use case for the
+// fetch-modules PR, and that is for now the only supported behavior.
+//
+// Returns (nil, nil) when the head refs is empty. The current ref is the latest in the base refs.
+// If base is empty, the first ref in head is returned as the current, and all the rest are returned
+// as appended.
+func resolveAppendedRefs(
+	baseRefs []*statev1alpha1.ModuleReference,
+	headRefs []*statev1alpha1.ModuleReference,
+) (*statev1alpha1.ModuleReference, []*statev1alpha1.ModuleReference) {
+	if len(baseRefs) == 0 && len(headRefs) == 0 {
+		// both empty
+		//   - current: none
+		//   - appended: none
+		return nil, nil
+	}
+	if len(baseRefs) == 0 {
+		// base empty
+		//   - current: first in head
+		//   - appended: the rest from head (if any)
+		return headRefs[0], headRefs[1:]
+	}
+	if len(headRefs) <= len(baseRefs) {
+		// head has the same amount or less refs than base
+		//   - current: last in base
+		//   - appended: none
+		return baseRefs[len(baseRefs)-1], nil
+	}
+	// head has more refs than base (expected scenario most of the times)
+	//   - current: last in base
+	//   - appended: the index-base appended in head
+	return baseRefs[len(baseRefs)-1], headRefs[len(baseRefs):]
 }
 
 // readFileAtRef reads a file's content at a specific git ref using git show.

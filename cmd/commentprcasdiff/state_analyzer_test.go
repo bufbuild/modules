@@ -17,9 +17,125 @@ package main
 import (
 	"testing"
 
+	statev1alpha1 "github.com/bufbuild/modules/private/gen/modules/state/v1alpha1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
+
+func TestResolveAppendedRefs(t *testing.T) {
+	t.Parallel()
+	ref := func(name, digest string) *statev1alpha1.ModuleReference {
+		return statev1alpha1.ModuleReference_builder{Name: name, Digest: digest}.Build()
+	}
+	type testCase struct {
+		name         string
+		baseRefs     []*statev1alpha1.ModuleReference
+		headRefs     []*statev1alpha1.ModuleReference
+		wantCurrent  *statev1alpha1.ModuleReference
+		wantAppended []*statev1alpha1.ModuleReference
+	}
+	testCases := []testCase{
+		{
+			// base=0, head=0 → nothing to do
+			name:         "both_empty",
+			baseRefs:     nil,
+			headRefs:     nil,
+			wantCurrent:  nil,
+			wantAppended: nil,
+		},
+		{
+			// base=0, head=1 → head[0] is baseline, nothing appended
+			name:         "base_empty_single_ref_in_head",
+			baseRefs:     nil,
+			headRefs:     []*statev1alpha1.ModuleReference{ref("v1.0.0", "d1")},
+			wantCurrent:  ref("v1.0.0", "d1"),
+			wantAppended: []*statev1alpha1.ModuleReference{},
+		},
+		{
+			// base=0, head=3 → head[0] is baseline, head[1:] are appended
+			name:     "base_empty_multiple_refs",
+			baseRefs: nil,
+			headRefs: []*statev1alpha1.ModuleReference{
+				ref("v1.0.0", "d1"),
+				ref("v2.0.0", "d2"),
+				ref("v3.0.0", "d2"),
+			},
+			wantCurrent: ref("v1.0.0", "d1"),
+			wantAppended: []*statev1alpha1.ModuleReference{
+				ref("v2.0.0", "d2"),
+				ref("v3.0.0", "d2"),
+			},
+		},
+		{
+			// base=2, head=4 → base[latest] is baseline, head[2:] are appended
+			name: "base_non_empty_some_appends",
+			baseRefs: []*statev1alpha1.ModuleReference{
+				ref("v1.0.0", "d1"),
+				ref("v1.1.0", "d1"),
+			},
+			headRefs: []*statev1alpha1.ModuleReference{
+				ref("v1.0.0", "d1"),
+				ref("v1.1.0", "d1"),
+				ref("v2.0.0", "d2"),
+				ref("v2.1.0", "d2"),
+			},
+			wantCurrent: ref("v1.1.0", "d1"),
+			wantAppended: []*statev1alpha1.ModuleReference{
+				ref("v2.0.0", "d2"),
+				ref("v2.1.0", "d2"),
+			},
+		},
+		{
+			// base=1, head=1 → base[latest] is baseline, no appends
+			name:         "head_count_equals_base_count_not_supported",
+			baseRefs:     []*statev1alpha1.ModuleReference{ref("v1.0.0", "d1")},
+			headRefs:     []*statev1alpha1.ModuleReference{ref("v1.0.0", "d1")},
+			wantCurrent:  ref("v1.0.0", "d1"),
+			wantAppended: nil,
+		},
+		{
+			// base=2, head=1 → base[latest] is baseline, no appends
+			name: "head_shorter_than_base_not_supported",
+			baseRefs: []*statev1alpha1.ModuleReference{
+				ref("v1.0.0", "d1"),
+				ref("v2.0.0", "d2"),
+			},
+			headRefs:     []*statev1alpha1.ModuleReference{ref("v1.0.0", "d1")},
+			wantCurrent:  ref("v2.0.0", "d2"),
+			wantAppended: nil,
+		},
+		{
+			// base=3, head=5, but the digests don't match. The function only looks at counts, not
+			// content: base[latest] is baseline, head[2:] are appended.
+			name: "existing_ref_modified_not_supported",
+			baseRefs: []*statev1alpha1.ModuleReference{
+				ref("v1.0.0", "d1"),
+				ref("v2.0.0", "d2"),
+				ref("v3.0.0", "d3"),
+			},
+			headRefs: []*statev1alpha1.ModuleReference{
+				ref("v1.0.0", "d1-modified"),
+				ref("v2.0.0", "d2-modified"),
+				ref("v3.0.0", "d3-modified"),
+				ref("v4.0.0", "d4"),
+				ref("v5.0.0", "d5"),
+			},
+			wantCurrent: ref("v3.0.0", "d3"), // the one from base, not from head
+			wantAppended: []*statev1alpha1.ModuleReference{
+				ref("v4.0.0", "d4"),
+				ref("v5.0.0", "d5"),
+			},
+		},
+	}
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+			gotCurrent, gotAppended := resolveAppendedRefs(tc.baseRefs, tc.headRefs)
+			assert.Equal(t, tc.wantCurrent, gotCurrent)
+			assert.Equal(t, tc.wantAppended, gotAppended)
+		})
+	}
+}
 
 func TestParseLineNumbersFromDiff(t *testing.T) {
 	t.Parallel()
