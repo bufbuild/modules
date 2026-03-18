@@ -3,9 +3,8 @@ name: Auto-comment PR with casdiff
 on:
   pull_request:
     types: [opened, synchronize]
-    # FIXME: filter to only PRs targetting main
-    # branches:
-    #   - main
+    branches:
+      - main
     paths:
       - modules/sync/*/*/state.json
 
