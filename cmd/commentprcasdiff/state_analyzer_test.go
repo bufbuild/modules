@@ -15,8 +15,10 @@
 package main
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestParseLineNumbersFromDiff(t *testing.T) {
@@ -114,13 +116,8 @@ func TestParseLineNumbersFromDiff(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
 			got, err := parseLineNumbersFromDiff(tc.diffOutput, tc.expectedCount)
-			if (err != nil) != tc.wantErr {
-				t.Errorf("parseLineNumbersFromDiff() error = %v, wantErr %v", err, tc.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tc.want) {
-				t.Errorf("parseLineNumbersFromDiff() = %v, want %v", got, tc.want)
-			}
+			require.NoError(t, err)
+			assert.Equal(t, tc.want, got)
 		})
 	}
 }
