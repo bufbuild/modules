@@ -79,11 +79,9 @@ func runCASDiffs(ctx context.Context, transitions []stateTransition) []casDiffRe
 	var wg sync.WaitGroup
 
 	for i, transition := range transitions {
-		wg.Add(1)
-		go func(index int, trans stateTransition) {
-			defer wg.Done()
-			results[index] = runCASDiff(ctx, trans)
-		}(i, transition)
+		wg.Go(func() {
+			results[i] = runCASDiff(ctx, transition)
+		})
 	}
 
 	wg.Wait()
