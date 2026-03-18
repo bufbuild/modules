@@ -71,7 +71,7 @@ func run(ctx context.Context, flags *flags) error {
 	baseRef := os.Getenv("BASE_REF")
 	headRef := os.Getenv("HEAD_REF")
 	prNumberString := os.Getenv("PR_NUMBER")
-	var prNumber uint64
+	var prNumber int
 
 	if baseRef == "" {
 		return errors.New("BASE_REF environment variable is required")
@@ -87,7 +87,7 @@ func run(ctx context.Context, flags *flags) error {
 			return errors.New("PR_NUMBER environment variable is required when not a dry-run")
 		}
 		var err error
-		prNumber, err = strconv.ParseUint(prNumberString, 10, 64)
+		prNumber, err = strconv.Atoi(prNumberString)
 		if err != nil {
 			return fmt.Errorf("parse PR_NUMBER: %w", err)
 		}
@@ -199,7 +199,7 @@ func run(ctx context.Context, flags *flags) error {
 					body:       result.output,
 				}
 			}
-			if err := postReviewComments(ctx, uint(prNumber), headRef, comments...); err != nil {
+			if err := postReviewComments(ctx, prNumber, headRef, comments...); err != nil {
 				errsToReturn = append(errsToReturn, fmt.Errorf("post review comments: %w", err))
 			}
 		}

@@ -39,10 +39,10 @@ type commentKey struct {
 
 // postReviewComments posts review comments to specific lines in the PR diff. If a bot comment
 // already exists at the same file/line, it is updated instead of creating a duplicate.
-func postReviewComments(ctx context.Context, prNumber uint, gitCommitID string, comments ...prReviewComment) error {
+func postReviewComments(ctx context.Context, prNumber int, gitCommitID string, comments ...prReviewComment) error {
 	client := githubutil.NewClient(ctx)
 
-	existingPRComments, err := listExistingBotComments(ctx, client, int(prNumber))
+	existingPRComments, err := listExistingBotComments(ctx, client, prNumber)
 	if err != nil {
 		return fmt.Errorf("list existing bot comments: %w", err)
 	}
@@ -55,7 +55,7 @@ func postReviewComments(ctx context.Context, prNumber uint, gitCommitID string, 
 				errsPosting = append(errsPosting, fmt.Errorf("updating existing comment in %v: %w", key, err))
 			}
 		} else {
-			if err := postSingleReviewComment(ctx, client, int(prNumber), gitCommitID, comment); err != nil {
+			if err := postSingleReviewComment(ctx, client, prNumber, gitCommitID, comment); err != nil {
 				errsPosting = append(errsPosting, fmt.Errorf("posting new comment in %v: %w", key, err))
 			}
 		}
@@ -107,10 +107,10 @@ func postSingleReviewComment(ctx context.Context, client *githubutil.Client, prN
 		string(githubutil.GithubRepoModules),
 		prNumber,
 		&github.PullRequestComment{
-			CommitID: github.String(gitCommitID),
-			Path:     github.String(comment.filePath),
-			Line:     github.Int(comment.lineNumber),
-			Body:     github.String(body),
+			CommitID: &gitCommitID,
+			Path:     &comment.filePath,
+			Line:     &comment.lineNumber,
+			Body:     &body,
 		},
 	)
 	if err != nil {
@@ -127,7 +127,7 @@ func updateReviewComment(ctx context.Context, client *githubutil.Client, prComme
 		string(githubutil.GithubRepoModules),
 		prCommentID,
 		&github.PullRequestComment{
-			Body: github.String(body),
+			Body: &body,
 		},
 	)
 	if err != nil {
