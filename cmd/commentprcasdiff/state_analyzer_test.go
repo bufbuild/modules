@@ -21,13 +21,14 @@ import (
 
 func TestParseLineNumbersFromDiff(t *testing.T) {
 	t.Parallel()
-	testCases := []struct {
+	type testCase struct {
 		name          string
 		diffOutput    string
 		expectedCount int
 		want          []int
 		wantErr       bool
-	}{
+	}
+	testCases := []testCase{
 		{
 			name: "single_digest_change",
 			diffOutput: `@@ -275,0 +276,6 @@
@@ -109,16 +110,16 @@ func TestParseLineNumbersFromDiff(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testCases {
-		t.Run(tt.name, func(t *testing.T) {
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			got, err := parseLineNumbersFromDiff(tt.diffOutput, tt.expectedCount)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("parseLineNumbersFromDiff() error = %v, wantErr %v", err, tt.wantErr)
+			got, err := parseLineNumbersFromDiff(tc.diffOutput, tc.expectedCount)
+			if (err != nil) != tc.wantErr {
+				t.Errorf("parseLineNumbersFromDiff() error = %v, wantErr %v", err, tc.wantErr)
 				return
 			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("parseLineNumbersFromDiff() = %v, want %v", got, tt.want)
+			if !reflect.DeepEqual(got, tc.want) {
+				t.Errorf("parseLineNumbersFromDiff() = %v, want %v", got, tc.want)
 			}
 		})
 	}
