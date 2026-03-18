@@ -5,6 +5,8 @@ on:
     types: [opened, synchronize]
     branches:
       - main
+    paths:
+      - modules/sync/*/*/state.json
 
 permissions:
   contents: read
