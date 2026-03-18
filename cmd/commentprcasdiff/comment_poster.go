@@ -117,7 +117,7 @@ func listExistingBotComments(ctx context.Context, repo string, prNumber uint) (m
 
 // updateReviewComment updates the body of an existing review comment.
 func updateReviewComment(ctx context.Context, repoOwnerAndName string, commentID int64, body string) error {
-	commentBody := fmt.Sprintf("[Updated at %s]\n\n%s", time.Now(), body)
+	commentBody := fmt.Sprintf("[Updated at %s]\n\n%s", time.Now().Format(time.RFC3339), body)
 	requestJSON, err := json.Marshal(map[string]any{"body": commentBody})
 	if err != nil {
 		return fmt.Errorf("marshal request: %w", err)
@@ -152,7 +152,7 @@ func getGitRepositoryOwnerAndName(ctx context.Context) (string, error) {
 
 // postSingleReviewComment posts a single review comment using GitHub API.
 func postSingleReviewComment(ctx context.Context, repoOwnerAndName string, prNumber uint, gitCommitID string, comment prReviewComment) error {
-	commentBody := fmt.Sprintf("[Posted at %s]\n\n%s", time.Now(), comment.body)
+	commentBody := fmt.Sprintf("[Posted at %s]\n\n%s", time.Now().Format(time.RFC3339), comment.body)
 	requestBody := map[string]any{
 		"commit_id": gitCommitID,
 		"path":      comment.filePath,
