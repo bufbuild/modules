@@ -122,7 +122,7 @@ func run(ctx context.Context) error {
 		if result.err != nil {
 			failedResults = append(failedResults, result)
 			fmt.Fprintf(
-				os.Stderr, "Warning: casdiff failed for %s %s->%s: %w\n",
+				os.Stderr, "Warning: casdiff failed for %s %s->%s: %v\n",
 				result.transition.modulePath,
 				result.transition.fromRef,
 				result.transition.toRef,
