@@ -24,7 +24,7 @@ import (
 	"time"
 )
 
-// prReviewComment represents a comment to be posted or patchedon a specific line in a PR.
+// prReviewComment represents a comment to be posted or patched on a specific line in a PR.
 type prReviewComment struct {
 	filePath   string // File path in the PR (e.g., "modules/sync/bufbuild/protovalidate/state.json")
 	lineNumber int    // Line number in the diff
@@ -62,20 +62,33 @@ func postReviewComments(ctx context.Context, prNumber uint, gitCommitID string, 
 		return fmt.Errorf("list existing bot comments: %w", err)
 	}
 
-	var errsPosting error
+	var errsPosting []error
 	for _, comment := range comments {
 		key := commentKey{path: comment.filePath, line: comment.lineNumber}
 		if prCommentID, alreadyPosted := existingPRComments[key]; alreadyPosted {
 			if err := updateReviewComment(ctx, gitRepoOwnerAndName, prCommentID, comment.body); err != nil {
-				errsPosting = errors.Join(errsPosting, fmt.Errorf("updating existing comment in %v: %w", key, err))
+				errsPosting = append(errsPosting, fmt.Errorf("updating existing comment in %v: %w", key, err))
 			}
 		} else {
 			if err := postSingleReviewComment(ctx, gitRepoOwnerAndName, prNumber, gitCommitID, comment); err != nil {
-				errsPosting = errors.Join(errsPosting, fmt.Errorf("posting new comment comment in %v: %w", key, err))
+				errsPosting = append(errsPosting, fmt.Errorf("posting new comment in %v: %w", key, err))
 			}
 		}
 	}
-	return errsPosting
+	if len(errsPosting) > 0 {
+		return errors.Join(errsPosting...)
+	}
+	return nil
+}
+
+// getGitRepositoryOwnerAndName gets the owner/repo from the current git repository.
+func getGitRepositoryOwnerAndName(ctx context.Context) (string, error) {
+	cmd := exec.CommandContext(ctx, "gh", "repo", "view", "--json", "nameWithOwner", "-q", ".nameWithOwner")
+	output, err := cmd.Output()
+	if err != nil {
+		return "", fmt.Errorf("gh repo view: %w", err)
+	}
+	return string(bytes.TrimSpace(output)), nil
 }
 
 // listExistingBotComments returns a map of (path, line) → commentID for all comments left by
@@ -106,65 +119,30 @@ func listExistingBotComments(ctx context.Context, repo string, prNumber uint) (m
 		return nil, fmt.Errorf("parse comments response: %s: %w", string(respBytes), err)
 	}
 
+	const githubActionsBotUsername = "github-actions[bot]"
 	result := make(map[commentKey]int64)
 	for _, comment := range existingComments {
-		if comment.User.Login == "github-actions[bot]" {
+		if comment.User.Login == githubActionsBotUsername {
 			result[commentKey{path: comment.Path, line: comment.Line}] = comment.ID
 		}
 	}
 	return result, nil
 }
 
-// updateReviewComment updates the body of an existing review comment.
-func updateReviewComment(ctx context.Context, repoOwnerAndName string, commentID int64, body string) error {
-	commentBody := fmt.Sprintf("[Updated at %s]\n\n%s", time.Now().Format(time.RFC3339), body)
-	requestJSON, err := json.Marshal(map[string]any{"body": commentBody})
-	if err != nil {
-		return fmt.Errorf("marshal request: %w", err)
-	}
-
-	cmd := exec.CommandContext( //nolint:gosec
-		ctx,
-		"gh", "api",
-		fmt.Sprintf("repos/%s/pulls/comments/%d", repoOwnerAndName, commentID),
-		"-X", "PATCH",
-		"--input", "-",
-	)
-	cmd.Stdin = bytes.NewReader(requestJSON)
-
-	var stderr bytes.Buffer
-	cmd.Stderr = &stderr
-	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("gh api patch comment: %w (stderr: %s)", err, stderr.String())
-	}
-	return nil
-}
-
-// getGitRepositoryOwnerAndName gets the owner/repo from the current git repository.
-func getGitRepositoryOwnerAndName(ctx context.Context) (string, error) {
-	cmd := exec.CommandContext(ctx, "gh", "repo", "view", "--json", "nameWithOwner", "-q", ".nameWithOwner")
-	output, err := cmd.Output()
-	if err != nil {
-		return "", fmt.Errorf("gh repo view: %w", err)
-	}
-	return string(bytes.TrimSpace(output)), nil
-}
-
-// postSingleReviewComment posts a single review comment using GitHub API.
 func postSingleReviewComment(ctx context.Context, repoOwnerAndName string, prNumber uint, gitCommitID string, comment prReviewComment) error {
-	commentBody := fmt.Sprintf("[Posted at %s]\n\n%s", time.Now().Format(time.RFC3339), comment.body)
+	commentBody := fmt.Sprintf("_[Posted at %s]_\n\n%s", time.Now().Format(time.RFC3339), comment.body)
 	requestBody := map[string]any{
 		"commit_id": gitCommitID,
 		"path":      comment.filePath,
 		"line":      comment.lineNumber,
 		"body":      commentBody,
 	}
-
 	requestJSON, err := json.Marshal(requestBody)
 	if err != nil {
 		return fmt.Errorf("marshal request: %w", err)
 	}
 
+	var stderr bytes.Buffer
 	cmd := exec.CommandContext( //nolint:gosec
 		ctx,
 		"gh", "api",
@@ -173,12 +151,32 @@ func postSingleReviewComment(ctx context.Context, repoOwnerAndName string, prNum
 		"--input", "-",
 	)
 	cmd.Stdin = bytes.NewReader(requestJSON)
-
-	var stderr bytes.Buffer
 	cmd.Stderr = &stderr
 	if err := cmd.Run(); err != nil {
 		return fmt.Errorf("gh api post comment: %w (stderr: %s)", err, stderr.String())
 	}
+	return nil
+}
 
+func updateReviewComment(ctx context.Context, repoOwnerAndName string, prCommentID int64, body string) error {
+	commentBody := fmt.Sprintf("_[Updated at %s]_\n\n%s", time.Now().Format(time.RFC3339), body)
+	requestJSON, err := json.Marshal(map[string]any{"body": commentBody})
+	if err != nil {
+		return fmt.Errorf("marshal request: %w", err)
+	}
+
+	var stderr bytes.Buffer
+	cmd := exec.CommandContext( //nolint:gosec
+		ctx,
+		"gh", "api",
+		fmt.Sprintf("repos/%s/pulls/comments/%d", repoOwnerAndName, prCommentID),
+		"-X", "PATCH",
+		"--input", "-",
+	)
+	cmd.Stdin = bytes.NewReader(requestJSON)
+	cmd.Stderr = &stderr
+	if err := cmd.Run(); err != nil {
+		return fmt.Errorf("gh api patch comment: %w (stderr: %s)", err, stderr.String())
+	}
 	return nil
 }
