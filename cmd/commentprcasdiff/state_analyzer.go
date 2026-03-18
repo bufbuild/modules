@@ -16,12 +16,15 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
+	"io"
 	"os/exec"
 	"path/filepath"
 	"strings"
+
+	"github.com/bufbuild/modules/private/bufpkg/bufstate"
 )
 
 // stateTransition represents a digest change in a module's state.json file.
@@ -35,20 +38,11 @@ type stateTransition struct {
 	lineNumber int    // Line in diff where new digest first appears
 }
 
-// FIXME: these references/state should use the proto schema.
-type moduleState struct {
-	References []reference `json:"references"`
-}
-
-type reference struct {
-	Name   string `json:"name"`
-	Digest string `json:"digest"`
-}
-
 // getStateFileTransitions reads state.json from base and head branches, compares the JSON arrays to
 // find appended references, and detects digest transitions.
 func getStateFileTransitions(
 	ctx context.Context,
+	stateRW *bufstate.ReadWriter,
 	filePath string,
 	baseRef string,
 	headRef string,
@@ -58,32 +52,33 @@ func getStateFileTransitions(
 	if err != nil {
 		return nil, fmt.Errorf("read base state: %w", err)
 	}
-
 	headContent, err := readFileAtRef(ctx, filePath, headRef)
 	if err != nil {
 		return nil, fmt.Errorf("read head state: %w", err)
 	}
 
-	// Parse JSON
-	var baseState, headState moduleState
-	if err := json.Unmarshal(baseContent, &baseState); err != nil {
-		return nil, fmt.Errorf("parse base state JSON: %w", err)
+	baseState, err := stateRW.ReadModStateFile(io.NopCloser(bytes.NewReader(baseContent)))
+	if err != nil {
+		return nil, fmt.Errorf("parse base state: %w", err)
 	}
-	if err := json.Unmarshal(headContent, &headState); err != nil {
-		return nil, fmt.Errorf("parse head state JSON: %w", err)
+	headState, err := stateRW.ReadModStateFile(io.NopCloser(bytes.NewReader(headContent)))
+	if err != nil {
+		return nil, fmt.Errorf("parse head state: %w", err)
 	}
 
-	// Identify appended references
+	// Identify appended references.
 	//
 	// This only works for diffs that append references in the state file, not for diffs that
 	// update/remove existing refs in base.
-	baseRefsCount := len(baseState.References)
-	headRefsCount := len(headState.References)
+	baseRefs := baseState.GetReferences()
+	headRefs := headState.GetReferences()
+	baseRefsCount := len(baseRefs)
+	headRefsCount := len(headRefs)
 	if headRefsCount <= baseRefsCount {
 		// No new references added
 		return nil, nil
 	}
-	appendedRefs := headState.References[baseRefsCount:]
+	appendedRefs := headRefs[baseRefsCount:]
 
 	// Get the baseline digest (last reference in base state)
 	var (
@@ -91,13 +86,13 @@ func getStateFileTransitions(
 		currentRef    string
 	)
 	if baseRefsCount > 0 {
-		lastBaseRef := baseState.References[baseRefsCount-1]
-		currentDigest = lastBaseRef.Digest
-		currentRef = lastBaseRef.Name
+		lastBaseRef := baseRefs[baseRefsCount-1]
+		currentDigest = lastBaseRef.GetDigest()
+		currentRef = lastBaseRef.GetName()
 	} else if len(appendedRefs) > 0 {
 		// If base state is empty, use first appended ref as baseline
-		currentDigest = appendedRefs[0].Digest
-		currentRef = appendedRefs[0].Name
+		currentDigest = appendedRefs[0].GetDigest()
+		currentRef = appendedRefs[0].GetName()
 		appendedRefs = appendedRefs[1:] // Skip first as it's now the baseline
 	}
 
@@ -111,28 +106,24 @@ func getStateFileTransitions(
 	var transitions []stateTransition
 	modulePath := filepath.Dir(filePath)
 	for i, ref := range appendedRefs {
-		if ref.Digest != currentDigest {
+		if ref.GetDigest() != currentDigest {
 			// Digest changed! Record transition
 			var lineNumber int
 			if i < len(lineNumbers) {
 				lineNumber = lineNumbers[i]
 			}
-
-			transition := stateTransition{
+			transitions = append(transitions, stateTransition{
 				modulePath: modulePath,
 				filePath:   filePath,
 				fromRef:    currentRef,
-				toRef:      ref.Name,
+				toRef:      ref.GetName(),
 				fromDigest: currentDigest,
-				toDigest:   ref.Digest,
+				toDigest:   ref.GetDigest(),
 				lineNumber: lineNumber,
-			}
-			transitions = append(transitions, transition)
-
-			// Update current for next iteration
-			currentDigest = ref.Digest
+			})
+			currentDigest = ref.GetDigest()
 		}
-		currentRef = ref.Name
+		currentRef = ref.GetName()
 	}
 
 	return transitions, nil

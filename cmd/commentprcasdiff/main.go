@@ -25,6 +25,7 @@ import (
 	"strings"
 
 	"buf.build/go/standard/xslices"
+	"github.com/bufbuild/modules/private/bufpkg/bufstate"
 )
 
 func main() {
@@ -97,12 +98,17 @@ func run(ctx context.Context) error {
 		strings.Join(moduleStatePathsSorted, "\n"),
 	)
 
+	stateRW, err := bufstate.NewReadWriter()
+	if err != nil {
+		return fmt.Errorf("new state read writer: %w", err)
+	}
+
 	// Collect all transitions from all modules
 	var allTransitions []stateTransition
 	for _, moduleStatePath := range moduleStatePathsSorted {
 		fmt.Fprintf(os.Stdout, "Analyzing %s...\n", moduleStatePath)
 
-		transitions, err := getStateFileTransitions(ctx, moduleStatePath, baseRef, headRef)
+		transitions, err := getStateFileTransitions(ctx, stateRW, moduleStatePath, baseRef, headRef)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Warning: failed to analyze %s: %v\n", moduleStatePath, err)
 			continue
