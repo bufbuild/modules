@@ -6,7 +6,7 @@
     },
     {
       "module_name": "bufbuild/protovalidate",
-      "latest_reference": "v0.14.1"
+      "latest_reference": "v1.1.1"
     },
     {
       "module_name": "bufbuild/protovalidate-testing",
