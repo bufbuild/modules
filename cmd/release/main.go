@@ -306,9 +306,9 @@ func createRelease(
 		githubutil.GithubOwnerBufbuild,
 		githubutil.GithubRepoModules,
 		&github.RepositoryRelease{
-			TagName: new(releaseName),
-			Name:    new(releaseName),
-			Body:    new(releaseBody),
+			TagName: &releaseName,
+			Name:    &releaseName,
+			Body:    &releaseBody,
 			Draft:   new(true), // Start release as a draft until all assets are uploaded
 		})
 	if err != nil {
