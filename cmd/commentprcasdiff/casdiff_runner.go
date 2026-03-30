@@ -15,13 +15,13 @@
 package main
 
 import (
-	"bytes"
 	"context"
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"sync"
+
+	"github.com/bufbuild/modules/internal/bufcasdiff"
 )
 
 // casDiffResult contains the result of running casdiff for a transition.
@@ -31,36 +31,19 @@ type casDiffResult struct {
 	err        error
 }
 
-// runCASDiff executes casdiff command in the module directory.
+// runCASDiff computes the CAS diff for a transition and returns its markdown output.
 func runCASDiff(ctx context.Context, transition stateTransition) casDiffResult {
-	result := casDiffResult{
-		transition: transition,
-	}
+	result := casDiffResult{transition: transition}
 
 	repoRoot, err := os.Getwd()
 	if err != nil {
 		result.err = fmt.Errorf("get working directory: %w", err)
 		return result
 	}
-
-	// Run casdiff in the module directory. casdiff reads state.json from "." so it must run from the
-	// module directory. We use an absolute path to the package to avoid path resolution issues when
-	// cmd.Dir is set.
-	cmd := exec.CommandContext( //nolint:gosec
-		ctx,
-		"go", "run", filepath.Join(repoRoot, "cmd", "casdiff"),
-		transition.fromRef,
-		transition.toRef,
-		"--format=markdown",
-	)
-	cmd.Dir = filepath.Join(repoRoot, transition.modulePath)
-
-	var stdout, stderr bytes.Buffer
-	cmd.Stdout = &stdout
-	cmd.Stderr = &stderr
-
-	if err := cmd.Run(); err != nil {
-		result.err = fmt.Errorf("casdiff failed: %w (stderr: %s)", err, stderr.String())
+	moduleDirPath := filepath.Join(repoRoot, transition.modulePath)
+	mdiff, err := bufcasdiff.DiffModuleDirectory(ctx, moduleDirPath, transition.fromRef, transition.toRef)
+	if err != nil {
+		result.err = fmt.Errorf("calculate casdiff: %w", err)
 		return result
 	}
 
@@ -68,7 +51,7 @@ func runCASDiff(ctx context.Context, transition stateTransition) casDiffResult {
 		"```sh\n$ casdiff %s %s --format=markdown\n```\n\n%s",
 		transition.fromRef,
 		transition.toRef,
-		stdout.String(),
+		mdiff.String(bufcasdiff.ManifestDiffOutputFormatMarkdown),
 	)
 	return result
 }
