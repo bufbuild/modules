@@ -48,9 +48,10 @@ func runCASDiff(ctx context.Context, transition stateTransition) casDiffResult {
 	}
 
 	result.output = fmt.Sprintf(
-		"```sh\n$ casdiff %s %s --format=markdown\n```\n\n%s",
+		"```sh\n$ casdiff %s %s --format=markdown\n```\n<details><summary>%s</summary>\n<p>\n%s\n</p>\n</details>",
 		transition.fromRef,
 		transition.toRef,
+		mdiff.Summary(),
 		mdiff.String(bufcasdiff.ManifestDiffOutputFormatMarkdown),
 	)
 	return result
