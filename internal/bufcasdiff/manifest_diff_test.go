@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package bufcasdiff
 
 import (
 	"context"
@@ -31,7 +31,7 @@ func TestManifestDiff(t *testing.T) {
 	t.Parallel()
 	ctx := t.Context()
 	casBucket, mFrom, mTo := prepareDiffCASBucket(ctx, t)
-	mdiff, err := buildManifestDiff(ctx, mFrom, mTo, casBucket)
+	mdiff, err := BuildManifestDiff(ctx, mFrom, mTo, casBucket)
 	require.NoError(t, err)
 	require.NotNil(t, mdiff)
 	t.Run("removed", func(t *testing.T) {
