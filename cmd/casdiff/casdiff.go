@@ -17,6 +17,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
 	"strconv"
 
 	"buf.build/go/app/appcmd"
@@ -106,16 +107,16 @@ func run(
 	if !ok {
 		return fmt.Errorf("unsupported format %s", flags.format)
 	}
-	from, to := container.Arg(0), container.Arg(1) //nolint:varnamelen // from/to used symmetrically
+	from, to := container.Arg(0), container.Arg(1)
 	mdiff, err := bufcasdiff.DiffModuleDirectory(ctx, ".", from, to)
 	if err != nil {
 		return fmt.Errorf("calculate diff: %w", err)
 	}
 	switch f {
 	case formatText:
-		fmt.Print(mdiff.String(bufcasdiff.ManifestDiffOutputFormatText))
+		fmt.Fprint(os.Stdout, mdiff.String(bufcasdiff.ManifestDiffOutputFormatText))
 	case formatMarkdown:
-		fmt.Print(mdiff.String(bufcasdiff.ManifestDiffOutputFormatMarkdown))
+		fmt.Fprint(os.Stdout, mdiff.String(bufcasdiff.ManifestDiffOutputFormatMarkdown))
 	default:
 		return fmt.Errorf("format %s not supported", f.String())
 	}

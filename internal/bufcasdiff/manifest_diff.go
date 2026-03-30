@@ -60,7 +60,7 @@ func newManifestDiff() *ManifestDiff {
 func buildManifestDiff(
 	ctx context.Context,
 	from cas.Manifest,
-	to cas.Manifest, //nolint:varnamelen // from/to used symmetrically
+	to cas.Manifest,
 	bucket storage.ReadBucket,
 ) (*ManifestDiff, error) {
 	var (
@@ -145,32 +145,25 @@ func (d *ManifestDiff) String(format ManifestDiffOutputFormat) string {
 	var b bytes.Buffer
 	isMarkdown := format == ManifestDiffOutputFormatMarkdown
 	if isMarkdown {
-		fmt.Fprintf(
-			&b,
-			"> _%d files changed: %d removed, %d renamed, %d added, %d changed content_\n",
-			len(d.pathsRemoved)+len(d.pathsRenamed)+len(d.pathsAdded)+len(d.pathsChangedContent),
-			len(d.pathsRemoved),
-			len(d.pathsRenamed),
-			len(d.pathsAdded),
-			len(d.pathsChangedContent),
-		)
-	} else {
-		fmt.Fprintf(
-			&b,
-			"%d files changed: %d removed, %d renamed, %d added, %d changed content\n",
-			len(d.pathsRemoved)+len(d.pathsRenamed)+len(d.pathsAdded)+len(d.pathsChangedContent),
-			len(d.pathsRemoved),
-			len(d.pathsRenamed),
-			len(d.pathsAdded),
-			len(d.pathsChangedContent),
-		)
+		b.WriteString("> ")
 	}
+	fmt.Fprintf(
+		&b,
+		"%d files changed: %d removed, %d renamed, %d added, %d changed content\n",
+		len(d.pathsRemoved)+len(d.pathsRenamed)+len(d.pathsAdded)+len(d.pathsChangedContent),
+		len(d.pathsRemoved),
+		len(d.pathsRenamed),
+		len(d.pathsAdded),
+		len(d.pathsChangedContent),
+	)
 	if len(d.pathsRemoved) > 0 {
 		b.WriteString("\n")
 		if isMarkdown {
-			b.WriteString("# Files removed:\n\n```diff\n")
-		} else {
-			b.WriteString("Files removed:\n\n")
+			b.WriteString("# ")
+		}
+		b.WriteString("Files removed:\n\n")
+		if isMarkdown {
+			b.WriteString("```diff\n")
 		}
 		for _, path := range xslices.MapKeysToSortedSlice(d.pathsRemoved) {
 			b.WriteString("- " + d.pathsRemoved[path].String() + "\n")
@@ -182,9 +175,11 @@ func (d *ManifestDiff) String(format ManifestDiffOutputFormat) string {
 	if len(d.pathsRenamed) > 0 {
 		b.WriteString("\n")
 		if isMarkdown {
-			b.WriteString("# Files renamed:\n\n```diff\n")
-		} else {
-			b.WriteString("Files renamed:\n\n")
+			b.WriteString("# ")
+		}
+		b.WriteString("Files renamed:\n\n")
+		if isMarkdown {
+			b.WriteString("```diff\n")
 		}
 		for _, path := range xslices.MapKeysToSortedSlice(d.pathsRenamed) {
 			b.WriteString("- " + d.pathsRenamed[path].from.String() + "\n")
@@ -197,9 +192,11 @@ func (d *ManifestDiff) String(format ManifestDiffOutputFormat) string {
 	if len(d.pathsAdded) > 0 {
 		b.WriteString("\n")
 		if isMarkdown {
-			b.WriteString("# Files added:\n\n```diff\n")
-		} else {
-			b.WriteString("Files added:\n\n")
+			b.WriteString("# ")
+		}
+		b.WriteString("Files added:\n\n")
+		if isMarkdown {
+			b.WriteString("```diff\n")
 		}
 		for _, path := range xslices.MapKeysToSortedSlice(d.pathsAdded) {
 			b.WriteString("+ " + d.pathsAdded[path].String() + "\n")
@@ -208,17 +205,20 @@ func (d *ManifestDiff) String(format ManifestDiffOutputFormat) string {
 			b.WriteString("```\n")
 		}
 	}
-	if len(d.pathsChangedContent) > 0 {
+	if len(d.pathsChangedContent) > 0 { //nolint:nestif // Markdown vs text small differences.
 		b.WriteString("\n")
 		if isMarkdown {
-			b.WriteString("# Files changed content:\n\n")
-		} else {
-			b.WriteString("Files changed content:\n\n")
+			b.WriteString("# ")
 		}
+		b.WriteString("Files changed content:\n\n")
 		for _, path := range xslices.MapKeysToSortedSlice(d.pathsChangedContent) {
 			fdiff := d.pathsChangedContent[path]
 			if isMarkdown {
 				b.WriteString("## `" + fdiff.from.Path() + "`:\n")
+			} else {
+				b.WriteString(fdiff.from.Path() + ":\n")
+			}
+			if isMarkdown {
 				b.WriteString("```diff\n" + fdiff.diff + "\n```\n")
 			} else {
 				b.WriteString(fdiff.diff + "\n")
@@ -231,7 +231,7 @@ func (d *ManifestDiff) String(format ManifestDiffOutputFormat) string {
 func calculateFileNodeDiff(
 	ctx context.Context,
 	from cas.FileNode,
-	to cas.FileNode, //nolint:varnamelen // from/to used symmetrically
+	to cas.FileNode,
 	bucket storage.ReadBucket,
 ) (string, error) {
 	if from.Path() == to.Path() && cas.DigestEqual(from.Digest(), to.Digest()) {
