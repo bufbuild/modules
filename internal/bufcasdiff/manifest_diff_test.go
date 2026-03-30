@@ -17,6 +17,9 @@ package bufcasdiff
 import (
 	"context"
 	"encoding/hex"
+	"flag"
+	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/bufbuild/buf/private/pkg/cas"
@@ -26,6 +29,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
+
+var update = flag.Bool("update", false, "update golden test files")
 
 func TestManifestDiff(t *testing.T) {
 	t.Parallel()
@@ -116,29 +121,35 @@ func TestManifestDiffString(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, mdiff)
 
-	t.Run("text", func(t *testing.T) {
-		t.Parallel()
-		out := mdiff.String(ManifestDiffOutputFormatText)
-		assert.Contains(t, out, "files changed:")
-		assert.Contains(t, out, "Files removed:")
-		assert.Contains(t, out, "Files added:")
-		assert.Contains(t, out, "Files renamed:")
-		assert.Contains(t, out, "Files changed content:")
-		assert.NotContains(t, out, "```")
-		assert.NotContains(t, out, "> _")
-	})
-	t.Run("markdown", func(t *testing.T) {
-		t.Parallel()
-		out := mdiff.String(ManifestDiffOutputFormatMarkdown)
-		assert.Contains(t, out, "> _")
-		assert.Contains(t, out, "files changed:")
-		assert.Contains(t, out, "# Files removed:")
-		assert.Contains(t, out, "# Files added:")
-		assert.Contains(t, out, "# Files renamed:")
-		assert.Contains(t, out, "# Files changed content:")
-		assert.Contains(t, out, "```diff")
-		assert.Contains(t, out, "```")
-	})
+	type testCase struct {
+		name      string
+		format    ManifestDiffOutputFormat
+		extension string
+	}
+	for _, tc := range []testCase{
+		{
+			name:      "text",
+			format:    ManifestDiffOutputFormatText,
+			extension: ".txt",
+		},
+		{
+			name:      "markdown",
+			format:    ManifestDiffOutputFormatMarkdown,
+			extension: ".md",
+		},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+			got := mdiff.String(tc.format)
+			golden := filepath.Join("testdata", "manifest_diff", tc.name+".golden"+tc.extension)
+			if *update {
+				require.NoError(t, os.WriteFile(golden, []byte(got), 0600))
+			}
+			want, err := os.ReadFile(golden)
+			require.NoError(t, err)
+			assert.Equal(t, string(want), got)
+		})
+	}
 }
 
 func prepareDiffCASBucket(ctx context.Context, t *testing.T) (
