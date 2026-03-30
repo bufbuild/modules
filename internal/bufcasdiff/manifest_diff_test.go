@@ -30,7 +30,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-var update = flag.Bool("update", false, "update golden test files")
+var update = flag.Bool("update", false, "update golden test files") //nolint:gochecknoglobals // only used for testing when updating golden files.
 
 func TestManifestDiff(t *testing.T) {
 	t.Parallel()
