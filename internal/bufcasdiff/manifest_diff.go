@@ -26,6 +26,15 @@ import (
 	"github.com/bufbuild/buf/private/pkg/storage"
 )
 
+// ManifestDiffOutputFormat is the format in which a manifest diff can output its results.
+type ManifestDiffOutputFormat int
+
+const (
+	ManifestDiffOutputFormatText = iota + 1
+	ManifestDiffOutputFormatMarkdown
+)
+
+// ManifestDiff represents a change in between two CAS manifests.
 type ManifestDiff struct {
 	pathsAdded          map[string]cas.FileNode
 	pathsRenamed        map[string]fileDiff
@@ -130,110 +139,90 @@ func buildManifestDiff(
 	return diff, nil
 }
 
-// FIXME: define a single `.String()` output with a list of formats.
-func (d *ManifestDiff) AsText() string {
+// String returns the diff output in the given format. On invalid or unknown format, this function
+// defaults to ManifestDiffOutputFormatText.
+func (d *ManifestDiff) String(format ManifestDiffOutputFormat) string {
 	var b bytes.Buffer
-	fmt.Fprintf(
-		&b,
-		"%d files changed: %d removed, %d renamed, %d added, %d changed content\n",
-		len(d.pathsRemoved)+len(d.pathsRenamed)+len(d.pathsAdded)+len(d.pathsChangedContent),
-		len(d.pathsRemoved),
-		len(d.pathsRenamed),
-		len(d.pathsAdded),
-		len(d.pathsChangedContent),
-	)
+	isMarkdown := format == ManifestDiffOutputFormatMarkdown
+	if isMarkdown {
+		fmt.Fprintf(
+			&b,
+			"> _%d files changed: %d removed, %d renamed, %d added, %d changed content_\n",
+			len(d.pathsRemoved)+len(d.pathsRenamed)+len(d.pathsAdded)+len(d.pathsChangedContent),
+			len(d.pathsRemoved),
+			len(d.pathsRenamed),
+			len(d.pathsAdded),
+			len(d.pathsChangedContent),
+		)
+	} else {
+		fmt.Fprintf(
+			&b,
+			"%d files changed: %d removed, %d renamed, %d added, %d changed content\n",
+			len(d.pathsRemoved)+len(d.pathsRenamed)+len(d.pathsAdded)+len(d.pathsChangedContent),
+			len(d.pathsRemoved),
+			len(d.pathsRenamed),
+			len(d.pathsAdded),
+			len(d.pathsChangedContent),
+		)
+	}
 	if len(d.pathsRemoved) > 0 {
 		b.WriteString("\n")
-		b.WriteString("Files removed:\n\n")
-		sortedPaths := xslices.MapKeysToSortedSlice(d.pathsRemoved)
-		for _, path := range sortedPaths {
+		if isMarkdown {
+			b.WriteString("# Files removed:\n\n```diff\n")
+		} else {
+			b.WriteString("Files removed:\n\n")
+		}
+		for _, path := range xslices.MapKeysToSortedSlice(d.pathsRemoved) {
 			b.WriteString("- " + d.pathsRemoved[path].String() + "\n")
+		}
+		if isMarkdown {
+			b.WriteString("```\n")
 		}
 	}
 	if len(d.pathsRenamed) > 0 {
 		b.WriteString("\n")
-		b.WriteString("Files renamed:\n\n")
-		sortedPaths := xslices.MapKeysToSortedSlice(d.pathsRenamed)
-		for _, path := range sortedPaths {
+		if isMarkdown {
+			b.WriteString("# Files renamed:\n\n```diff\n")
+		} else {
+			b.WriteString("Files renamed:\n\n")
+		}
+		for _, path := range xslices.MapKeysToSortedSlice(d.pathsRenamed) {
 			b.WriteString("- " + d.pathsRenamed[path].from.String() + "\n")
 			b.WriteString("+ " + d.pathsRenamed[path].to.String() + "\n")
+		}
+		if isMarkdown {
+			b.WriteString("```\n")
 		}
 	}
 	if len(d.pathsAdded) > 0 {
 		b.WriteString("\n")
-		b.WriteString("Files added:\n\n")
-		sortedPaths := xslices.MapKeysToSortedSlice(d.pathsAdded)
-		for _, path := range sortedPaths {
+		if isMarkdown {
+			b.WriteString("# Files added:\n\n```diff\n")
+		} else {
+			b.WriteString("Files added:\n\n")
+		}
+		for _, path := range xslices.MapKeysToSortedSlice(d.pathsAdded) {
 			b.WriteString("+ " + d.pathsAdded[path].String() + "\n")
+		}
+		if isMarkdown {
+			b.WriteString("```\n")
 		}
 	}
 	if len(d.pathsChangedContent) > 0 {
 		b.WriteString("\n")
-		b.WriteString("Files changed content:\n\n")
-		sortedPaths := xslices.MapKeysToSortedSlice(d.pathsChangedContent)
-		for _, path := range sortedPaths {
-			fnDiff := d.pathsChangedContent[path]
-			b.WriteString(fnDiff.diff + "\n")
+		if isMarkdown {
+			b.WriteString("# Files changed content:\n\n")
+		} else {
+			b.WriteString("Files changed content:\n\n")
 		}
-	}
-	return b.String()
-}
-
-func (d *ManifestDiff) AsMarkdown() string {
-	var b bytes.Buffer
-	fmt.Fprintf(
-		&b,
-		"> _%d files changed: %d removed, %d renamed, %d added, %d changed content_\n",
-		len(d.pathsRemoved)+len(d.pathsRenamed)+len(d.pathsAdded)+len(d.pathsChangedContent),
-		len(d.pathsRemoved),
-		len(d.pathsRenamed),
-		len(d.pathsAdded),
-		len(d.pathsChangedContent),
-	)
-	if len(d.pathsRemoved) > 0 {
-		b.WriteString("\n")
-		b.WriteString("# Files removed:\n\n")
-		b.WriteString("```diff\n")
-		sortedPaths := xslices.MapKeysToSortedSlice(d.pathsRemoved)
-		for _, path := range sortedPaths {
-			b.WriteString("- " + d.pathsRemoved[path].String() + "\n")
-		}
-		b.WriteString("```\n")
-	}
-	if len(d.pathsRenamed) > 0 {
-		b.WriteString("\n")
-		b.WriteString("# Files renamed:\n\n")
-		b.WriteString("```diff\n")
-		sortedPaths := xslices.MapKeysToSortedSlice(d.pathsRenamed)
-		for _, path := range sortedPaths {
-			b.WriteString("- " + d.pathsRenamed[path].from.String() + "\n")
-			b.WriteString("+ " + d.pathsRenamed[path].to.String() + "\n")
-		}
-		b.WriteString("```\n")
-	}
-	if len(d.pathsAdded) > 0 {
-		b.WriteString("\n")
-		b.WriteString("# Files added:\n\n")
-		b.WriteString("```diff\n")
-		sortedPaths := xslices.MapKeysToSortedSlice(d.pathsAdded)
-		for _, path := range sortedPaths {
-			b.WriteString("+ " + d.pathsAdded[path].String() + "\n")
-		}
-		b.WriteString("```\n")
-	}
-	if len(d.pathsChangedContent) > 0 {
-		b.WriteString("\n")
-		b.WriteString("# Files changed content:\n\n")
-		sortedPaths := xslices.MapKeysToSortedSlice(d.pathsChangedContent)
-		for _, path := range sortedPaths {
+		for _, path := range xslices.MapKeysToSortedSlice(d.pathsChangedContent) {
 			fdiff := d.pathsChangedContent[path]
-			// the path we use here can be from/to, is the same, what changed was the content.
-			b.WriteString("## `" + fdiff.from.Path() + "`:\n")
-			b.WriteString(
-				"```diff\n" +
-					fdiff.diff + "\n" +
-					"```\n",
-			)
+			if isMarkdown {
+				b.WriteString("## `" + fdiff.from.Path() + "`:\n")
+				b.WriteString("```diff\n" + fdiff.diff + "\n```\n")
+			} else {
+				b.WriteString(fdiff.diff + "\n")
+			}
 		}
 	}
 	return b.String()

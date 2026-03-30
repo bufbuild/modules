@@ -113,9 +113,9 @@ func run(
 	}
 	switch f {
 	case formatText:
-		fmt.Print(mdiff.AsText())
+		fmt.Print(mdiff.String(bufcasdiff.ManifestDiffOutputFormatText))
 	case formatMarkdown:
-		fmt.Print(mdiff.AsMarkdown())
+		fmt.Print(mdiff.String(bufcasdiff.ManifestDiffOutputFormatMarkdown))
 	default:
 		return fmt.Errorf("format %s not supported", f.String())
 	}

@@ -108,6 +108,39 @@ func TestManifestDiff(t *testing.T) {
 	})
 }
 
+func TestManifestDiffString(t *testing.T) {
+	t.Parallel()
+	ctx := t.Context()
+	casBucket, mFrom, mTo := prepareDiffCASBucket(ctx, t)
+	mdiff, err := buildManifestDiff(ctx, mFrom, mTo, casBucket)
+	require.NoError(t, err)
+	require.NotNil(t, mdiff)
+
+	t.Run("text", func(t *testing.T) {
+		t.Parallel()
+		out := mdiff.String(ManifestDiffOutputFormatText)
+		assert.Contains(t, out, "files changed:")
+		assert.Contains(t, out, "Files removed:")
+		assert.Contains(t, out, "Files added:")
+		assert.Contains(t, out, "Files renamed:")
+		assert.Contains(t, out, "Files changed content:")
+		assert.NotContains(t, out, "```")
+		assert.NotContains(t, out, "> _")
+	})
+	t.Run("markdown", func(t *testing.T) {
+		t.Parallel()
+		out := mdiff.String(ManifestDiffOutputFormatMarkdown)
+		assert.Contains(t, out, "> _")
+		assert.Contains(t, out, "files changed:")
+		assert.Contains(t, out, "# Files removed:")
+		assert.Contains(t, out, "# Files added:")
+		assert.Contains(t, out, "# Files renamed:")
+		assert.Contains(t, out, "# Files changed content:")
+		assert.Contains(t, out, "```diff")
+		assert.Contains(t, out, "```")
+	})
+}
+
 func prepareDiffCASBucket(ctx context.Context, t *testing.T) (
 	storage.ReadBucket,
 	cas.Manifest,
