@@ -39,7 +39,7 @@ type fileDiff struct {
 	diff string
 }
 
-func NewManifestDiff() *ManifestDiff {
+func newManifestDiff() *ManifestDiff {
 	return &ManifestDiff{
 		pathsAdded:          make(map[string]cas.FileNode),
 		pathsRenamed:        make(map[string]fileDiff),
@@ -48,14 +48,14 @@ func NewManifestDiff() *ManifestDiff {
 	}
 }
 
-func BuildManifestDiff(
+func buildManifestDiff(
 	ctx context.Context,
 	from cas.Manifest,
 	to cas.Manifest, //nolint:varnamelen // from/to used symmetrically
 	bucket storage.ReadBucket,
 ) (*ManifestDiff, error) {
 	var (
-		diff                 = NewManifestDiff()
+		diff                 = newManifestDiff()
 		digestToAddedPaths   = make(map[string][]string)
 		digestToRemovedPaths = make(map[string][]string)
 	)
