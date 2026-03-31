@@ -12,11 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package bufcasdiff
 
 import (
 	"context"
 	"encoding/hex"
+	"flag"
+	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/bufbuild/buf/private/pkg/cas"
@@ -26,6 +29,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
+
+var update = flag.Bool("update", false, "update golden test files") //nolint:gochecknoglobals // only used for testing when updating golden files.
 
 func TestManifestDiff(t *testing.T) {
 	t.Parallel()
@@ -106,6 +111,45 @@ func TestManifestDiff(t *testing.T) {
 			assert.NotEmpty(t, actual.diff)
 		}
 	})
+}
+
+func TestManifestDiffString(t *testing.T) {
+	t.Parallel()
+	ctx := t.Context()
+	casBucket, mFrom, mTo := prepareDiffCASBucket(ctx, t)
+	mdiff, err := buildManifestDiff(ctx, mFrom, mTo, casBucket)
+	require.NoError(t, err)
+	require.NotNil(t, mdiff)
+
+	type testCase struct {
+		name      string
+		format    ManifestDiffOutputFormat
+		extension string
+	}
+	for _, tc := range []testCase{
+		{
+			name:      "text",
+			format:    ManifestDiffOutputFormatText,
+			extension: ".txt",
+		},
+		{
+			name:      "markdown",
+			format:    ManifestDiffOutputFormatMarkdown,
+			extension: ".md",
+		},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+			got := mdiff.String(tc.format)
+			golden := filepath.Join("testdata", "manifest_diff", tc.name+".golden"+tc.extension)
+			if *update {
+				require.NoError(t, os.WriteFile(golden, []byte(got), 0600))
+			}
+			want, err := os.ReadFile(golden)
+			require.NoError(t, err)
+			assert.Equal(t, string(want), got)
+		})
+	}
 }
 
 func prepareDiffCASBucket(ctx context.Context, t *testing.T) (

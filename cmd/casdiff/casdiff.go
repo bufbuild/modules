@@ -16,19 +16,15 @@ package main
 
 import (
 	"context"
-	"errors"
 	"fmt"
-	"io/fs"
+	"os"
 	"strconv"
 
 	"buf.build/go/app/appcmd"
 	"buf.build/go/app/appext"
 	"buf.build/go/standard/xslices"
-	"github.com/bufbuild/buf/private/pkg/cas"
 	"github.com/bufbuild/buf/private/pkg/slogapp"
-	"github.com/bufbuild/buf/private/pkg/storage"
-	"github.com/bufbuild/buf/private/pkg/storage/storageos"
-	"github.com/bufbuild/modules/private/bufpkg/bufstate"
+	"github.com/bufbuild/modules/internal/bufcasdiff"
 	"github.com/spf13/pflag"
 )
 
@@ -107,121 +103,22 @@ func run(
 	container appext.Container,
 	flags *flags,
 ) error {
-	format, ok := formatsNamesToValues[flags.format]
+	f, ok := formatsNamesToValues[flags.format]
 	if !ok {
 		return fmt.Errorf("unsupported format %s", flags.format)
 	}
-	from, to := container.Arg(0), container.Arg(1) //nolint:varnamelen // from/to used symmetrically
-	if from == to {
-		return printDiff(newManifestDiff(), format)
-	}
-	// first, attempt to match from/to as module references in a state file in the same directory
-	// where the command is run
-	bucket, err := storageos.NewProvider().NewReadWriteBucket(".")
+	from, to := container.Arg(0), container.Arg(1)
+	mdiff, err := bufcasdiff.DiffModuleDirectory(ctx, ".", from, to)
 	if err != nil {
-		return fmt.Errorf("new rw bucket: %w", err)
+		return fmt.Errorf("calculate diff: %w", err)
 	}
-	moduleStateReader, err := bucket.Get(ctx, bufstate.ModStateFileName)
-	if err != nil {
-		if !errors.Is(err, fs.ErrNotExist) {
-			return fmt.Errorf("read module state file: %w", err)
-		}
-		// if the state file does not exist, we assume we are in the cas directory, and that from/to are
-		// the manifest paths
-		mdiff, err := calculateDiffFromCASDirectory(ctx, bucket, from, to)
-		if err != nil {
-			return fmt.Errorf("calculate cas diff: %w", err)
-		}
-		return printDiff(mdiff, format)
-	}
-	// state file was found, attempt to parse it and match from/to with its references
-	stateRW, err := bufstate.NewReadWriter()
-	if err != nil {
-		return fmt.Errorf("new state rw: %w", err)
-	}
-	moduleState, err := stateRW.ReadModStateFile(moduleStateReader)
-	if err != nil {
-		return fmt.Errorf("read module state: %w", err)
-	}
-	var (
-		fromManifestPath string
-		toManifestPath   string
-	)
-	for _, ref := range moduleState.GetReferences() {
-		if ref.GetName() == from {
-			fromManifestPath = ref.GetDigest()
-			if toManifestPath != "" {
-				break
-			}
-		} else if ref.GetName() == to {
-			toManifestPath = ref.GetDigest()
-			if fromManifestPath != "" {
-				break
-			}
-		}
-	}
-	if fromManifestPath == "" {
-		return fmt.Errorf("from reference %s not found in the module state file", from)
-	}
-	if toManifestPath == "" {
-		return fmt.Errorf("to reference %s not found in the module state file", to)
-	}
-	if fromManifestPath == toManifestPath {
-		return printDiff(newManifestDiff(), format)
-	}
-	casBucket, err := storageos.NewProvider().NewReadWriteBucket("cas")
-	if err != nil {
-		return fmt.Errorf("new rw cas bucket: %w", err)
-	}
-	mdiff, err := calculateDiffFromCASDirectory(ctx, casBucket, fromManifestPath, toManifestPath)
-	if err != nil {
-		return fmt.Errorf("calculate cas diff from state references: %w", err)
-	}
-	return printDiff(mdiff, format)
-}
-
-// calculateDiffFromCASDirectory takes the cas bucket, and the from/to manifest paths to calculate a
-// diff.
-func calculateDiffFromCASDirectory(
-	ctx context.Context,
-	casBucket storage.ReadBucket,
-	fromManifestPath string,
-	toManifestPath string,
-) (*manifestDiff, error) {
-	if fromManifestPath == toManifestPath {
-		return newManifestDiff(), nil
-	}
-	fromManifest, err := readManifest(ctx, casBucket, fromManifestPath)
-	if err != nil {
-		return nil, fmt.Errorf("read manifest from: %w", err)
-	}
-	toManifest, err := readManifest(ctx, casBucket, toManifestPath)
-	if err != nil {
-		return nil, fmt.Errorf("read manifest to: %w", err)
-	}
-	return buildManifestDiff(ctx, fromManifest, toManifest, casBucket)
-}
-
-func readManifest(ctx context.Context, bucket storage.ReadBucket, manifestPath string) (cas.Manifest, error) {
-	data, err := storage.ReadPath(ctx, bucket, manifestPath)
-	if err != nil {
-		return nil, fmt.Errorf("read path: %w", err)
-	}
-	m, err := cas.ParseManifest(string(data))
-	if err != nil {
-		return nil, fmt.Errorf("parse manifest: %w", err)
-	}
-	return m, nil
-}
-
-func printDiff(mdiff *manifestDiff, format format) error {
-	switch format {
+	switch f {
 	case formatText:
-		mdiff.printText()
+		fmt.Fprint(os.Stdout, mdiff.String(bufcasdiff.ManifestDiffOutputFormatText))
 	case formatMarkdown:
-		mdiff.printMarkdown()
+		fmt.Fprint(os.Stdout, mdiff.String(bufcasdiff.ManifestDiffOutputFormatMarkdown))
 	default:
-		return fmt.Errorf("format %s not supported", format.String())
+		return fmt.Errorf("format %s not supported", f.String())
 	}
 	return nil
 }
