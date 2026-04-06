@@ -74,5 +74,6 @@
 + type/quaternion.proto
 + type/timeofday.proto
 
+- /preview/
 + */
 - *
