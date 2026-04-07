@@ -15,7 +15,7 @@ To depend on a specific Git commit, you can use it as your reference in your dep
 
 ```
 deps:
-  - buf.build/googleapis/cloud-run:<GIT_COMMIT_LABEL>
+  - {{bsrhost}}/googleapis/cloud-run:<GIT_COMMIT_LABEL>
 ```
 
 For more information, see the [documentation](https://buf.build/docs/bsr/overview).
