@@ -7,7 +7,7 @@ To depend on a specific version, you can use it as your reference in your depend
 
 ```
 deps:
-  - <BSR_HOSTNAME>/googlechrome/lighthouse:<SEMVER_RELEASE_VERSION>
+  - {{bsrhost}}/googlechrome/lighthouse:<SEMVER_RELEASE_VERSION>
 ```
 
 For more information, see the [documentation](https://buf.build/docs/bsr/overview).

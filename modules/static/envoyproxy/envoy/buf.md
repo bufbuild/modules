@@ -9,7 +9,7 @@ dependencies:
 
 ```yaml
 deps:
-  - <BSR_HOSTNAME>/envoyproxy/envoy:<SEMVER_RELEASE_VERSION>
+  - {{bsrhost}}/envoyproxy/envoy:<SEMVER_RELEASE_VERSION>
 ```
 
 For more information, see the [documentation](https://buf.build/docs/bsr/overview).

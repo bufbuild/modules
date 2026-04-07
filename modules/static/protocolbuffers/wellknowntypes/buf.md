@@ -41,7 +41,7 @@ Well-Known Types to a specific version, you can do so by depending on this modul
 # buf.yaml
 version: v1
 deps:
-  - <BSR_HOSTNAME>/protocolbuffers/wellknowntypes:v21.12
+  - {{bsrhost}}/protocolbuffers/wellknowntypes:v21.12
 ```
 
 We update the tags on this module for every release of

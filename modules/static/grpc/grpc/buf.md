@@ -8,7 +8,7 @@ To depend on a specific Git commit, you can use it as your reference in your dep
 
 ```
 deps:
-  - <BSR_HOSTNAME>/grpc/grpc:<GIT_COMMIT_TAG>
+  - {{bsrhost}}/grpc/grpc:<GIT_COMMIT_TAG>
 ```
 
 For more information, see the [documentation](https://buf.build/docs/bsr/overview).
