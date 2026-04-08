@@ -41,7 +41,7 @@ jobs:
           app_id: ${{ secrets.BUFBUILD_ISSUE_CREATOR_APP_ID }}
           private-key: ${{ secrets.BUFBUILD_ISSUE_CREATOR_APP_KEY }}
           permission-issues: write
-      - uses: dblock/create-a-github-issue@d10508ebcd7fbef05990c86355a17763cd29aa93
+      - uses: dblock/create-a-github-issue@a25e69ccb88998dc267170a0dbde8ef8ac3a491c # v3.4.0
         if: ${{ failure() }}
         env:
           GITHUB_TOKEN: ${{ steps.generate_issues_token.outputs.token }}
@@ -82,7 +82,7 @@ jobs:
         uses: google-github-actions/setup-gcloud@aa5489c8933f4cc7a4f7d45035b3b1440c9c10db
       - name: Upload To Release Bucket
         run: gsutil -m rsync -c -r modules/sync gs://buf-modules
-      - uses: dblock/create-a-github-issue@d10508ebcd7fbef05990c86355a17763cd29aa93
+      - uses: dblock/create-a-github-issue@a25e69ccb88998dc267170a0dbde8ef8ac3a491c # v3.4.0
         if: failure()
         env:
           GITHUB_TOKEN: ${{ github.token }}
