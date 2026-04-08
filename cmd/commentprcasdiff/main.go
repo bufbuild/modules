@@ -147,6 +147,17 @@ func run(ctx context.Context, flags *flags) error {
 		}
 	}
 
+	overallTransitions, err := getGlobalOverallTransitions(ctx, stateRW, baseRef, headRef)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Warning: failed to get overall transitions from global state: %v\n", err)
+	} else if len(overallTransitions) > 0 {
+		fmt.Fprintf(os.Stdout, "Found %d overall transition(s) in global state:\n", len(overallTransitions))
+		for _, t := range overallTransitions {
+			fmt.Fprintf(os.Stdout, "  %s: %s -> %s\n", strings.TrimPrefix(t.modulePath, "modules/sync/"), t.fromRef, t.toRef)
+		}
+		allTransitions = append(allTransitions, overallTransitions...)
+	}
+
 	if len(allTransitions) == 0 {
 		fmt.Fprintf(os.Stdout, "No digest transitions found\n")
 		return nil

@@ -30,13 +30,14 @@ import (
 
 // stateTransition represents a digest change in a module's state.json file.
 type stateTransition struct {
-	modulePath string // e.g., "modules/sync/bufbuild/protovalidate"
-	filePath   string // e.g., "modules/sync/bufbuild/protovalidate/state.json"
-	fromRef    string // Last reference with old digest (e.g., "v1.1.0")
-	toRef      string // First reference with new digest (e.g., "v1.2.0")
-	fromDigest string // Old digest
-	toDigest   string // New digest
-	lineNumber int    // Line in diff where new digest first appears
+	modulePath         string // e.g., "modules/sync/bufbuild/protovalidate"
+	filePath           string // The module where the transition happened, can be an individual module like "modules/sync/bufbuild/protovalidate/state.json" or the global state file "modules/sync/state.json"
+	fromRef            string // Old git reference (e.g., "v1.1.0")
+	toRef              string // New git reference (e.g., "v1.2.0")
+	fromDigest         string // Old digest
+	toDigest           string // New digest
+	lineNumber         int    // Line in diff where the new reference or digest appears.
+	isGlobalTransition bool   // True for the transition on the state.json global to all modules.
 }
 
 // getStateFileTransitions reads state.json from base and head branches, compares the JSON arrays to
@@ -99,13 +100,14 @@ func getStateFileTransitions(
 				lineNumber = lineNumbers[i]
 			}
 			transitions = append(transitions, stateTransition{
-				modulePath: modulePath,
-				filePath:   filePath,
-				fromRef:    currentRef,
-				toRef:      appendedRef.GetName(),
-				fromDigest: currentDigest,
-				toDigest:   appendedRef.GetDigest(),
-				lineNumber: lineNumber,
+				modulePath:         modulePath,
+				filePath:           filePath,
+				fromRef:            currentRef,
+				toRef:              appendedRef.GetName(),
+				fromDigest:         currentDigest,
+				toDigest:           appendedRef.GetDigest(),
+				lineNumber:         lineNumber,
+				isGlobalTransition: false,
 			})
 			currentDigest = appendedRef.GetDigest()
 		}
@@ -149,6 +151,90 @@ func resolveAppendedRefs(
 	//   - current: last in base
 	//   - appended: the index-base appended in head
 	return baseRefs[len(baseRefs)-1], headRefs[len(baseRefs):]
+}
+
+// getGlobalOverallTransitions reads modules/sync/state.json from both base and head, compares the
+// two, and returns one stateTransition per module whose latest_reference changed. Modules that were
+// added or removed between base and head are ignored.
+func getGlobalOverallTransitions(
+	ctx context.Context,
+	stateRW *bufstate.ReadWriter,
+	baseRef string,
+	headRef string,
+) ([]stateTransition, error) {
+	const globalStatePath = "modules/sync/state.json"
+
+	baseContent, err := readFileAtRef(ctx, globalStatePath, baseRef)
+	if err != nil {
+		return nil, fmt.Errorf("read base global state: %w", err)
+	}
+	headContent, err := readFileAtRef(ctx, globalStatePath, headRef)
+	if err != nil {
+		return nil, fmt.Errorf("read head global state: %w", err)
+	}
+
+	baseGlobalState, err := stateRW.ReadGlobalState(io.NopCloser(bytes.NewReader(baseContent)))
+	if err != nil {
+		return nil, fmt.Errorf("parse base global state: %w", err)
+	}
+	headGlobalState, err := stateRW.ReadGlobalState(io.NopCloser(bytes.NewReader(headContent)))
+	if err != nil {
+		return nil, fmt.Errorf("parse head global state: %w", err)
+	}
+
+	baseLatestRefs := make(map[string]string, len(baseGlobalState.GetModules()))
+	for _, mod := range baseGlobalState.GetModules() {
+		baseLatestRefs[mod.GetModuleName()] = mod.GetLatestReference()
+	}
+
+	var transitions []stateTransition
+	for _, mod := range headGlobalState.GetModules() {
+		moduleName := mod.GetModuleName()
+		toRef := mod.GetLatestReference()
+		fromRef, existsInBase := baseLatestRefs[moduleName]
+		if !existsInBase || fromRef == toRef {
+			continue // it is a new module, or the reference did not change.
+		}
+		lineNumber, err := findLatestReferenceLineInGlobalState(headContent, moduleName)
+		if err != nil {
+			return nil, fmt.Errorf("find line number for %q: %w", moduleName, err)
+		}
+		transitions = append(transitions, stateTransition{
+			modulePath:         "modules/sync/" + moduleName,
+			filePath:           globalStatePath,
+			fromRef:            fromRef,
+			toRef:              toRef,
+			lineNumber:         lineNumber,
+			isGlobalTransition: true,
+		})
+	}
+	return transitions, nil
+}
+
+// findLatestReferenceLineInGlobalState scans the raw JSON of modules/sync/state.json and returns
+// the 1-based line number of the "latest_reference" field for the given module.
+func findLatestReferenceLineInGlobalState(content []byte, moduleName string) (int, error) {
+	quotedName := `"` + moduleName + `"`
+	scanner := bufio.NewScanner(bytes.NewReader(content))
+	var (
+		lineNum     int
+		foundModule bool
+	)
+	for scanner.Scan() {
+		lineNum++
+		line := scanner.Text()
+		if !foundModule {
+			if strings.Contains(line, `"module_name"`) && strings.Contains(line, quotedName) {
+				foundModule = true
+			}
+		} else if strings.Contains(line, `"latest_reference"`) {
+			return lineNum, nil
+		}
+	}
+	if err := scanner.Err(); err != nil {
+		return 0, fmt.Errorf("scan global state: %w", err)
+	}
+	return 0, fmt.Errorf("latest_reference for module %q not found in global state", moduleName)
 }
 
 // readFileAtRef reads a file's content at a specific git ref using git show.
