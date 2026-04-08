@@ -19,6 +19,7 @@ import (
 	"context"
 	"encoding/hex"
 	"fmt"
+	"strings"
 
 	"buf.build/go/standard/xslices"
 	"github.com/bufbuild/buf/private/pkg/cas"
@@ -225,13 +226,23 @@ func (d *ManifestDiff) String(format ManifestDiffOutputFormat) string {
 				b.WriteString(fdiff.from.Path() + ":\n")
 			}
 			if isMarkdown {
-				b.WriteString("```diff\n" + fdiff.diff + "\n```\n")
+				b.WriteString(markdownFencedDiff(fdiff.diff))
 			} else {
 				b.WriteString(fdiff.diff + "\n")
 			}
 		}
 	}
 	return b.String()
+}
+
+// markdownFencedDiff wraps content in a ```diff code fence, using a longer fence if the content
+// itself contains backtick runs that would break the fence.
+func markdownFencedDiff(content string) string {
+	fence := "```"
+	for strings.Contains(content, fence) {
+		fence += "`"
+	}
+	return fence + "diff\n" + content + "\n" + fence + "\n"
 }
 
 func calculateFileNodeDiff(
