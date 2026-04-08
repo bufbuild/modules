@@ -47,7 +47,7 @@ func runCASDiff(ctx context.Context, transition stateTransition) casDiffResult {
 		return result
 	}
 
-	cmd := fmt.Sprintf("```sh\n$ casdiff %s %s --format=markdown\n```", transition.fromRef, transition.toRef)
+	cmd := fmt.Sprintf("```sh\n$ casdiff %s \\\n          %s \\\n          --format=markdown\n```", transition.fromRef, transition.toRef)
 	diffOutput := mdiff.String(bufcasdiff.ManifestDiffOutputFormatMarkdown)
 	if transition.isGlobalTransition {
 		result.output = "### Global transition\n\n" + cmd + "\n\n" + diffOutput
