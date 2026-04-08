@@ -42,15 +42,15 @@
     },
     {
       "module_name": "googleapis/cloud-run",
-      "latest_reference": "cd090841ab172574e740c214c99df00aef9c0dee"
+      "latest_reference": "2233f63baf69c2a481f30180045fcf036242781d"
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "cd090841ab172574e740c214c99df00aef9c0dee"
+      "latest_reference": "2233f63baf69c2a481f30180045fcf036242781d"
     },
     {
       "module_name": "googlechrome/lighthouse",
-      "latest_reference": "v13.0.3"
+      "latest_reference": "v13.1.0"
     },
     {
       "module_name": "googlecloudplatform/bq-schema-api",
