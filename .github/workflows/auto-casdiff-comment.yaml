@@ -3,9 +3,10 @@ name: Auto-comment PR with casdiff
 on:
   pull_request:
     types: [opened, synchronize]
-    branches:
-      - main
+    # branches:
+    #   - main
     paths:
+      - modules/sync/state.json
       - modules/sync/*/*/state.json
 
 permissions:
