@@ -53,7 +53,7 @@ func runCASDiff(ctx context.Context, transition stateTransition) casDiffResult {
 		result.output = "### Global transition\n\n" + cmd + "\n\n" + diffOutput
 	} else {
 		result.output = fmt.Sprintf(
-			"**Intermediate transition**\n\n%s\n<details><summary>%s</summary>\n<p>\n%s\n</p>\n</details>",
+			"**Intermediate transition**\n\n%s\n<details><summary>%s</summary>\n<p>\n\n%s\n</p>\n</details>",
 			cmd,
 			mdiff.Summary(),
 			diffOutput,
