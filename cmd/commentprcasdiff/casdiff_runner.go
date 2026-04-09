@@ -47,12 +47,18 @@ func runCASDiff(ctx context.Context, transition stateTransition) casDiffResult {
 		return result
 	}
 
-	result.output = fmt.Sprintf(
-		"```sh\n$ casdiff %s %s --format=markdown\n```\n\n%s",
-		transition.fromRef,
-		transition.toRef,
-		mdiff.String(bufcasdiff.ManifestDiffOutputFormatMarkdown),
-	)
+	cmd := fmt.Sprintf("```sh\n$ casdiff %s \\\n          %s \\\n          --format=markdown\n```", transition.fromRef, transition.toRef)
+	diffOutput := mdiff.String(bufcasdiff.ManifestDiffOutputFormatMarkdown)
+	if transition.isOverallTransition {
+		result.output = "### Overall transition\n\n" + cmd + "\n\n" + diffOutput
+	} else {
+		result.output = fmt.Sprintf(
+			"**Intermediate transition**\n\n%s\n<details><summary>%s</summary>\n<p>\n\n%s\n</p>\n</details>",
+			cmd,
+			mdiff.Summary(),
+			diffOutput,
+		)
+	}
 	return result
 }
 

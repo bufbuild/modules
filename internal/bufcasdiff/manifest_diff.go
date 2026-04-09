@@ -19,6 +19,7 @@ import (
 	"context"
 	"encoding/hex"
 	"fmt"
+	"strings"
 
 	"buf.build/go/standard/xslices"
 	"github.com/bufbuild/buf/private/pkg/cas"
@@ -139,6 +140,20 @@ func buildManifestDiff(
 	return diff, nil
 }
 
+// Summary returns a manifest diff summary in the shape of:
+//
+// %d files changed: %d removed, %d renamed, %d added, %d changed content.
+func (d *ManifestDiff) Summary() string {
+	return fmt.Sprintf(
+		"%d files changed: %d removed, %d renamed, %d added, %d changed content.",
+		len(d.pathsRemoved)+len(d.pathsRenamed)+len(d.pathsAdded)+len(d.pathsChangedContent),
+		len(d.pathsRemoved),
+		len(d.pathsRenamed),
+		len(d.pathsAdded),
+		len(d.pathsChangedContent),
+	)
+}
+
 // String returns the diff output in the given format. On invalid or unknown format, this function
 // defaults to ManifestDiffOutputFormatText.
 func (d *ManifestDiff) String(format ManifestDiffOutputFormat) string {
@@ -147,15 +162,7 @@ func (d *ManifestDiff) String(format ManifestDiffOutputFormat) string {
 	if isMarkdown {
 		b.WriteString("> ")
 	}
-	fmt.Fprintf(
-		&b,
-		"%d files changed: %d removed, %d renamed, %d added, %d changed content\n",
-		len(d.pathsRemoved)+len(d.pathsRenamed)+len(d.pathsAdded)+len(d.pathsChangedContent),
-		len(d.pathsRemoved),
-		len(d.pathsRenamed),
-		len(d.pathsAdded),
-		len(d.pathsChangedContent),
-	)
+	b.WriteString(d.Summary() + "\n")
 	if len(d.pathsRemoved) > 0 {
 		b.WriteString("\n")
 		if isMarkdown {
@@ -219,13 +226,23 @@ func (d *ManifestDiff) String(format ManifestDiffOutputFormat) string {
 				b.WriteString(fdiff.from.Path() + ":\n")
 			}
 			if isMarkdown {
-				b.WriteString("```diff\n" + fdiff.diff + "\n```\n")
+				b.WriteString(markdownFencedDiff(fdiff.diff))
 			} else {
 				b.WriteString(fdiff.diff + "\n")
 			}
 		}
 	}
 	return b.String()
+}
+
+// markdownFencedDiff wraps content in a ```diff code fence, using a longer fence if the content
+// itself contains backtick runs that would break the fence.
+func markdownFencedDiff(content string) string {
+	fence := "```"
+	for strings.Contains(content, fence) {
+		fence += "`"
+	}
+	return fence + "diff\n" + content + "\n" + fence + "\n"
 }
 
 func calculateFileNodeDiff(

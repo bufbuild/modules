@@ -6,6 +6,7 @@ on:
     branches:
       - main
     paths:
+      - modules/sync/state.json
       - modules/sync/*/*/state.json
 
 permissions:
