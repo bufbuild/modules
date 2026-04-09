@@ -30,14 +30,14 @@ import (
 
 // stateTransition represents a digest change in a module's state.json file.
 type stateTransition struct {
-	modulePath         string // e.g., "modules/sync/bufbuild/protovalidate"
-	filePath           string // The module where the transition happened, can be an individual module like "modules/sync/bufbuild/protovalidate/state.json" or the global state file "modules/sync/state.json"
-	fromRef            string // Old git reference (e.g., "v1.1.0")
-	toRef              string // New git reference (e.g., "v1.2.0")
-	fromDigest         string // Old digest
-	toDigest           string // New digest
-	lineNumber         int    // Line in diff where the new reference or digest appears.
-	isGlobalTransition bool   // True for the transition on the state.json global to all modules.
+	modulePath          string // e.g., "modules/sync/bufbuild/protovalidate"
+	filePath            string // The module where the transition happened, can be an individual module like "modules/sync/bufbuild/protovalidate/state.json" or the global state file "modules/sync/state.json"
+	fromRef             string // Old git reference (e.g., "v1.1.0")
+	toRef               string // New git reference (e.g., "v1.2.0")
+	fromDigest          string // Old digest
+	toDigest            string // New digest
+	lineNumber          int    // Line in diff where the new reference or digest appears.
+	isOverallTransition bool   // True for overall transitions on the global state.json file.
 }
 
 // getStateFileTransitions reads state.json from base and head branches, compares the JSON arrays to
@@ -100,14 +100,14 @@ func getStateFileTransitions(
 				lineNumber = lineNumbers[i]
 			}
 			transitions = append(transitions, stateTransition{
-				modulePath:         modulePath,
-				filePath:           filePath,
-				fromRef:            currentRef,
-				toRef:              appendedRef.GetName(),
-				fromDigest:         currentDigest,
-				toDigest:           appendedRef.GetDigest(),
-				lineNumber:         lineNumber,
-				isGlobalTransition: false,
+				modulePath:          modulePath,
+				filePath:            filePath,
+				fromRef:             currentRef,
+				toRef:               appendedRef.GetName(),
+				fromDigest:          currentDigest,
+				toDigest:            appendedRef.GetDigest(),
+				lineNumber:          lineNumber,
+				isOverallTransition: false,
 			})
 			currentDigest = appendedRef.GetDigest()
 		}
@@ -153,10 +153,10 @@ func resolveAppendedRefs(
 	return baseRefs[len(baseRefs)-1], headRefs[len(baseRefs):]
 }
 
-// getGlobalOverallTransitions reads modules/sync/state.json from both base and head, compares the
+// getOverallTransitions reads modules/sync/state.json from both base and head, compares the
 // two, and returns one stateTransition per module whose latest_reference changed. Modules that were
 // added or removed between base and head are ignored.
-func getGlobalOverallTransitions(
+func getOverallTransitions(
 	ctx context.Context,
 	stateRW *bufstate.ReadWriter,
 	baseRef string,
@@ -200,12 +200,12 @@ func getGlobalOverallTransitions(
 			return nil, fmt.Errorf("find line number for %q: %w", moduleName, err)
 		}
 		transitions = append(transitions, stateTransition{
-			modulePath:         "modules/sync/" + moduleName,
-			filePath:           globalStatePath,
-			fromRef:            fromRef,
-			toRef:              toRef,
-			lineNumber:         lineNumber,
-			isGlobalTransition: true,
+			modulePath:          "modules/sync/" + moduleName,
+			filePath:            globalStatePath,
+			fromRef:             fromRef,
+			toRef:               toRef,
+			lineNumber:          lineNumber,
+			isOverallTransition: true,
 		})
 	}
 	return transitions, nil

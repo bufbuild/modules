@@ -147,7 +147,7 @@ func run(ctx context.Context, flags *flags) error {
 		}
 	}
 
-	overallTransitions, err := getGlobalOverallTransitions(ctx, stateRW, baseRef, headRef)
+	overallTransitions, err := getOverallTransitions(ctx, stateRW, baseRef, headRef)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Warning: failed to get overall transitions from global state: %v\n", err)
 	} else if len(overallTransitions) > 0 {
