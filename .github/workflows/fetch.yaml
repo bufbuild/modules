@@ -32,7 +32,7 @@ jobs:
           cache: true
       - name: Install buf cli
         run: |
-          go install github.com/bufbuild/buf/cmd/buf@latest
+          go install github.com/bufbuild/buf/cmd/buf@1.67.0
       - name: Fetch references
         run: |
           bash ./scripts/fetch.sh
