@@ -30,9 +30,10 @@ jobs:
           go-version: 1.26.x
           check-latest: true
           cache: true
-      - name: Install buf cli
-        run: |
-          go install github.com/bufbuild/buf/cmd/buf@latest
+      - uses: bufbuild/buf-action@fd21066df7214747548607aaa45548ba2b9bc1ff # v1.4.0
+        with:
+          setup_only: true
+          version: 1.67.0 # pinning to v1.67.0 while the new compiler fixes in v1.68.0+ are released
       - name: Fetch references
         run: |
           bash ./scripts/fetch.sh
