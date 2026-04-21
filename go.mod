@@ -7,7 +7,7 @@ require (
 	buf.build/go/app v0.2.1-0.20260407195847-833f8f978cda
 	buf.build/go/protovalidate v1.1.3
 	buf.build/go/standard v0.1.1-0.20260325175353-2b287e071df5
-	github.com/bufbuild/buf v1.68.2
+	github.com/bufbuild/buf v1.68.3
 	github.com/google/go-cmp v0.7.0
 	github.com/google/go-github/v64 v64.0.0
 	github.com/hashicorp/go-retryablehttp v0.7.8
@@ -25,7 +25,7 @@ require (
 	buf.build/go/protoyaml v0.6.0 // indirect
 	cel.dev/expr v0.25.1 // indirect
 	github.com/antlr4-go/antlr/v4 v4.13.1 // indirect
-	github.com/bufbuild/protocompile v0.14.2-0.20260417153234-65c782f91a0b // indirect
+	github.com/bufbuild/protocompile v0.14.2-0.20260420203553-9e5399662822 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.7 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/google/cel-go v0.28.0 // indirect

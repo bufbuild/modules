@@ -20,10 +20,10 @@ github.com/antlr4-go/antlr/v4 v4.13.1 h1:SqQKkuVZ+zWkMMNkjy5FZe5mr5WURWnlpmOuzYW
 github.com/antlr4-go/antlr/v4 v4.13.1/go.mod h1:GKmUxMtwp6ZgGwZSva4eWPC5mS6vUAmOABFgjdkM7Nw=
 github.com/brianvoe/gofakeit/v6 v6.28.0 h1:Xib46XXuQfmlLS2EXRuJpqcw8St6qSZz75OUo0tgAW4=
 github.com/brianvoe/gofakeit/v6 v6.28.0/go.mod h1:Xj58BMSnFqcn/fAQeSK+/PLtC5kSb7FJIq4JyGa8vEs=
-github.com/bufbuild/buf v1.68.2 h1:v5dwGGcyR8bDIsxX56wxb/6AVQgIU/yq1sWGGn0e9uU=
-github.com/bufbuild/buf v1.68.2/go.mod h1:RumqiEsU6fXKUC2sSc7v9yc0Jlw7Dr4qaHNPXy66iyE=
-github.com/bufbuild/protocompile v0.14.2-0.20260417153234-65c782f91a0b h1:0q84wQoejn+OL3iUOrOuYrkNfrzwwlcPwDnOhc1ztr8=
-github.com/bufbuild/protocompile v0.14.2-0.20260417153234-65c782f91a0b/go.mod h1:DhgqsRznX/F0sGkUYtTQJRP+q8xMReQRQ3qr+n1opWU=
+github.com/bufbuild/buf v1.68.3 h1:U8f009iPe+EbfTJESvV4X3AhtDcnz5E+qx8s0VJ7ftY=
+github.com/bufbuild/buf v1.68.3/go.mod h1:SGGqxFHsQbw9Q1hThZVvNnwI1KjbA18hmkl0sQPrtUs=
+github.com/bufbuild/protocompile v0.14.2-0.20260420203553-9e5399662822 h1:up+abu92N9MCFYo1IWnrA+mb4HdPCvuc9+vCMo6n7oU=
+github.com/bufbuild/protocompile v0.14.2-0.20260420203553-9e5399662822/go.mod h1:DhgqsRznX/F0sGkUYtTQJRP+q8xMReQRQ3qr+n1opWU=
 github.com/cpuguy83/go-md2man/v2 v2.0.6/go.mod h1:oOW0eioCTA6cOiMLiUPZOpcVxMig6NIQQ7OS05n1F4g=
 github.com/cpuguy83/go-md2man/v2 v2.0.7 h1:zbFlGlXEAKlwXpmvle3d8Oe3YnkKIK4xSRTd3sHPnBo=
 github.com/cpuguy83/go-md2man/v2 v2.0.7/go.mod h1:oOW0eioCTA6cOiMLiUPZOpcVxMig6NIQQ7OS05n1F4g=
