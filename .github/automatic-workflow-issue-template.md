@@ -1,6 +1,6 @@
 ---
 title: Unexpected {{ workflow }} failure
-assignees: unmultimedio, pkwarren
+assignees: pkwarren, stefanvanburen
 labels: bug
 ---
 
