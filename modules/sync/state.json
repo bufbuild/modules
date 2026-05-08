@@ -30,7 +30,7 @@
     },
     {
       "module_name": "envoyproxy/ratelimit",
-      "latest_reference": "fe26676df197f4c72d46d1049d13f50f6aeeebb4"
+      "latest_reference": "ff287602d8ca0df269a1e7dd393887ab781f64a4"
     },
     {
       "module_name": "gogo/protobuf",
@@ -42,15 +42,15 @@
     },
     {
       "module_name": "googleapis/cloud-run",
-      "latest_reference": "c2648728afb6deff882cfc4167a21abd382870fa"
+      "latest_reference": "08fe47aa6f694301a07f2099229ba7123dba5946"
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "c2648728afb6deff882cfc4167a21abd382870fa"
+      "latest_reference": "08fe47aa6f694301a07f2099229ba7123dba5946"
     },
     {
       "module_name": "googlechrome/lighthouse",
-      "latest_reference": "v13.2.0"
+      "latest_reference": "v13.3.0"
     },
     {
       "module_name": "googlecloudplatform/bq-schema-api",
