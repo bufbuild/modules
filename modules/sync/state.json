@@ -38,15 +38,15 @@
     },
     {
       "module_name": "google/cel-spec",
-      "latest_reference": "v0.25.1"
+      "latest_reference": "v0.25.2"
     },
     {
       "module_name": "googleapis/cloud-run",
-      "latest_reference": "08fe47aa6f694301a07f2099229ba7123dba5946"
+      "latest_reference": "33487db94dc501594861764d2cd7666296daa51a"
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "08fe47aa6f694301a07f2099229ba7123dba5946"
+      "latest_reference": "33487db94dc501594861764d2cd7666296daa51a"
     },
     {
       "module_name": "googlechrome/lighthouse",
