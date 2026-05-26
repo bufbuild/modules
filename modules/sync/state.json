@@ -42,11 +42,11 @@
     },
     {
       "module_name": "googleapis/cloud-run",
-      "latest_reference": "29c6482ccb75b302c33665d8c7d7a38d3698be53"
+      "latest_reference": "ef19b7b7a73f19f33ab86c5b3603e9590025acd7"
     },
     {
       "module_name": "googleapis/googleapis",
-      "latest_reference": "29c6482ccb75b302c33665d8c7d7a38d3698be53"
+      "latest_reference": "ef19b7b7a73f19f33ab86c5b3603e9590025acd7"
     },
     {
       "module_name": "googlechrome/lighthouse",
