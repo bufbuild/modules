@@ -135,11 +135,11 @@ func (c *command) convertToCAS(ctx context.Context) (cas.Digest, error) {
 	if err != nil {
 		return nil, fmt.Errorf("new bucket from buf dir: %w", err)
 	}
-	fileSet, err := cas.NewFileSetForBucket(ctx, bucket)
+	fileSet, err := cas.NewFileSetForBucket(ctx, bucket, cas.DigestTypeShake256)
 	if err != nil {
 		return nil, fmt.Errorf("new file set from bucket: %w", err)
 	}
-	manifestBlob, err := cas.ManifestToBlob(fileSet.Manifest())
+	manifestBlob, err := cas.ManifestToBlob(fileSet.Manifest(), cas.DigestTypeShake256)
 	if err != nil {
 		return nil, fmt.Errorf("manifest to blob: %w", err)
 	}
