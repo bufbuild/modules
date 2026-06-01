@@ -162,9 +162,9 @@ func prepareDiffCASBucket(ctx context.Context, t *testing.T) (
 	casWrite := func(dirpath string) cas.Manifest {
 		testFiles, err := storageos.NewProvider().NewReadWriteBucket("testdata/manifest_diff/" + dirpath)
 		require.NoError(t, err)
-		fileSet, err := cas.NewFileSetForBucket(ctx, testFiles)
+		fileSet, err := cas.NewFileSetForBucket(ctx, testFiles, cas.DigestTypeShake256)
 		require.NoError(t, err)
-		mBlob, err := cas.ManifestToBlob(fileSet.Manifest())
+		mBlob, err := cas.ManifestToBlob(fileSet.Manifest(), cas.DigestTypeShake256)
 		require.NoError(t, err)
 		blobsToPut := append(fileSet.BlobSet().Blobs(), mBlob)
 		for _, blob := range blobsToPut {

@@ -7,6 +7,7 @@ linters:
     - exhaustruct # irrelevant for modules
     - funlen      # rely on code review to limit function length
     - gocognit    # dubious "cognitive overhead" quantification
+    - gomodguard  # replaced by gomodguard_v2
     - ireturn     # "accept interfaces, return structs" isn't ironclad
     - lll         # don't want hard limits for line length
     - maintidx    # covered by gocyclo
@@ -52,7 +53,7 @@ linters:
         path: private/bufpkg/bufstate/module_state_test.go
       - linters:
           - goconst
-        path: cmd/release/main_test.go
+        path: _test\.go$
       - linters:
           - gosec
         text: "G705:"
