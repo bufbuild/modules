@@ -119,6 +119,10 @@
     {
       "name": "v1.38.0",
       "digest": "6dcba211d622ee2b9c86e5834966b6a5fc4e1ae830212feb68348cac2bcfbdccbfa3a388d79233814b259fdf23b22f40356925a3ddb72f478ea5d8de2d438297"
+    },
+    {
+      "name": "v1.38.1",
+      "digest": "6dcba211d622ee2b9c86e5834966b6a5fc4e1ae830212feb68348cac2bcfbdccbfa3a388d79233814b259fdf23b22f40356925a3ddb72f478ea5d8de2d438297"
     }
   ]
 }
