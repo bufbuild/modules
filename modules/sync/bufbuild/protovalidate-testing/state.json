@@ -275,6 +275,14 @@
     {
       "name": "v1.2.0",
       "digest": "a078c7d06b8b73cd0bd7abe208a12028a075c125c64682f671d7c227c38e998b7904d8bd1cca45521c722fb229d4edae546c1e422c7af07d8812bb7aa8db73b5"
+    },
+    {
+      "name": "v1.2.1",
+      "digest": "39e2246b8bebc19a616d7cede8fc964b0e6894546804286f51433bf779550694f57d1e8b7e11d7f77c8461cb9db9e59a696b8ab0626aa83c79c2aafe2e925832"
+    },
+    {
+      "name": "v1.2.2",
+      "digest": "39e2246b8bebc19a616d7cede8fc964b0e6894546804286f51433bf779550694f57d1e8b7e11d7f77c8461cb9db9e59a696b8ab0626aa83c79c2aafe2e925832"
     }
   ]
 }
