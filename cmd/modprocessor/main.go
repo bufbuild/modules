@@ -36,6 +36,10 @@ const (
 	ownerFlagName       = "owner"
 	repoFlagName        = "repo"
 	refFlagName         = "ref"
+	dryRunFlagName      = "dry-run"
+
+	changedStatus   = "changed"
+	unchangedStatus = "unchanged"
 )
 
 type command struct {
@@ -44,6 +48,7 @@ type command struct {
 	owner       string
 	repo        string
 	ref         string
+	dryRun      bool
 }
 
 func newCmd(
@@ -52,6 +57,7 @@ func newCmd(
 	owner string,
 	repo string,
 	modRef string,
+	dryRun bool,
 ) (*command, error) {
 	var err error
 	if len(rootSyncDir) == 0 {
@@ -78,6 +84,7 @@ func newCmd(
 		owner:       owner,
 		repo:        repo,
 		ref:         modRef,
+		dryRun:      dryRun,
 	}, nil
 }
 
@@ -88,6 +95,10 @@ func main() {
 		owner       = flag.String(ownerFlagName, "", "Managed module owner name.")
 		repo        = flag.String(repoFlagName, "", "Managed module repository name.")
 		ref         = flag.String(refFlagName, "", "Managed module reference that matches the contents in the source directory.")
+		dryRun      = flag.Bool(dryRunFlagName, false, fmt.Sprintf(
+			"Print %q or %q depending on whether the source files differ from the module's latest reference, without writing any blobs or state.",
+			changedStatus, unchangedStatus,
+		))
 	)
 	flag.Parse()
 	cmd, err := newCmd(
@@ -96,6 +107,7 @@ func main() {
 		*owner,
 		*repo,
 		*ref,
+		*dryRun,
 	)
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "cannot run mod processor: %v\n\nusage: modprocessor [flags]\n\n", err)
@@ -111,7 +123,7 @@ func main() {
 
 func (c *command) run() error {
 	ctx := context.Background()
-	manifestDigest, err := c.convertToCAS(ctx)
+	fileSet, manifestBlob, err := c.newFileSet(ctx)
 	if err != nil {
 		return fmt.Errorf("convert module to CAS: %w", err)
 	}
@@ -119,43 +131,63 @@ func (c *command) run() error {
 	if err != nil {
 		return fmt.Errorf("new state read writer: %w", err)
 	}
-	manifestHexDigest := hex.EncodeToString(manifestDigest.Value())
+	manifestHexDigest := hex.EncodeToString(manifestBlob.Digest().Value())
+	if c.dryRun {
+		latestDigest, err := stateRW.LatestModuleDigest(c.rootSyncDir, c.owner, c.repo)
+		if err != nil {
+			return fmt.Errorf("latest module digest: %w", err)
+		}
+		status := changedStatus
+		if latestDigest == manifestHexDigest {
+			status = unchangedStatus
+		}
+		_, _ = fmt.Fprintln(os.Stdout, status)
+		return nil
+	}
+	if err := c.writeCAS(fileSet, manifestBlob); err != nil {
+		return fmt.Errorf("write module CAS: %w", err)
+	}
 	if err := stateRW.AppendModuleReference(c.rootSyncDir, c.owner, c.repo, c.ref, manifestHexDigest); err != nil {
 		return fmt.Errorf("update mod reference: %w", err)
 	}
 	return nil
 }
 
-// convertToCAS converts all files in the source directory to blobs, and a saves
-// them in the module destination directory using its manifest digest hex string
-// as filenames.
-func (c *command) convertToCAS(ctx context.Context) (cas.Digest, error) {
+// newFileSet converts all files in the source directory to blobs, returning them
+// along with the blob of their manifest.
+func (c *command) newFileSet(ctx context.Context) (cas.FileSet, cas.Blob, error) {
 	storageosProvider := storageos.NewProvider()
 	bucket, err := storageosProvider.NewReadWriteBucket(c.srcDir)
 	if err != nil {
-		return nil, fmt.Errorf("new bucket from buf dir: %w", err)
+		return nil, nil, fmt.Errorf("new bucket from buf dir: %w", err)
 	}
 	fileSet, err := cas.NewFileSetForBucket(ctx, bucket, cas.DigestTypeShake256)
 	if err != nil {
-		return nil, fmt.Errorf("new file set from bucket: %w", err)
+		return nil, nil, fmt.Errorf("new file set from bucket: %w", err)
 	}
 	manifestBlob, err := cas.ManifestToBlob(fileSet.Manifest(), cas.DigestTypeShake256)
 	if err != nil {
-		return nil, fmt.Errorf("manifest to blob: %w", err)
+		return nil, nil, fmt.Errorf("manifest to blob: %w", err)
 	}
+	return fileSet, manifestBlob, nil
+}
+
+// writeCAS saves the file set blobs in the module destination directory using
+// their digest hex string as filenames.
+func (c *command) writeCAS(fileSet cas.FileSet, manifestBlob cas.Blob) error {
 	modSyncDir := filepath.Join(c.rootSyncDir, c.owner, c.repo, "cas")
 	// mkdir directory in case this is the first time a reference is being synced for this module.
 	if err := os.MkdirAll(modSyncDir, 0755); err != nil {
-		return nil, fmt.Errorf("make module sync cas dir: %w", err)
+		return fmt.Errorf("make module sync cas dir: %w", err)
 	}
 	// TODO: parallelize
 	for _, blob := range append([]cas.Blob{manifestBlob}, fileSet.BlobSet().Blobs()...) {
 		if err := writeBlobInDir(blob, modSyncDir); err != nil {
 			hexDigest := hex.EncodeToString(blob.Digest().Value())
-			return nil, fmt.Errorf("write blob %q to file: %w", hexDigest, err)
+			return fmt.Errorf("write blob %q to file: %w", hexDigest, err)
 		}
 	}
-	return manifestBlob.Digest(), nil
+	return nil
 }
 
 // writeBlobInDir takes a blob and writes its content to a file named as its

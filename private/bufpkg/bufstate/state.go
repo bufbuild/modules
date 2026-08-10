@@ -24,6 +24,26 @@ import (
 
 const SyncRoot = "modules/sync"
 
+// LatestModuleDigest returns the digest of the last reference appended to the
+// module state, or an empty string if the module has no state file yet or its
+// state file has no references. It assumes the same sync dir structure as
+// AppendModuleReference.
+func (rw *ReadWriter) LatestModuleDigest(
+	rootSyncDir string,
+	ownerName string,
+	repoName string,
+) (string, error) {
+	modState, err := rw.readModuleState(filepath.Join(rootSyncDir, ownerName, repoName, ModStateFileName))
+	if err != nil {
+		return "", err
+	}
+	references := modState.GetReferences()
+	if len(references) == 0 {
+		return "", nil
+	}
+	return references[len(references)-1].GetDigest(), nil
+}
+
 // AppendModuleReference appends a reference-digest pair at the end of the module
 // state, and updates the module's latest reference in the global state. It
 // assumes the structure of the sync dir is
@@ -37,21 +57,9 @@ func (rw *ReadWriter) AppendModuleReference(
 	digest string,
 ) error {
 	modFilePath := filepath.Join(rootSyncDir, ownerName, repoName, ModStateFileName)
-	var modState *statev1alpha1.ModuleState
-	if _, err := os.Stat(modFilePath); err != nil {
-		if !os.IsNotExist(err) {
-			return fmt.Errorf("stat file: %w", err)
-		}
-		modState = &statev1alpha1.ModuleState{}
-	} else {
-		modStateFile, err := os.Open(modFilePath)
-		if err != nil {
-			return fmt.Errorf("open file: %w", err)
-		}
-		modState, err = rw.ReadModStateFile(modStateFile)
-		if err != nil {
-			return fmt.Errorf("read module state file: %w", err)
-		}
+	modState, err := rw.readModuleState(modFilePath)
+	if err != nil {
+		return err
 	}
 	modState.SetReferences(append(modState.GetReferences(), statev1alpha1.ModuleReference_builder{Name: reference, Digest: digest}.Build()))
 	// As the state file read/write functions both close after their operations,
@@ -111,4 +119,24 @@ func (rw *ReadWriter) AppendModuleReference(
 		return fmt.Errorf("write global state file: %w", err)
 	}
 	return nil
+}
+
+// readModuleState reads the module state file at the given path, returning an
+// empty state if the file does not exist yet.
+func (rw *ReadWriter) readModuleState(modFilePath string) (*statev1alpha1.ModuleState, error) {
+	if _, err := os.Stat(modFilePath); err != nil {
+		if !os.IsNotExist(err) {
+			return nil, fmt.Errorf("stat file: %w", err)
+		}
+		return &statev1alpha1.ModuleState{}, nil
+	}
+	modStateFile, err := os.Open(modFilePath)
+	if err != nil {
+		return nil, fmt.Errorf("open file: %w", err)
+	}
+	modState, err := rw.ReadModStateFile(modStateFile)
+	if err != nil {
+		return nil, fmt.Errorf("read module state file: %w", err)
+	}
+	return modState, nil
 }
