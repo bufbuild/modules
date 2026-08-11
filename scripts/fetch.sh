@@ -11,14 +11,19 @@ all_mods_sync_path="${repo_root}/modules/sync"
 all_mods_static_path="${repo_root}/modules/static"
 cd "${repo_root}"
 
+# Build the module processor once up front. It runs at least once per reference walked, and `go run`
+# relinks it on every invocation.
+modprocessor_bin="${repo_root}/.tmp/bin/modprocessor"
+go build -o "${modprocessor_bin}" "${repo_root}/cmd/modprocessor"
+
 log() {
   >&2 echo "$@"
 }
 
-# process_ref should be called within the appropriate proto src directory where files will be copied
-# from. Rsync file should be relative to this dir. This func process a reference, checks out to it,
-# copies relevant files and stores them in CAS format. It updates references in state files.
-process_ref() {
+# prepare_ref should be called within the appropriate proto src directory where files will be copied
+# from. Rsync file should be relative to this dir. This func checks out to a reference and copies the
+# relevant files to a fresh temporary directory, setting its path in ${prepared_ref_path}.
+prepare_ref() {
   local -r mod_ref="${1}"
   local -r mod_tmp_path="$(mktemp -d)"
   dirs_to_delete+=("${mod_tmp_path}")
@@ -60,6 +65,43 @@ process_ref() {
   rsync "${rsync_args[@]}" . "${mod_tmp_path}"
   [ ! -e "${module_static_path}/buf.md" ] || cp "${module_static_path}/buf.md" "${mod_tmp_path}"
   [ ! -e "${module_static_path}/buf.yaml" ] || cp "${module_static_path}/buf.yaml" "${mod_tmp_path}"
+  prepared_ref_path="${mod_tmp_path}"
+}
+
+# ref_digest_status prints "changed" or "unchanged" depending on whether the contents prepared in the
+# given directory differ from the digest of the module's latest reference in its state file.
+ref_digest_status() {
+  local -r mod_tmp_path="${1}"
+  local -r mod_ref="${2}"
+  "${modprocessor_bin}" \
+    --dry-run \
+    --root-sync-dir="${all_mods_sync_path}" \
+    --src-dir="${mod_tmp_path}" \
+    --owner="${owner}" \
+    --repo="${repo}" \
+    --ref="${mod_ref}"
+}
+
+# process_ref should be called within the appropriate proto src directory where files will be copied
+# from. This func processes a reference, checks it out, copies relevant files in CAS format, and
+# updates references in state files.
+process_ref() {
+  local -r mod_ref="${1}"
+  prepare_ref "${mod_ref}"
+  local -r mod_tmp_path="${prepared_ref_path}"
+
+  # Modules synced by commit mirror every commit of their source repository, but we only sync a
+  # curated subset of its files. Appending a reference whose contents are identical to the previous
+  # one publishes a BSR label pointing at identical content, so drop it.
+  if [ "${sync_strategy}" == "commits" ]; then
+    local digest_status
+    digest_status="$(ref_digest_status "${mod_tmp_path}" "${mod_ref}")"
+    if [ "${digest_status}" == "unchanged" ]; then
+      echo "skipping reference ${owner}/${repo}:${mod_ref}, contents unchanged"
+      rm -rf "${mod_tmp_path}"
+      return
+    fi
+  fi
 
   # If the source of the module that we are syncing is from a v2 workspace with another module
   # we are syncing, e.g. protovalidate and protovalidate-testing, then it is possible that
@@ -88,14 +130,12 @@ process_ref() {
 
   # process the prepared module: convert it to CAS from the tmp mod directory and put blob files in
   # the cas path in the repo, and update the state file.
-  pushd "${repo_root}" > /dev/null
-  go run "${repo_root}/cmd/modprocessor" \
+  "${modprocessor_bin}" \
     --root-sync-dir="${all_mods_sync_path}" \
     --src-dir="${mod_tmp_path}" \
     --owner="${owner}" \
     --repo="${repo}" \
     --ref="${mod_ref}"
-  popd > /dev/null
 }
 
 # sync_references ${sync_strategy} ${owner} ${repo} ${git_remote} ${opt_proto_subdir}
@@ -126,6 +166,16 @@ sync_references() {
 
   local -r module_root=$(pwd)
   pushd "${git_owner}/${git_repo}/${proto_subdir}" > /dev/null
+
+  # Resolve the tip of the cloned branch from the remote ref instead of HEAD: processing a reference
+  # leaves the work tree on a detached HEAD, and a single clone can back more than one managed module
+  # (googleapis/googleapis and googleapis/cloud-run).
+  local git_origin_head_ref="refs/remotes/origin/HEAD"
+  if ! git rev-parse --verify --quiet "${git_origin_head_ref}" > /dev/null; then
+    git_origin_head_ref="$(git for-each-ref --count=1 --format='%(refname)' refs/remotes/origin)"
+  fi
+  local git_origin_head
+  git_origin_head="$(git rev-parse "${git_origin_head_ref}")"
 
   local rev_list
   if [ "${sync_strategy}" == "releases" ]; then
@@ -158,15 +208,15 @@ get_commit_revlist() {
   if [ -f "${mod_state_file}" ]; then
     mod_latest_ref="$(cat "${mod_state_file}" | jq -r '.references | last.name')"
     log "latest reference for module ${owner}/${repo}: ${mod_latest_ref}"
-    # revisions from initial latest_ref...HEAD (excluding latest_ref)
-    commit_rev_list=$(git rev-list "${mod_latest_ref}"...HEAD --first-parent --reverse)
+    # revisions from initial latest_ref...git_origin_head (excluding latest_ref)
+    commit_rev_list=$(git rev-list "${mod_latest_ref}..${git_origin_head}" --first-parent --reverse)
   elif [ -f "${mod_initref_file}" ]; then
     log "state file not found: ${mod_state_file}"
     mod_init_ref="$(cat "${mod_initref_file}")"
     log "falling back to initializing reference for module ${owner}/${repo}: ${mod_init_ref}"
     # Prints revisions on the main branch, stopping when ${mod_init_ref} is
     # encountered, and using tac to reverse the revisions (includes init_ref).
-    commit_rev_list=$(git rev-list HEAD --first-parent | sed "/${mod_init_ref}/q" | tac)
+    commit_rev_list=$(git rev-list "${git_origin_head}" --first-parent | sed "/${mod_init_ref}/q" | tac)
   else
     log "module ${owner}/${repo} has no initializing reference"
     exit 2

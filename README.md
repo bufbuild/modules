@@ -34,6 +34,18 @@ We currently sync automatically the following modules:
 | prometheus/client-model | https://github.com/prometheus/client_model |  |
 | protocolbuffers/wellknowntypes | https://github.com/protocolbuffers/protobuf |  |
 
+### How we handle references
+
+Each module is synced either from its source repository's releases or from its commits. Modules
+synced from releases get a reference for every release tag, even when the tagged contents are
+identical to the previous tag.
+
+Modules synced from commits only get a reference when the commit changes the files we sync. We sync
+a curated subset of each source repository (see the `rsync.incl` file in the module's directory
+under `modules/static`), and in large repositories most commits leave that subset untouched. A
+reference for such a commit would point at contents that were already published under an earlier
+reference, so we skip it.
+
 ### How we handle dependencies
 
 Dependencies are an essential part of these community modules as they help developers reuse well
