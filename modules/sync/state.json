@@ -74,11 +74,11 @@
     },
     {
       "module_name": "prometheus/client-model",
-      "latest_reference": "v0.6.2"
+      "latest_reference": "v0.6.3"
     },
     {
       "module_name": "protocolbuffers/wellknowntypes",
-      "latest_reference": "v36.0"
+      "latest_reference": "v36.1"
     }
   ]
 }
