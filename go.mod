@@ -3,7 +3,7 @@ module github.com/bufbuild/modules
 go 1.26.0
 
 require (
-	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.12-20260709200747-435963d16310.1
+	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.12-20260825204119-511051f7f437.1
 	buf.build/go/app v0.2.1-0.20260626143626-be153867abea
 	buf.build/go/protovalidate v1.3.0
 	buf.build/go/standard v0.1.1-0.20260325175353-2b287e071df5
