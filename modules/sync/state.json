@@ -62,7 +62,7 @@
     },
     {
       "module_name": "grpc/grpc",
-      "latest_reference": "99135b19189588fcc787acb84cff27991787473d"
+      "latest_reference": "dd549fc4ed04b60b0fdd3866b82ef0a7c87c6e4f"
     },
     {
       "module_name": "opencensus/opencensus",
