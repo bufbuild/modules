@@ -71,9 +71,9 @@ func listExistingBotComments(ctx context.Context, client *githubutil.Client, prN
 	const githubActionsBotUsername = "github-actions[bot]"
 	result := make(map[commentKey]int64)
 	opts := &github.PullRequestListCommentsOptions{
-		Sort:        "created",
-		Direction:   "asc",
-		ListOptions: github.ListOptions{PerPage: 100},
+		Sort:      "created",
+		Direction: "asc",
+		PerPage:   100,
 	}
 	for {
 		comments, resp, err := client.GitHub.PullRequests.ListComments(

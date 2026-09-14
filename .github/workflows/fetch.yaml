@@ -27,7 +27,7 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@v7
         with:
-          go-version: 1.26.x
+          go-version: 1.27.x
           check-latest: true
           cache: true
       - uses: bufbuild/buf-action@fd21066df7214747548607aaa45548ba2b9bc1ff # v1.4.0
