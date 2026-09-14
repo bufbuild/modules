@@ -2,4 +2,7 @@
 + protoc-gen-openapiv2/
 + protoc-gen-openapiv2/options/
 + protoc-gen-openapiv2/options/*.proto
++ protoc-gen-openapiv3/
++ protoc-gen-openapiv3/options/
++ protoc-gen-openapiv3/options/*.proto
 - *
