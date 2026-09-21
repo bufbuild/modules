@@ -50,7 +50,7 @@
     },
     {
       "module_name": "googlechrome/lighthouse",
-      "latest_reference": "v13.4.1"
+      "latest_reference": "v13.5.0"
     },
     {
       "module_name": "googlecloudplatform/bq-schema-api",
