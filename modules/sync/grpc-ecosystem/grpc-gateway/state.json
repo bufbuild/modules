@@ -91,6 +91,10 @@
     {
       "name": "v2.30.0",
       "digest": "9747ec8da8c45fe6e0c9860f5495897b28c77b985c2c65a75a54c22f2f1f168039f06925aca6cd8d856a723b60eb80d510d6db1f7d0f3bd27f8d91a8a8c6182c"
+    },
+    {
+      "name": "v2.31.0",
+      "digest": "52cf6d1a3569dfbe28d579e585a34274dc6cbea4bb244554017963db978134fc6734f620865f9655ae9a71a7462e6b3c7ec6f4a9859f3a40733a6a3dc39303e2"
     }
   ]
 }

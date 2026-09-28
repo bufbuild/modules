@@ -58,7 +58,7 @@
     },
     {
       "module_name": "grpc-ecosystem/grpc-gateway",
-      "latest_reference": "v2.30.0"
+      "latest_reference": "v2.31.0"
     },
     {
       "module_name": "grpc/grpc",
