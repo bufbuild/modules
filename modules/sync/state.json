@@ -22,7 +22,7 @@
     },
     {
       "module_name": "envoyproxy/envoy",
-      "latest_reference": "v1.39.2"
+      "latest_reference": "v1.39.3"
     },
     {
       "module_name": "envoyproxy/protoc-gen-validate",
