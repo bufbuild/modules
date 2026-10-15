@@ -1,0 +1,385 @@
+syntax = "proto3";
+
+// Package grpc.gateway.protoc_gen_openapiv3.options defines the minimal set of
+// OpenAPI 3.1.0 override messages consumed by protoc-gen-openapiv3.
+package grpc.gateway.protoc_gen_openapiv3.options;
+
+import "google/protobuf/struct.proto";
+
+option go_package = "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv3/options";
+
+// Document is a file-level override applied to the top of the generated
+// OpenAPI document. Only non-empty sub-fields replace the defaults the
+// generator would otherwise synthesize from the proto file name.
+//
+// Spec: https://spec.openapis.org/oas/v3.1.0#openapi-object
+message Document {
+  // Provides metadata about the API. The metadata MAY be used by tooling as
+  // required.
+  Info info = 1;
+  // An array of Server Objects, which provide connectivity information to a
+  // target server. If the servers property is not provided, or is an empty
+  // array, the default value would be a Server Object with a url value of /.
+  repeated Server servers = 2;
+  // Additional external documentation.
+  ExternalDocs external_docs = 3;
+  // A list of tags used by the document with additional metadata. Tags
+  // declared here are merged with the tags derived from proto services: an
+  // entry here whose name matches a service's tag replaces the default,
+  // and entries with new names are appended. This is the only way to
+  // attach a description (or external docs) to a tag referenced by a
+  // method-level `openapiv3_operation.tags` override, since those tags
+  // would otherwise appear in the document with no metadata.
+  repeated Tag tags = 4;
+  // Custom specification extensions rendered at the root of the OpenAPI
+  // document. Keys MUST start with "x-".
+  //
+  // See: https://spec.openapis.org/oas/v3.1.0#specification-extensions
+  map<string, google.protobuf.Value> extensions = 5;
+  // Reusable objects rendered under the document's `components` section.
+  //
+  // See: https://spec.openapis.org/oas/v3.1.0#oasComponents
+  Components components = 6;
+  // A declaration of which security mechanisms can be used across the API.
+  // The list of values includes alternative security requirement objects
+  // that can be used. Only one of the security requirement objects needs to
+  // be satisfied to authorize a request. Individual operations can override
+  // this definition with `openapiv3_operation.security`.
+  //
+  // See: https://spec.openapis.org/oas/v3.1.0#oasSecurity
+  repeated SecurityRequirement security = 7;
+}
+
+// Components holds reusable objects for the document. Entries declared here
+// are added to the `components` section the generator builds from the proto
+// types.
+//
+// Spec: https://spec.openapis.org/oas/v3.1.0#components-object
+message Components {
+  // Security schemes that can be referenced by name from security
+  // requirements, keyed by scheme name.
+  //
+  // See: https://spec.openapis.org/oas/v3.1.0#componentsSecuritySchemes
+  map<string, SecurityScheme> security_schemes = 1;
+}
+
+// Info mirrors the fields of the OpenAPI 3.1.0 Info object that users most
+// often want to set from proto.
+//
+// Spec: https://spec.openapis.org/oas/v3.1.0#info-object
+message Info {
+  // The title of the API.
+  string title = 1;
+  // A short summary of the API.
+  string summary = 2;
+  // A description of the API. CommonMark syntax MAY be used for rich text
+  // representation.
+  string description = 3;
+  // A URL to the Terms of Service for the API. This MUST be in the form of a
+  // URL.
+  string terms_of_service = 4;
+  // The contact information for the exposed API.
+  Contact contact = 5;
+  // The license information for the exposed API.
+  License license = 6;
+  // The version of the OpenAPI document (which is distinct from the OpenAPI
+  // Specification version or the API implementation version).
+  string version = 7;
+  // Custom specification extensions rendered on the Info object. Keys MUST
+  // start with "x-".
+  //
+  // See: https://spec.openapis.org/oas/v3.1.0#specification-extensions
+  map<string, google.protobuf.Value> extensions = 8;
+}
+
+// Contact information for the exposed API.
+//
+// Spec: https://spec.openapis.org/oas/v3.1.0#contact-object
+message Contact {
+  // The identifying name of the contact person/organization.
+  string name = 1;
+  // The URL pointing to the contact information. This MUST be in the form of
+  // a URL.
+  string url = 2;
+  // The email address of the contact person/organization. This MUST be in the
+  // form of an email address.
+  string email = 3;
+}
+
+// License information for the exposed API. `identifier` and `url` are
+// mutually exclusive in the OpenAPI 3.1.0 spec, so they are modeled as a
+// oneof: setting one clears the other.
+//
+// Spec: https://spec.openapis.org/oas/v3.1.0#license-object
+message License {
+  // The license name used for the API.
+  string name = 1;
+  // Source identifying the license. Either an SPDX expression or a URL,
+  // mutually exclusive per the OpenAPI 3.1.0 spec.
+  oneof source {
+    // An SPDX expression for the API.
+    string identifier = 2;
+    // A URL to the license used for the API. This MUST be in the form of a
+    // URL.
+    string url = 3;
+  }
+}
+
+// Server represents an API server.
+//
+// Spec: https://spec.openapis.org/oas/v3.1.0#server-object
+message Server {
+  // A URL to the target host. This URL supports Server Variables and MAY be
+  // relative, to indicate that the host location is relative to the location
+  // where the OpenAPI document is being served.
+  string url = 1;
+  // An optional string describing the host designated by the URL. CommonMark
+  // syntax MAY be used for rich text representation.
+  string description = 2;
+}
+
+// Operation is a method-level override applied to the generated Operation
+// object. Non-empty fields replace values the generator would otherwise
+// derive from proto comments or defaults.
+//
+// Spec: https://spec.openapis.org/oas/v3.1.0#operation-object
+message Operation {
+  // A list of tags for API documentation control. Tags can be used for
+  // logical grouping of operations by resources or any other qualifier.
+  repeated string tags = 1;
+  // A short summary of what the operation does.
+  string summary = 2;
+  // A verbose explanation of the operation behavior. CommonMark syntax MAY
+  // be used for rich text representation.
+  string description = 3;
+  // Additional external documentation for this operation.
+  ExternalDocs external_docs = 4;
+  // Unique string used to identify the operation. The id MUST be unique among
+  // all operations described in the API.
+  string operation_id = 5;
+  // Declares this operation to be deprecated. Consumers SHOULD refrain from
+  // usage of the declared operation. Default value is false. Setting this to
+  // false does not un-deprecate a method that is marked deprecated in proto
+  // (`option deprecated = true` on the method, service, or file).
+  bool deprecated = 6;
+  // An alternative `servers` array to service this operation. If a `servers`
+  // array is specified at the Path Item Object or OpenAPI Object level, it
+  // will be overridden by this value.
+  repeated Server servers = 7;
+  // Custom specification extensions rendered on the Operation object. Keys
+  // MUST start with "x-".
+  //
+  // See: https://spec.openapis.org/oas/v3.1.0#specification-extensions
+  map<string, google.protobuf.Value> extensions = 8;
+  // A declaration of which security mechanisms can be used for this
+  // operation. The list of values includes alternative security requirement
+  // objects that can be used. When set, this replaces the document-level
+  // `security` for this operation. To make security optional for this
+  // operation, add an empty security requirement (`security: {}`).
+  //
+  // See: https://spec.openapis.org/oas/v3.1.0#operationSecurity
+  repeated SecurityRequirement security = 9;
+}
+
+// Schema is a message- or field-level override applied to the generated
+// JSON Schema. Non-empty fields replace values the generator would
+// otherwise derive from proto comments or the proto type.
+//
+// Both `openapiv3_schema` (on MessageOptions) and `openapiv3_field` (on
+// FieldOptions) use this message.
+//
+// Spec: https://spec.openapis.org/oas/v3.1.0#schema-object
+// Underlying dialect: https://json-schema.org/draft/2020-12/json-schema-core
+message Schema {
+  // A preferably short string describing the purpose of the instance
+  // described by the schema.
+  string title = 1;
+  // A string providing explanation about the purpose of the instance
+  // described by the schema.
+  string description = 2;
+  // Declares this schema to be deprecated. Consumers SHOULD refrain from
+  // usage of the declared schema. Default value is false. Setting this to
+  // false does not un-deprecate a schema that is marked deprecated in proto
+  // (`option deprecated = true` on the message, field, or file).
+  bool deprecated = 3;
+  // Custom specification extensions rendered on the Schema object. Keys
+  // MUST start with "x-". Setting this on a field-level annotation forces
+  // a schema body (like `title`), so a $ref-typed field carrying extensions
+  // is wrapped in `allOf`.
+  //
+  // See: https://spec.openapis.org/oas/v3.1.0#specification-extensions
+  map<string, google.protobuf.Value> extensions = 4;
+}
+
+// ExternalDocs is a link to external documentation.
+//
+// Spec: https://spec.openapis.org/oas/v3.1.0#external-documentation-object
+message ExternalDocs {
+  // A description of the target documentation. CommonMark syntax MAY be used
+  // for rich text representation.
+  string description = 1;
+  // The URL for the target documentation. This MUST be in the form of a URL.
+  string url = 2;
+}
+
+// Tag adds metadata to a single tag that is used by the Operation Object. It
+// is not mandatory to have a Tag Object per tag defined in the Operation
+// Object instances.
+//
+// Spec: https://spec.openapis.org/oas/v3.1.0#tag-object
+message Tag {
+  // The name of the tag.
+  string name = 1;
+  // A description for the tag. CommonMark syntax MAY be used for rich text
+  // representation.
+  string description = 2;
+  // Additional external documentation for this tag.
+  ExternalDocs external_docs = 3;
+  // Custom specification extensions rendered on the Tag object. Keys MUST
+  // start with "x-".
+  //
+  // See: https://spec.openapis.org/oas/v3.1.0#specification-extensions
+  map<string, google.protobuf.Value> extensions = 4;
+}
+
+// SecurityScheme defines a security scheme that can be used by the
+// operations.
+//
+// Spec: https://spec.openapis.org/oas/v3.1.0#security-scheme-object
+message SecurityScheme {
+  // The type of the security scheme.
+  enum Type {
+    // Not a valid security scheme type. Setting `type` is required.
+    TYPE_UNSPECIFIED = 0;
+    // An API key sent in a header, query parameter or cookie.
+    TYPE_API_KEY = 1;
+    // HTTP authentication, for example basic or bearer.
+    TYPE_HTTP = 2;
+    // Mutual TLS.
+    TYPE_MUTUAL_TLS = 3;
+    // OAuth2.
+    TYPE_OAUTH2 = 4;
+    // OpenID Connect Discovery.
+    TYPE_OPEN_ID_CONNECT = 5;
+  }
+
+  // The location of an API key.
+  enum In {
+    // Not set. Required when `type` is `TYPE_API_KEY`.
+    IN_UNSPECIFIED = 0;
+    // The API key is sent as a query parameter.
+    IN_QUERY = 1;
+    // The API key is sent as a header.
+    IN_HEADER = 2;
+    // The API key is sent as a cookie.
+    IN_COOKIE = 3;
+  }
+
+  // The type of the security scheme. Required.
+  //
+  // See: https://spec.openapis.org/oas/v3.1.0#securitySchemeType
+  Type type = 1;
+  // A description for the security scheme. CommonMark syntax MAY be used for
+  // rich text representation.
+  //
+  // See: https://spec.openapis.org/oas/v3.1.0#securitySchemeDescription
+  string description = 2;
+  // The name of the header, query or cookie parameter to be used. Required
+  // when `type` is `TYPE_API_KEY`.
+  //
+  // See: https://spec.openapis.org/oas/v3.1.0#securitySchemeName
+  string name = 3;
+  // The location of the API key. Required when `type` is `TYPE_API_KEY`.
+  //
+  // See: https://spec.openapis.org/oas/v3.1.0#securitySchemeIn
+  In in = 4;
+  // The name of the HTTP Authorization scheme to be used in the
+  // Authorization header as defined in RFC 7235, for example "basic" or
+  // "bearer". Required when `type` is `TYPE_HTTP`.
+  //
+  // See: https://spec.openapis.org/oas/v3.1.0#securitySchemeScheme
+  string scheme = 5;
+  // A hint to the client to identify how the bearer token is formatted.
+  // Only used when `type` is `TYPE_HTTP` and `scheme` is "bearer".
+  //
+  // See: https://spec.openapis.org/oas/v3.1.0#securitySchemeBearerFormat
+  string bearer_format = 6;
+  // Configuration information for the flow types supported. Required when
+  // `type` is `TYPE_OAUTH2`.
+  //
+  // See: https://spec.openapis.org/oas/v3.1.0#securitySchemeFlows
+  OAuthFlows flows = 7;
+  // OpenID Connect URL to discover OAuth2 configuration values. This MUST be
+  // in the form of a URL. Required when `type` is `TYPE_OPEN_ID_CONNECT`.
+  //
+  // See: https://spec.openapis.org/oas/v3.1.0#securitySchemeOpenIdConnectUrl
+  string open_id_connect_url = 8;
+}
+
+// OAuthFlows allows configuration of the supported OAuth flows.
+//
+// Spec: https://spec.openapis.org/oas/v3.1.0#oauth-flows-object
+message OAuthFlows {
+  // Configuration for the OAuth Implicit flow.
+  //
+  // See: https://spec.openapis.org/oas/v3.1.0#oauthFlowsImplicit
+  OAuthFlow implicit = 1;
+  // Configuration for the OAuth Resource Owner Password flow.
+  //
+  // See: https://spec.openapis.org/oas/v3.1.0#oauthFlowsPassword
+  OAuthFlow password = 2;
+  // Configuration for the OAuth Client Credentials flow.
+  //
+  // See: https://spec.openapis.org/oas/v3.1.0#oauthFlowsClientCredentials
+  OAuthFlow client_credentials = 3;
+  // Configuration for the OAuth Authorization Code flow.
+  //
+  // See: https://spec.openapis.org/oas/v3.1.0#oauthFlowsAuthorizationCode
+  OAuthFlow authorization_code = 4;
+}
+
+// OAuthFlow is the configuration details for a supported OAuth flow.
+//
+// Spec: https://spec.openapis.org/oas/v3.1.0#oauth-flow-object
+message OAuthFlow {
+  // The authorization URL to be used for this flow. Required for the
+  // implicit and authorization code flows.
+  //
+  // See: https://spec.openapis.org/oas/v3.1.0#oauthFlowAuthorizationUrl
+  string authorization_url = 1;
+  // The token URL to be used for this flow. Required for the password,
+  // client credentials and authorization code flows.
+  //
+  // See: https://spec.openapis.org/oas/v3.1.0#oauthFlowTokenUrl
+  string token_url = 2;
+  // The URL to be used for obtaining refresh tokens.
+  //
+  // See: https://spec.openapis.org/oas/v3.1.0#oauthFlowRefreshUrl
+  string refresh_url = 3;
+  // The available scopes for the OAuth2 security scheme. A map between the
+  // scope name and a short description for it. The map MAY be empty.
+  //
+  // See: https://spec.openapis.org/oas/v3.1.0#oauthFlowScopes
+  map<string, string> scopes = 4;
+}
+
+// SecurityRequirement lists the security schemes required to execute an
+// operation. When multiple schemes are listed, all of them must be
+// satisfied. An empty security requirement allows anonymous access.
+//
+// Spec: https://spec.openapis.org/oas/v3.1.0#security-requirement-object
+message SecurityRequirement {
+  // Scopes lists the scopes required by a single security scheme.
+  message Scopes {
+    // For `TYPE_OAUTH2` and `TYPE_OPEN_ID_CONNECT` schemes, the scope names
+    // required for the execution. For other scheme types, a list of role
+    // names, which MAY be empty.
+    repeated string scopes = 1;
+  }
+
+  // Maps the name of a security scheme declared in
+  // `Document.components.security_schemes` to the scopes it requires.
+  //
+  // See: https://spec.openapis.org/oas/v3.1.0#securityRequirementsName
+  map<string, Scopes> schemes = 1;
+}
