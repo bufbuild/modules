@@ -9,6 +9,7 @@
 + cloud/run/v2/k8s.min.proto
 + cloud/run/v2/revision.proto
 + cloud/run/v2/revision_template.proto
++ cloud/run/v2/sandbox.proto
 + cloud/run/v2/service.proto
 + cloud/run/v2/status.proto
 + cloud/run/v2/task.proto
