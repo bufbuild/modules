@@ -38,7 +38,7 @@
     },
     {
       "module_name": "google/cel-spec",
-      "latest_reference": "v0.25.3"
+      "latest_reference": "v0.26.0"
     },
     {
       "module_name": "googleapis/cloud-run",
